@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail } from "lucide-react";
-import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const quickLinks = [
@@ -26,7 +25,8 @@ const Footer = () => {
           {/* Logo & Description */}
           <div className="lg:col-span-2">
             <Link to="/" className="inline-block mb-4">
-              <img src={logo} alt="InVitvo Pharmaceuticals" className="h-16 w-auto brightness-0 invert" />
+              <span className="text-2xl font-bold text-background tracking-wide">INVITVO</span>
+              <span className="block text-xs text-background/70 tracking-widest">PHARMACEUTICALS LTD.</span>
             </Link>
             <p className="text-background/70 text-sm leading-relaxed max-w-md">
               InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolating, purifying and characterizing pharmacologically active secondary metabolites from natural resources.
