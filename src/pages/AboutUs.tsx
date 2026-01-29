@@ -53,7 +53,7 @@ const AboutUs = () => {
             </FadeInOnScroll>
             <FadeInOnScroll delay={0.2}>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
-                InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolate, purify and characterize the pharmacologically active secondary metabolites from natural resources including microorganisms. InVitvo Pharmaceuticals was founded in 2021 by a group of young and energetic pharmaceutical scientists and soon became the home for research scientists in the field of medicinal and analytical chemistry, pharmacology and microbiology. InVitvo Pharmaceuticals has great potential to grow and become the leading company in its own kind in Canada.
+                InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolate, purify and characterize the pharmacologically active secondary metabolites from natural resources including microorganisms. InVitvo Pharmaceuticals was founded in 2021 by a group of experienced pharmaceutical scientists and soon became the home for research scientists in the field of medicinal and analytical chemistry, pharmacology and microbiology. InVitvo Pharmaceuticals has great potential to grow and become the leading company in its own kind in Canada.
               </p>
             </FadeInOnScroll>
           </div>
