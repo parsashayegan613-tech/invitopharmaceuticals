@@ -7,7 +7,7 @@ interface PageHeroProps {
   subtitle?: string;
 }
 
-const PageHero = ({ title, subtitle = "invitvo" }: PageHeroProps) => {
+const PageHero = ({ title, subtitle = "InVitvo" }: PageHeroProps) => {
   return (
     <section className="relative min-h-[300px] md:min-h-[350px] flex items-center justify-center overflow-hidden">
       {/* Background Image with subtle animation */}
