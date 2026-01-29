@@ -36,7 +36,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -53,7 +53,7 @@ const Header = () => {
 
         {/* Mobile Menu Button */}
         <motion.button
-          className="md:hidden text-nav"
+          className="lg:hidden text-nav"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
           whileTap={{ scale: 0.95 }}
@@ -66,7 +66,7 @@ const Header = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.nav 
-            className="md:hidden bg-background border-t border-border mt-4 py-4 overflow-hidden"
+            className="lg:hidden bg-background border-t border-border mt-4 py-4 overflow-hidden"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

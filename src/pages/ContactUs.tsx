@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, ChevronDown, ChevronUp } from "lucide-react";
 
 const ContactUs = () => {
   const { toast } = useToast();
@@ -20,6 +20,7 @@ const ContactUs = () => {
     email: "",
     message: "",
   });
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,6 +41,30 @@ const ContactUs = () => {
     { icon: MapPin, label: "Address", value: "9407-20 Ave, NW, Edmonton, AB, Canada, T6N 1E5" },
     { icon: Phone, label: "Phone", value: "780.709.5678" },
     { icon: Mail, label: "Email", value: "info@invitvo.com" },
+    { icon: Clock, label: "Business Hours", value: "Monday - Friday: 9:00 AM - 5:00 PM MST" },
+  ];
+
+  const faqs = [
+    {
+      question: "How can I place an order for Terrein?",
+      answer: "You can place an order through our Order page. Select your desired quantity and fill out the order request form. Our team will contact you to process your order and discuss payment and shipping details."
+    },
+    {
+      question: "What is the purity level of your Terrein?",
+      answer: "Our Terrein is purified to >95% purity, verified by UHPLC analysis. The structure is confirmed using Tandem Mass spectroscopy and NMR."
+    },
+    {
+      question: "Do you ship internationally?",
+      answer: "Yes, we ship to research institutions worldwide. Shipping costs and delivery times vary by location. Please contact us for specific shipping inquiries."
+    },
+    {
+      question: "Can I request a custom quantity?",
+      answer: "Yes, we can accommodate custom quantity requests for research purposes. Please contact us directly to discuss your specific needs."
+    },
+    {
+      question: "How can I invest in InVitvo Pharmaceuticals?",
+      answer: "We welcome investor inquiries. Please contact our research team through this form or email us directly at info@invitvo.com for more information about investment opportunities."
+    },
   ];
 
   return (
@@ -49,6 +74,7 @@ const ContactUs = () => {
       <main className="flex-grow">
         <PageHero title="Contact us" />
         
+        {/* Contact Info & Form */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-5xl">
             <div className="grid md:grid-cols-2 gap-12">
@@ -152,6 +178,75 @@ const ContactUs = () => {
                   </motion.div>
                 </form>
               </FadeInOnScroll>
+            </div>
+          </div>
+        </section>
+
+        {/* Map */}
+        <section className="bg-section-alt">
+          <div className="container mx-auto px-4 max-w-5xl py-16">
+            <FadeInOnScroll>
+              <h3 className="text-2xl font-light text-foreground mb-8 text-center">Our Location</h3>
+            </FadeInOnScroll>
+            <FadeInOnScroll delay={0.2}>
+              <div className="rounded-lg overflow-hidden shadow-lg">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2374.5!2d-113.5!3d53.45!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTPCsDI3JzAwLjAiTiAxMTPCsDMwJzAwLjAiVw!5e0!3m2!1sen!2sca!4v1234567890"
+                  width="100%"
+                  height="400"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="InVitvo Pharmaceuticals Location"
+                  className="w-full"
+                />
+              </div>
+              <p className="text-center text-muted-foreground mt-4">
+                9407-20 Ave, NW, Edmonton, AB, Canada, T6N 1E5
+              </p>
+            </FadeInOnScroll>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4 max-w-3xl">
+            <FadeInOnScroll>
+              <h3 className="text-2xl font-light text-foreground mb-8 text-center">Frequently Asked Questions</h3>
+            </FadeInOnScroll>
+            <div className="space-y-4">
+              {faqs.map((faq, index) => (
+                <FadeInOnScroll key={index} delay={index * 0.1}>
+                  <motion.div
+                    className="bg-card border border-border rounded-lg overflow-hidden"
+                    whileHover={{ scale: 1.01 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <button
+                      onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                      className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-muted/50 transition-colors"
+                    >
+                      <span className="font-medium text-foreground">{faq.question}</span>
+                      {openFaq === index ? (
+                        <ChevronUp className="w-5 h-5 text-primary" />
+                      ) : (
+                        <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                      )}
+                    </button>
+                    {openFaq === index && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="px-6 pb-4"
+                      >
+                        <p className="text-muted-foreground">{faq.answer}</p>
+                      </motion.div>
+                    )}
+                  </motion.div>
+                </FadeInOnScroll>
+              ))}
             </div>
           </div>
         </section>
