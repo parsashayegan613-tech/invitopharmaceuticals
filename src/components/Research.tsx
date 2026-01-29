@@ -44,7 +44,7 @@ const Research = () => {
 
           {/* Research Images - Side by Side */}
           <FadeInOnScroll delay={0.5}>
-            <div className="grid grid-cols-3 gap-4 mb-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
               {images.map((image, index) => (
                 <motion.div
                   key={index}
@@ -63,7 +63,7 @@ const Research = () => {
           </FadeInOnScroll>
 
           <FadeInOnScroll delay={0.6}>
-            <div className="flex justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
