@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import pageHeroBg from "@/assets/page-hero-bg.jpg";
 
 interface PageHeroProps {
@@ -7,22 +8,37 @@ interface PageHeroProps {
 
 const PageHero = ({ title, subtitle = "invitvo" }: PageHeroProps) => {
   return (
-    <section className="relative min-h-[300px] md:min-h-[350px] flex items-center justify-center">
-      {/* Background Image */}
-      <div 
+    <section className="relative min-h-[300px] md:min-h-[350px] flex items-center justify-center overflow-hidden">
+      {/* Background Image with subtle animation */}
+      <motion.div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${pageHeroBg})` }}
+        initial={{ scale: 1.05 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 1.2, ease: "easeOut" }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-foreground/60" />
-      </div>
+        <div className="absolute inset-0 bg-foreground/50" />
+      </motion.div>
 
       {/* Content */}
       <div className="relative text-center">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-4">
+        <motion.h1 
+          className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
           {title}
-        </h1>
-        <p className="text-lg text-white/70">{subtitle}</p>
+        </motion.h1>
+        <motion.p 
+          className="text-lg text-white/70"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          {subtitle}
+        </motion.p>
       </div>
     </section>
   );
