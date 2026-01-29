@@ -1,0 +1,59 @@
+import TopBar from "@/components/TopBar";
+import Header from "@/components/Header";
+import PageHero from "@/components/PageHero";
+import Footer from "@/components/Footer";
+import drAnoosh from "@/assets/dr-anoosh.jpg";
+import heidi from "@/assets/heidi.jpg";
+
+const OurTeam = () => {
+  const teamMembers = [
+    {
+      name: "Anooshirvan Shayeganpour PhD",
+      role: "President and Founder",
+      image: drAnoosh,
+    },
+    {
+      name: "Heidi Rashidi Pharm D",
+      role: "Cofounder",
+      image: heidi,
+    },
+  ];
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      <TopBar />
+      <Header />
+      <main className="flex-grow">
+        <PageHero title="Our team" />
+        
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4 max-w-4xl">
+            {teamMembers.map((member, index) => (
+              <div key={index}>
+                <div className="flex flex-col md:flex-row items-start gap-8 py-8">
+                  <img 
+                    src={member.image} 
+                    alt={member.name}
+                    className="w-full md:w-56 h-auto object-cover"
+                  />
+                  <div className="flex flex-col justify-center">
+                    <h3 className="text-xl font-medium text-foreground mb-2">
+                      {member.name}
+                    </h3>
+                    <p className="text-primary">{member.role}</p>
+                  </div>
+                </div>
+                {index < teamMembers.length - 1 && (
+                  <hr className="border-border" />
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default OurTeam;
