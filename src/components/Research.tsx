@@ -3,8 +3,17 @@ import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import research1 from "@/assets/research-1.png";
+import research2 from "@/assets/research-2.png";
+import research3 from "@/assets/research-3.png";
 
 const Research = () => {
+  const images = [
+    { src: research1, alt: "Microscopy research image 1" },
+    { src: research2, alt: "Microscopy research image 2" },
+    { src: research3, alt: "Microscopy research image 3" },
+  ];
+
   return (
     <section className="py-20 bg-section-alt">
       <div className="container mx-auto px-4">
@@ -12,20 +21,40 @@ const Research = () => {
           <h2 className="section-title mb-12">Research projects in pipeline</h2>
         </FadeInOnScroll>
         
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <FadeInOnScroll delay={0.2}>
-            <p className="text-muted-foreground leading-relaxed mb-8 text-center md:text-left">
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-center md:text-left">
               The latest research project is related to the synthesis of a new prodrug of Terrein dedicated to being used in In vivo scale for cancer treatment. Our team has designed a cancer cell targeted molecule with desirable PKPD properties. At the moment, this molecule is in preclinical scale and showed desirable properties.
             </p>
           </FadeInOnScroll>
 
           <FadeInOnScroll delay={0.3}>
-            <p className="text-muted-foreground leading-relaxed mb-8 text-center md:text-left">
+            <p className="text-lg text-muted-foreground leading-relaxed mb-10 text-center md:text-left">
               InVitvo Pharmaceuticals invites investors to visit our website and contact our research team for more information about this molecule.
             </p>
           </FadeInOnScroll>
 
+          {/* Research Images - Side by Side */}
           <FadeInOnScroll delay={0.4}>
+            <div className="grid grid-cols-3 gap-4 mb-10">
+              {images.map((image, index) => (
+                <motion.div
+                  key={index}
+                  whileHover={{ scale: 1.03 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                >
+                  <img 
+                    src={image.src} 
+                    alt={image.alt} 
+                    className="w-full h-auto object-contain"
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </FadeInOnScroll>
+
+          <FadeInOnScroll delay={0.5}>
             <div className="flex justify-center gap-4">
               <motion.div
                 whileHover={{ scale: 1.02 }}
