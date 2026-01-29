@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import pageHeroBg from "@/assets/page-hero-bg.jpg";
+import logo from "@/assets/logo.png";
 
 interface PageHeroProps {
   title: string;
@@ -21,8 +22,17 @@ const PageHero = ({ title, subtitle = "invitvo" }: PageHeroProps) => {
         <div className="absolute inset-0 bg-foreground/50" />
       </motion.div>
 
+      {/* Logo Watermark Background */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img 
+          src={logo} 
+          alt="" 
+          className="w-64 md:w-80 lg:w-96 h-auto opacity-[0.12]"
+        />
+      </div>
+
       {/* Content */}
-      <div className="relative text-center">
+      <div className="relative text-center z-10">
         <motion.h1 
           className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-4"
           initial={{ opacity: 0, y: 20 }}

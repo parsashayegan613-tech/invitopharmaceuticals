@@ -8,14 +8,13 @@ const Stats = () => {
   const stats = [
     { number: "2021", label: "Founded" },
     { number: ">95%", label: "Purity Level" },
-    { number: "100+", label: "Research Partners" },
     { number: "Canada", label: "Based In" },
   ];
 
   return (
     <section className="py-16 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-3 gap-8">
           {stats.map((stat, index) => (
             <FadeInOnScroll key={index} delay={index * 0.1}>
               <motion.div
