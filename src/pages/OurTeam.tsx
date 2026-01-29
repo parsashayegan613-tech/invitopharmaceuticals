@@ -1,7 +1,9 @@
+import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import PageHero from "@/components/PageHero";
 import Footer from "@/components/Footer";
+import FadeInOnScroll from "@/components/animations/FadeInOnScroll";
 import drAnoosh from "@/assets/dr-anoosh.jpg";
 import heidi from "@/assets/heidi.jpg";
 
@@ -29,24 +31,32 @@ const OurTeam = () => {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-4xl">
             {teamMembers.map((member, index) => (
-              <div key={index}>
-                <div className="flex flex-col md:flex-row items-start gap-8 py-8">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-full md:w-56 h-auto object-cover"
-                  />
-                  <div className="flex flex-col justify-center">
-                    <h3 className="text-xl font-medium text-foreground mb-2">
-                      {member.name}
-                    </h3>
-                    <p className="text-primary">{member.role}</p>
+              <FadeInOnScroll key={index} delay={index * 0.15}>
+                <div>
+                  <div className="flex flex-col md:flex-row items-start gap-8 py-8">
+                    <motion.div
+                      whileHover={{ scale: 1.02 }}
+                      transition={{ duration: 0.3 }}
+                      className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                    >
+                      <img 
+                        src={member.image} 
+                        alt={member.name}
+                        className="w-full md:w-56 h-auto object-cover"
+                      />
+                    </motion.div>
+                    <div className="flex flex-col justify-center">
+                      <h3 className="text-xl font-medium text-foreground mb-2">
+                        {member.name}
+                      </h3>
+                      <p className="text-primary">{member.role}</p>
+                    </div>
                   </div>
+                  {index < teamMembers.length - 1 && (
+                    <hr className="border-border" />
+                  )}
                 </div>
-                {index < teamMembers.length - 1 && (
-                  <hr className="border-border" />
-                )}
-              </div>
+              </FadeInOnScroll>
             ))}
           </div>
         </section>
