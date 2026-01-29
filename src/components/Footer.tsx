@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, Linkedin } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 const Footer = () => {
@@ -64,22 +64,6 @@ const Footer = () => {
                   <span>{item.value}</span>
                 </div>
               ))}
-            </div>
-            
-            {/* Social Links */}
-            <div className="mt-6">
-              <h5 className="text-sm font-medium mb-3">Follow Us</h5>
-              <div className="flex gap-3">
-                <motion.a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1 }}
-                  className="w-10 h-10 bg-background/10 rounded-full flex items-center justify-center hover:bg-primary transition-colors duration-300"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </motion.a>
-              </div>
             </div>
           </div>
         </div>
