@@ -66,23 +66,33 @@ const Header = () => {
       <AnimatePresence>
         {isMenuOpen && (
           <motion.nav 
-            className="lg:hidden bg-background border-t border-border mt-4 py-4 overflow-hidden"
+            className="lg:hidden bg-background border-t border-border mt-4 overflow-hidden relative"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
-            <div className="container mx-auto px-4 flex flex-col gap-4">
+            {/* Logo Watermark Background */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.08] pointer-events-none">
+              <img 
+                src={logo} 
+                alt="" 
+                className="w-48 h-auto"
+              />
+            </div>
+            
+            {/* Navigation Links */}
+            <div className="container mx-auto px-4 py-6 flex flex-col gap-5 relative z-10">
               {navLinks.map((link, index) => (
                 <motion.div
                   key={link.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.08 }}
                 >
                   <Link
                     to={link.href}
-                    className={isActive(link.href) ? "nav-link-active" : "nav-link"}
+                    className={`block text-lg ${isActive(link.href) ? "text-primary font-medium border-l-2 border-primary pl-3" : "text-nav hover:text-primary transition-colors pl-3"}`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}
