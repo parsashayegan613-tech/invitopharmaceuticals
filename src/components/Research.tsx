@@ -27,18 +27,18 @@ const Research = () => {
           </FadeInOnScroll>
 
           {/* Research Images */}
-          <StaggerContainer className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6" staggerDelay={0.15}>
+          <StaggerContainer className="flex flex-wrap justify-center gap-6" staggerDelay={0.15}>
             {images.map((image, index) => (
               <StaggerItem key={index}>
                 <motion.div
-                  whileHover={{ scale: 1.02, y: -3 }}
+                  whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 >
                   <img 
                     src={image.src} 
                     alt={image.alt} 
-                    className="w-full aspect-[4/3] object-cover"
+                    className="h-auto max-w-full"
                   />
                 </motion.div>
               </StaggerItem>
