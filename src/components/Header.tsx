@@ -27,12 +27,13 @@ const Header = () => {
   return (
     <header className="bg-background py-3 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Logo */}
+        {/* Text Logo */}
         <Link 
           to="/" 
-          className="flex items-center gap-3 group"
+          className="flex flex-col group"
         >
-          <img src={logo} alt="InVitvo Pharmaceuticals" className="h-12 md:h-14 w-auto" />
+          <span className="text-xl md:text-2xl font-bold text-primary tracking-wide">INVITVO</span>
+          <span className="text-[10px] md:text-xs text-muted-foreground tracking-widest">PHARMACEUTICALS LTD.</span>
         </Link>
 
         {/* Desktop Navigation */}
