@@ -97,10 +97,10 @@ const AboutUs = () => {
             </FadeInOnScroll>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {coreValues.map((value, index) => (
-                <FadeInOnScroll key={index} delay={index * 0.1}>
+                <FadeInOnScroll key={index} delay={index * 0.1} className="h-full">
                   <motion.div
                     whileHover={{ y: -5 }}
-                    className="bg-card border border-border rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300"
+                    className="bg-card border border-border rounded-lg p-6 text-center hover:shadow-lg transition-shadow duration-300 h-full"
                   >
                     <div className="inline-flex items-center justify-center w-14 h-14 bg-primary/10 rounded-full mb-4">
                       <value.icon className="w-7 h-7 text-primary" />
