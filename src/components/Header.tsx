@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import logo from "@/assets/logo.png";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -24,16 +25,14 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-background py-4 sticky top-0 z-50 shadow-sm">
+    <header className="bg-background py-3 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
         <Link 
           to="/" 
-          className="text-xl md:text-2xl font-light tracking-wide group"
+          className="flex items-center gap-3 group"
         >
-          <span className="text-primary font-normal transition-colors group-hover:text-primary/80">IN</span>
-          <span className="text-nav">VITVO</span>
-          <span className="text-nav font-semibold ml-1">PHARMACEUTICALS</span>
+          <img src={logo} alt="InVitvo Pharmaceuticals" className="h-12 md:h-14 w-auto" />
         </Link>
 
         {/* Desktop Navigation */}
