@@ -7,7 +7,7 @@ interface PageHeroProps {
   subtitle?: string;
 }
 
-const PageHero = ({ title, subtitle = "InVitvo" }: PageHeroProps) => {
+const PageHero = ({ title, subtitle = "InVitvo Pharmaceuticals" }: PageHeroProps) => {
   return (
     <section className="relative min-h-[300px] md:min-h-[350px] flex items-center justify-center overflow-hidden">
       {/* Background Image with subtle animation */}
@@ -34,7 +34,7 @@ const PageHero = ({ title, subtitle = "InVitvo" }: PageHeroProps) => {
       {/* Content */}
       <div className="relative text-center z-10">
         <motion.h1 
-          className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-4"
+          className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
