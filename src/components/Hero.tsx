@@ -20,7 +20,7 @@ const Hero = () => {
       <div className="relative container mx-auto px-4 py-16">
         <div className="max-w-xl">
           <motion.h1 
-            className="hero-title mb-6"
+            className="hero-title mb-6 font-bold"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
