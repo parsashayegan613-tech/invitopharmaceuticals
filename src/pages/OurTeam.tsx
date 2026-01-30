@@ -16,7 +16,7 @@ const OurTeam = () => {
     },
     {
       name: "Heidi Rashidi Pharm D",
-      role: "Cofounder",
+      role: "Co-Founder",
       image: heidi,
     },
   ];
