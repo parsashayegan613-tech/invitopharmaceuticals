@@ -62,7 +62,7 @@ const Products = () => {
                     InVitvo Pharmaceuticals uses advanced analytical instrumentation for identification of the isolated secondary metabolites from natural resources. At the moment, our team has scaled up and commercialized the production of a secondary metabolite called "Terrein" purified from <em>Aspergillus terreus</em> isolated from Canadian soil samples.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                    This molecule has shown strong anticancer and antibiotic properties. Terrein is produced in high yield in a specific designed media developed by InVitvo Pharmaceuticals scientists in the semi-industrial scale.
+                    This molecule has shown strong anticancer and antibiotic properties. Terrein is produced in high yield in a specifically designed medium developed by InVitvo Pharmaceuticals scientists at the semi-industrial scale.
                   </p>
                   <p className="text-lg text-muted-foreground leading-relaxed">
                     The structure of the purified Terrein is confirmed using Tandem Mass spectroscopy and NMR. The high yield of Terrein production in the media is measured by UHPLC and calculated according to the calibration curve of the standard Terrein.

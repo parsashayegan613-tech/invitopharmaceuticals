@@ -9,7 +9,7 @@ const Mission = () => {
         </FadeInOnScroll>
         <FadeInOnScroll delay={0.2}>
           <p className="text-lg md:text-xl text-muted-foreground font-light italic leading-relaxed">
-            Providing the best possible pharmaceutical products derived from microorganism isolated from Canadian environment.
+            Providing the best possible pharmaceutical products derived from microorganisms isolated from the Canadian environment.
           </p>
         </FadeInOnScroll>
       </div>
