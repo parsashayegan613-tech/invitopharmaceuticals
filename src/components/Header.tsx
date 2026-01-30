@@ -32,8 +32,8 @@ const Header = () => {
           to="/" 
           className="flex flex-col group"
         >
-          <span className="text-xl md:text-2xl font-bold text-primary tracking-wide">INVITVO</span>
-          <span className="text-[10px] md:text-xs text-muted-foreground tracking-widest">PHARMACEUTICALS LTD.</span>
+          <span className="text-2xl md:text-3xl font-bold text-primary tracking-wide">INVITVO</span>
+          <span className="text-xs md:text-sm text-muted-foreground tracking-widest">PHARMACEUTICALS LTD.</span>
         </Link>
 
         {/* Desktop Navigation */}
