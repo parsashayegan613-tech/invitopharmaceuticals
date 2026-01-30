@@ -13,11 +13,13 @@ const OurTeam = () => {
       name: "Anooshirvan Shayeganpour PhD",
       role: "President and Founder",
       image: drAnoosh,
+      description: "Dr. Anooshirvan Shayeganpour brings over 20 years of experience in pharmaceutical sciences and biotechnology. With a PhD in pharmaceutical sciences, he has led numerous research initiatives in drug discovery and natural product development. His expertise in analytical chemistry and pharmacokinetics has been instrumental in establishing InVitvo Pharmaceuticals as a leader in microbial secondary metabolite research.",
     },
     {
       name: "Heidi Rashidi Pharm D",
       role: "Co-Founder",
       image: heidi,
+      description: "Dr. Heidi Rashidi holds a Doctor of Pharmacy degree and brings extensive experience in clinical pharmacy and pharmaceutical research. Her background in drug formulation and quality assurance has been vital to developing InVitvo's high-purity products. She oversees the company's quality control processes and regulatory compliance.",
     },
   ];
 
@@ -45,11 +47,14 @@ const OurTeam = () => {
                         className="w-full md:w-56 h-auto object-cover"
                       />
                     </motion.div>
-                    <div className="flex flex-col justify-center">
+                    <div className="flex flex-col justify-center flex-1">
                       <h3 className="text-xl font-medium text-foreground mb-2">
                         {member.name}
                       </h3>
-                      <p className="text-primary">{member.role}</p>
+                      <p className="text-primary mb-4">{member.role}</p>
+                      <p className="text-muted-foreground leading-relaxed">
+                        {member.description}
+                      </p>
                     </div>
                   </div>
                   {index < teamMembers.length - 1 && (
