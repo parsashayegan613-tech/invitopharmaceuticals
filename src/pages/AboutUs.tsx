@@ -34,8 +34,8 @@ const AboutUs = () => {
     { year: "2021", event: "InVitvo Pharmaceuticals founded in Edmonton, Alberta" },
     { year: "2022", event: "Successful isolation of Terrein from Canadian soil samples" },
     { year: "2023", event: "Scaled up Terrein production to semi-industrial level" },
-    { year: "2024", event: "Commercialized Terrein for research purposes" },
-    { year: "2025", event: "Development of Terrein prodrug for cancer treatment" },
+    { year: "2024", event: "Terrein commercially available for research institutions" },
+    { year: "2025", event: "Ongoing development of novel Terrein derivatives" },
   ];
 
   return (

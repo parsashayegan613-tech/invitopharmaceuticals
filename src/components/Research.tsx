@@ -15,22 +15,30 @@ const Research = () => {
   ];
 
   return (
-    <section className="py-20 bg-section-alt">
+    <section className="py-20 bg-background">
       <div className="container mx-auto px-4">
         <FadeInOnScroll>
-          <h2 className="section-title mb-12">Research projects in pipeline</h2>
+          <h2 className="section-title mb-12">Research Pipeline</h2>
         </FadeInOnScroll>
         
         <div className="max-w-5xl mx-auto">
           <FadeInOnScroll delay={0.2}>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-8 text-center md:text-left">
-              The latest research project is related to the synthesis of a new prodrug of Terrein dedicated to being used in In vivo scale for cancer treatment. Our team has designed a cancer cell targeted molecule with desirable PKPD properties. At the moment, this molecule is in preclinical scale and showed desirable properties.
+            <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-center md:text-left">
+              Our current research focuses on the synthesis and characterization of novel Terrein prodrugs. Preclinical studies have demonstrated promising pharmacokinetic and pharmacodynamic (PKPD) properties. Biological activity has been reported in peer-reviewed literature, including potential applications in cancer research models.
             </p>
           </FadeInOnScroll>
 
           <FadeInOnScroll delay={0.3}>
+            <div className="bg-muted/50 border border-border rounded-lg p-4 mb-8">
+              <p className="text-sm text-muted-foreground italic">
+                <strong>Note:</strong> Research compounds are provided for laboratory investigation only. Reported biological activities are based on preclinical studies and peer-reviewed literature. Products are not intended for therapeutic use.
+              </p>
+            </div>
+          </FadeInOnScroll>
+
+          <FadeInOnScroll delay={0.4}>
             <p className="text-lg text-muted-foreground leading-relaxed mb-10 text-center md:text-left">
-              InVitvo Pharmaceuticals invites investors to visit our website and contact our research team for more information about this molecule.
+              InVitvo Pharmaceuticals welcomes collaboration inquiries from academic institutions and industry partners interested in natural product research.
             </p>
           </FadeInOnScroll>
 
