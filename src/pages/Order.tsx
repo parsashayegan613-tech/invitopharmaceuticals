@@ -5,11 +5,20 @@ import Header from "@/components/Header";
 import PageHero from "@/components/PageHero";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/animations/FadeInOnScroll";
+import RuoDisclaimer from "@/components/RuoDisclaimer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Check } from "lucide-react";
+import { Check, Clock, Mail, FileCheck, CreditCard, Building2, Banknote } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Order = () => {
   const { toast } = useToast();
@@ -17,13 +26,44 @@ const Order = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    organization: "",
-    message: "",
+    phone: "",
+    institution: "",
+    department: "",
+    piName: "",
+    streetAddress: "",
+    city: "",
+    province: "",
+    postalCode: "",
+    country: "Canada",
+    intendedUse: "",
+    customQuantity: "",
+    paymentMethod: "",
+    poNumber: "",
+    additionalNotes: "",
   });
+  const [acceptRuo, setAcceptRuo] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const products = [
-    { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450" },
-    { id: "terrein-10mg", name: "Terrein >95%", amount: "10 mg", price: "C$800" },
+    { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
+    { id: "terrein-10mg", name: "Terrein >95%", amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
+    { id: "terrein-custom", name: "Terrein >95%", amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
+  ];
+
+  const intendedUseOptions = [
+    "Academic research",
+    "Industrial R&D",
+    "Analytical method development",
+    "Reference standard",
+    "Compound screening",
+    "Other (specify in notes)",
+  ];
+
+  const paymentMethods = [
+    { value: "invoice", label: "Invoice (Net 30)", icon: FileCheck },
+    { value: "po", label: "Institutional Purchase Order", icon: Building2 },
+    { value: "wire", label: "Wire Transfer", icon: Banknote },
+    { value: "credit", label: "Credit Card", icon: CreditCard },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,146 +71,421 @@ const Order = () => {
     if (!selectedProduct) {
       toast({
         title: "Please select a product",
-        description: "Choose a product from the table before submitting your order.",
+        description: "Choose a product from the table before submitting your request.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (!acceptRuo || !acceptTerms) {
+      toast({
+        title: "Please accept the required terms",
+        description: "You must acknowledge the RUO disclaimer and accept the Terms of Service.",
         variant: "destructive",
       });
       return;
     }
     toast({
-      title: "Order request submitted",
-      description: "Thank you for your interest. Our team will contact you shortly to process your order.",
+      title: "Request for Quotation Submitted",
+      description: "Thank you for your inquiry. Our team will respond within 1-2 business days.",
     });
-    setFormData({ name: "", email: "", organization: "", message: "" });
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      institution: "",
+      department: "",
+      piName: "",
+      streetAddress: "",
+      city: "",
+      province: "",
+      postalCode: "",
+      country: "Canada",
+      intendedUse: "",
+      customQuantity: "",
+      paymentMethod: "",
+      poNumber: "",
+      additionalNotes: "",
+    });
     setSelectedProduct(null);
+    setAcceptRuo(false);
+    setAcceptTerms(false);
   };
+
+  const whatHappensNext = [
+    { icon: Mail, title: "RFQ Review", description: "Our team reviews your request within 1-2 business days" },
+    { icon: FileCheck, title: "Formal Quote", description: "You'll receive a detailed quotation with pricing and lead times" },
+    { icon: Clock, title: "Order Confirmation", description: "Confirm your order via email and submit payment/PO" },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
       <TopBar />
       <Header />
       <main className="flex-grow">
-        <PageHero title="Order" />
+        <PageHero title="Request a Quote" />
         
+        {/* RUO Disclaimer */}
+        <section className="py-6 bg-muted/30">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <RuoDisclaimer />
+          </div>
+        </section>
+
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-4xl">
             <FadeInOnScroll>
-              <h3 className="text-2xl font-light text-foreground mb-8 text-center">
-                Available Products
+              <h3 className="text-2xl font-light text-foreground mb-2 text-center">
+                Request for Quotation (RFQ)
               </h3>
+              <p className="text-muted-foreground text-center mb-8">
+                Complete the form below to receive a formal quotation for your research needs
+              </p>
             </FadeInOnScroll>
 
-            {/* Product Table */}
-            <FadeInOnScroll delay={0.2}>
-              <div className="overflow-hidden rounded-lg border border-border mb-12">
-                <table className="w-full">
-                  <thead className="bg-muted">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-foreground">Product</th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-foreground">Amount</th>
-                      <th className="px-6 py-4 text-left text-sm font-medium text-foreground">Price</th>
-                      <th className="px-6 py-4 text-center text-sm font-medium text-foreground">Select</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {products.map((product) => (
-                      <motion.tr
-                        key={product.id}
-                        className={`cursor-pointer transition-colors duration-200 ${
-                          selectedProduct === product.id 
-                            ? "bg-primary/10" 
-                            : "hover:bg-muted/50"
-                        }`}
-                        onClick={() => setSelectedProduct(product.id)}
-                        whileHover={{ scale: 1.005 }}
-                        transition={{ duration: 0.2 }}
+            <form onSubmit={handleSubmit}>
+              {/* Product Selection */}
+              <FadeInOnScroll delay={0.1}>
+                <div className="mb-10">
+                  <h4 className="text-lg font-medium text-foreground mb-4">1. Product Selection</h4>
+                  <div className="overflow-hidden rounded-lg border border-border">
+                    <table className="w-full">
+                      <thead className="bg-muted">
+                        <tr>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Catalog #</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Product</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Amount</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Price</th>
+                          <th className="px-4 py-3 text-center text-sm font-medium text-foreground">Select</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border">
+                        {products.map((product) => (
+                          <motion.tr
+                            key={product.id}
+                            className={`cursor-pointer transition-colors duration-200 ${
+                              selectedProduct === product.id 
+                                ? "bg-primary/10" 
+                                : "hover:bg-muted/50"
+                            }`}
+                            onClick={() => setSelectedProduct(product.id)}
+                            whileHover={{ scale: 1.002 }}
+                            transition={{ duration: 0.2 }}
+                          >
+                            <td className="px-4 py-3 text-sm text-muted-foreground font-mono">{product.catalog}</td>
+                            <td className="px-4 py-3 text-sm text-muted-foreground">{product.name}</td>
+                            <td className="px-4 py-3 text-sm text-muted-foreground">{product.amount}</td>
+                            <td className="px-4 py-3 text-sm text-foreground font-medium">{product.price}</td>
+                            <td className="px-4 py-3 text-center">
+                              <div className={`w-5 h-5 mx-auto rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${
+                                selectedProduct === product.id 
+                                  ? "border-primary bg-primary" 
+                                  : "border-muted-foreground"
+                              }`}>
+                                {selectedProduct === product.id && (
+                                  <Check className="w-3 h-3 text-primary-foreground" />
+                                )}
+                              </div>
+                            </td>
+                          </motion.tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  
+                  {selectedProduct === "terrein-custom" && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium mb-2">
+                        Specify Custom Quantity
+                      </label>
+                      <Input
+                        value={formData.customQuantity}
+                        onChange={(e) => setFormData({ ...formData, customQuantity: e.target.value })}
+                        placeholder="e.g., 25 mg, 50 mg, 100 mg"
+                        className="max-w-xs"
+                      />
+                    </div>
+                  )}
+                </div>
+              </FadeInOnScroll>
+
+              {/* Contact Information */}
+              <FadeInOnScroll delay={0.2}>
+                <div className="mb-10">
+                  <h4 className="text-lg font-medium text-foreground mb-4">2. Contact Information</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Full Name <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Email <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Phone</label>
+                      <Input
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Institution / Organization <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.institution}
+                        onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Department</label>
+                      <Input
+                        value={formData.department}
+                        onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Principal Investigator (PI) Name</label>
+                      <Input
+                        value={formData.piName}
+                        onChange={(e) => setFormData({ ...formData, piName: e.target.value })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </FadeInOnScroll>
+
+              {/* Shipping Address */}
+              <FadeInOnScroll delay={0.3}>
+                <div className="mb-10">
+                  <h4 className="text-lg font-medium text-foreground mb-4">3. Shipping Address</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium mb-2">
+                        Street Address <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.streetAddress}
+                        onChange={(e) => setFormData({ ...formData, streetAddress: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        City <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.city}
+                        onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Province / State <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.province}
+                        onChange={(e) => setFormData({ ...formData, province: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Postal / ZIP Code <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.postalCode}
+                        onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Country <span className="text-primary">*</span>
+                      </label>
+                      <Input
+                        value={formData.country}
+                        onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </FadeInOnScroll>
+
+              {/* Intended Use & Payment */}
+              <FadeInOnScroll delay={0.4}>
+                <div className="mb-10">
+                  <h4 className="text-lg font-medium text-foreground mb-4">4. Order Details</h4>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Intended Use <span className="text-primary">*</span>
+                      </label>
+                      <Select 
+                        value={formData.intendedUse} 
+                        onValueChange={(value) => setFormData({ ...formData, intendedUse: value })}
                       >
-                        <td className="px-6 py-4 text-muted-foreground">{product.name}</td>
-                        <td className="px-6 py-4 text-muted-foreground">{product.amount}</td>
-                        <td className="px-6 py-4 text-foreground font-medium">{product.price}</td>
-                        <td className="px-6 py-4 text-center">
-                          <div className={`w-5 h-5 mx-auto rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${
-                            selectedProduct === product.id 
-                              ? "border-primary bg-primary" 
-                              : "border-muted-foreground"
-                          }`}>
-                            {selectedProduct === product.id && (
-                              <Check className="w-3 h-3 text-primary-foreground" />
-                            )}
-                          </div>
-                        </td>
-                      </motion.tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </FadeInOnScroll>
-
-            {/* Order Form */}
-            <FadeInOnScroll delay={0.3}>
-              <h3 className="text-2xl font-light text-foreground mb-6 text-center">
-                Request Order
-              </h3>
-              <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Name <span className="text-primary">*</span>
-                  </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                    className="transition-all duration-300 focus:shadow-md"
-                  />
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select intended use" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {intendedUseOptions.map((option) => (
+                            <SelectItem key={option} value={option}>{option}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Preferred Payment Method
+                      </label>
+                      <Select 
+                        value={formData.paymentMethod} 
+                        onValueChange={(value) => setFormData({ ...formData, paymentMethod: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select payment method" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {paymentMethods.map((method) => (
+                            <SelectItem key={method.value} value={method.value}>{method.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    {formData.paymentMethod === "po" && (
+                      <div>
+                        <label className="block text-sm font-medium mb-2">PO Number (if available)</label>
+                        <Input
+                          value={formData.poNumber}
+                          onChange={(e) => setFormData({ ...formData, poNumber: e.target.value })}
+                          placeholder="Enter PO number"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="mt-4 p-4 bg-muted/50 rounded-lg">
+                    <p className="text-sm text-muted-foreground">
+                      <strong>Tax Note:</strong> Canadian orders are subject to GST/HST. International orders may be subject to import duties and taxes payable by the recipient.
+                    </p>
+                  </div>
                 </div>
+              </FadeInOnScroll>
 
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Email <span className="text-primary">*</span>
-                  </label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                    className="transition-all duration-300 focus:shadow-md"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Organization / Institution
-                  </label>
-                  <Input
-                    value={formData.organization}
-                    onChange={(e) => setFormData({ ...formData, organization: e.target.value })}
-                    className="transition-all duration-300 focus:shadow-md"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Additional Notes
-                  </label>
+              {/* Additional Notes */}
+              <FadeInOnScroll delay={0.5}>
+                <div className="mb-10">
+                  <label className="block text-sm font-medium mb-2">Additional Notes</label>
                   <Textarea
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    rows={4}
-                    className="transition-all duration-300 focus:shadow-md"
+                    value={formData.additionalNotes}
+                    onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
+                    rows={3}
+                    placeholder="Special requirements, shipping instructions, or other notes..."
                   />
                 </div>
+              </FadeInOnScroll>
 
+              {/* Terms Acceptance */}
+              <FadeInOnScroll delay={0.6}>
+                <div className="mb-8 space-y-4">
+                  <h4 className="text-lg font-medium text-foreground mb-4">5. Terms & Acknowledgements</h4>
+                  
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="ruo"
+                      checked={acceptRuo}
+                      onCheckedChange={(checked) => setAcceptRuo(checked as boolean)}
+                    />
+                    <label htmlFor="ruo" className="text-sm text-muted-foreground cursor-pointer">
+                      I acknowledge that all products are for <strong>Research Use Only (RUO)</strong>. Not for human or veterinary use. Not intended to diagnose, treat, cure, or prevent any disease. <span className="text-primary">*</span>
+                    </label>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id="terms"
+                      checked={acceptTerms}
+                      onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
+                    />
+                    <label htmlFor="terms" className="text-sm text-muted-foreground cursor-pointer">
+                      I agree to the <a href="/terms-of-service" target="_blank" className="text-primary hover:underline">Terms of Service</a> and <a href="/privacy-policy" target="_blank" className="text-primary hover:underline">Privacy Policy</a>. <span className="text-primary">*</span>
+                    </label>
+                  </div>
+                </div>
+              </FadeInOnScroll>
+
+              {/* Submit Button */}
+              <FadeInOnScroll delay={0.7}>
                 <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                 >
                   <Button 
                     type="submit" 
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                    size="lg"
                   >
-                    Submit Order Request
+                    Submit Request for Quotation
                   </Button>
                 </motion.div>
-              </form>
+              </FadeInOnScroll>
+            </form>
+          </div>
+        </section>
+
+        {/* What Happens Next */}
+        <section className="py-16 bg-section-alt">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <FadeInOnScroll>
+              <h3 className="text-2xl font-light text-foreground mb-2 text-center">
+                What Happens Next?
+              </h3>
+              <p className="text-muted-foreground text-center mb-10">
+                Our typical response time is 1-2 business days
+              </p>
+            </FadeInOnScroll>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              {whatHappensNext.map((step, index) => (
+                <FadeInOnScroll key={index} delay={index * 0.1}>
+                  <motion.div
+                    whileHover={{ y: -3 }}
+                    className="bg-card border border-border rounded-lg p-6 text-center"
+                  >
+                    <div className="inline-flex items-center justify-center w-12 h-12 bg-primary text-primary-foreground rounded-full mb-4">
+                      <step.icon className="w-6 h-6" />
+                    </div>
+                    <h4 className="text-lg font-medium text-foreground mb-2">{step.title}</h4>
+                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                  </motion.div>
+                </FadeInOnScroll>
+              ))}
+            </div>
+
+            <FadeInOnScroll delay={0.4}>
+              <div className="mt-10 text-center">
+                <p className="text-muted-foreground">
+                  Questions? Contact us at <a href="mailto:info@invitvo.com" className="text-primary hover:underline">info@invitvo.com</a> or call <strong>780.709.5678</strong>
+                </p>
+              </div>
             </FadeInOnScroll>
           </div>
         </section>

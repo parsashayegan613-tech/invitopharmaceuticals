@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-scientist.jpg";
 
@@ -29,27 +30,42 @@ const Hero = () => {
             Pharmaceuticals
           </motion.h1>
           <motion.p 
-            className="hero-subtitle"
+            className="hero-subtitle mb-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            A breakthrough innovation in pharmaceutical biotechnology and fermentation
+            Microbial Metabolite Discovery & Purification
+          </motion.p>
+          <motion.p 
+            className="text-base md:text-lg text-white/70"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            High-purity research compounds from Canadian soil microorganisms. Advanced analytical characterization with full documentation.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="mt-8"
+            className="mt-8 flex flex-wrap gap-4"
           >
-            <a 
-              href="/about-us" 
+            <Link 
+              to="/products" 
               className="inline-block bg-primary text-primary-foreground px-8 py-3 rounded font-medium 
                          hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25
                          hover:-translate-y-0.5"
             >
-              Learn More
-            </a>
+              View Products
+            </Link>
+            <Link 
+              to="/order" 
+              className="inline-block bg-white/10 text-white border border-white/30 px-8 py-3 rounded font-medium 
+                         hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5"
+            >
+              Request Quote
+            </Link>
           </motion.div>
         </div>
       </div>
