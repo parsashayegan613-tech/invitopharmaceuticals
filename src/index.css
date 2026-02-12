@@ -25,7 +25,7 @@
     --secondary-foreground: 210 11% 15%;
 
     --muted: 210 20% 96%;
-    --muted-foreground: 210 11% 45%;
+    --muted-foreground: 210 11% 35%;
 
     --accent: 187 71% 40%;
     --accent-foreground: 0 0% 100%;
@@ -116,7 +116,7 @@
   }
 
   .section-title {
-    @apply text-3xl md:text-4xl font-light text-muted-foreground text-center;
+    @apply text-3xl md:text-4xl font-light text-foreground text-center;
   }
 
   .hero-title {

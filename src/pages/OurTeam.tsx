@@ -10,13 +10,13 @@ import heidi from "@/assets/heidi.jpg";
 const OurTeam = () => {
   const teamMembers = [
     {
-      name: "Anooshirvan Shayeganpour PhD",
+      name: "Anooshirvan Shayeganpour, Ph.D.",
       role: "President and Founder",
       image: drAnoosh,
       description: "Dr. Anooshirvan Shayeganpour brings over 20 years of experience in pharmaceutical sciences and biotechnology. With a PhD in pharmaceutical sciences, he has led numerous research initiatives in drug discovery and natural product development. His expertise in analytical chemistry and pharmacokinetics has been instrumental in establishing InVitvo Pharmaceuticals as a leader in microbial secondary metabolite research.",
     },
     {
-      name: "Heidi Rashidi Pharm D",
+      name: "Heidi Rashidi, Pharm.D.",
       role: "Co-Founder",
       image: heidi,
       description: "Dr. Heidi Rashidi holds a Doctor of Pharmacy degree and brings extensive experience in clinical pharmacy and pharmaceutical research. Her background in drug formulation and quality assurance has been vital to developing InVitvo's high-purity products. She oversees the company's quality control processes and regulatory compliance.",
@@ -28,8 +28,8 @@ const OurTeam = () => {
       <TopBar />
       <Header />
       <main className="flex-grow">
-        <PageHero title="Our team" />
-        
+        <PageHero title="Our Team" />
+
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-4xl">
             {teamMembers.map((member, index) => (
@@ -41,8 +41,8 @@ const OurTeam = () => {
                       transition={{ duration: 0.3 }}
                       className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                     >
-                      <img 
-                        src={member.image} 
+                      <img
+                        src={member.image}
                         alt={member.name}
                         className="w-full md:w-56 h-auto object-cover"
                       />

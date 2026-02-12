@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { MapPin, Phone, Mail, AlertTriangle } from "lucide-react";
+import { MapPin, Phone, Mail, AlertTriangle, Linkedin } from "lucide-react";
 
 const Footer = () => {
   const quickLinks = [
@@ -13,9 +13,9 @@ const Footer = () => {
   ];
 
   const contactInfo = [
-    { icon: MapPin, value: "Edmonton, AB, Canada" },
-    { icon: Phone, value: "780.709.5678" },
-    { icon: Mail, value: "info@invitvo.com" },
+    { icon: MapPin, text: "Edmonton, AB, Canada" },
+    { icon: Phone, text: "780.709.5678" },
+    { icon: Mail, text: "info@invitvo.com" },
   ];
 
   return (
@@ -58,8 +58,8 @@ const Footer = () => {
                   whileHover={{ x: 3 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Link 
-                    to={link.href} 
+                  <Link
+                    to={link.href}
                     className="text-background/70 hover:text-primary transition-colors duration-300 text-sm"
                   >
                     {link.name}
@@ -74,11 +74,30 @@ const Footer = () => {
             <h4 className="text-lg font-medium mb-4">Contact</h4>
             <div className="space-y-3">
               {contactInfo.map((item, index) => (
-                <div key={index} className="flex items-center gap-3 text-sm text-background/70">
-                  <item.icon className="w-4 h-4 text-primary" />
-                  <span>{item.value}</span>
+                <div key={index} className="flex items-start gap-3">
+                  <item.icon className="w-5 h-5 mt-0.5 text-primary" />
+                  <span className="text-background/70 text-sm">{item.text}</span>
                 </div>
               ))}
+            </div>
+            {/* Social Links */}
+            <div className="flex items-center gap-3 mt-6">
+              <a
+                href="https://www.linkedin.com/company/invitvo-pharmaceuticals"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center w-9 h-9 bg-background/10 rounded-full hover:bg-primary/80 transition-colors duration-200"
+                aria-label="LinkedIn"
+              >
+                <Linkedin className="w-4 h-4" />
+              </a>
+              <a
+                href="mailto:info@invitvo.com"
+                className="inline-flex items-center justify-center w-9 h-9 bg-background/10 rounded-full hover:bg-primary/80 transition-colors duration-200"
+                aria-label="Email"
+              >
+                <Mail className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>

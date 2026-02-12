@@ -7,13 +7,15 @@ import { ArrowRight } from "lucide-react";
 const Stats = () => {
   const stats = [
     { number: "2021", label: "Founded" },
+    { number: ">95%", label: "Purity (UHPLC)" },
+    { number: "5–7 Days", label: "Delivery (Canada)" },
     { number: "Canada", label: "Based In" },
   ];
 
   return (
     <section className="py-16 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 gap-8 max-w-xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
           {stats.map((stat, index) => (
             <FadeInOnScroll key={index} delay={index * 0.1}>
               <motion.div

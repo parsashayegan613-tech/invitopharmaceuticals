@@ -72,8 +72,8 @@ const ContactUs = () => {
       <TopBar />
       <Header />
       <main className="flex-grow">
-        <PageHero title="Contact us" />
-        
+        <PageHero title="Contact Us" />
+
         {/* Contact Info & Form */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-5xl">
@@ -169,8 +169,8 @@ const ContactUs = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Button 
-                      type="submit" 
+                    <Button
+                      type="submit"
                       className="w-full bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
                     >
                       Submit
@@ -191,7 +191,7 @@ const ContactUs = () => {
             <FadeInOnScroll delay={0.2}>
               <div className="rounded-lg overflow-hidden shadow-lg">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2374.5!2d-113.5!3d53.45!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTPCsDI3JzAwLjAiTiAxMTPCsDMwJzAwLjAiVw!5e0!3m2!1sen!2sca!4v1234567890"
+                  src="https://maps.google.com/maps?q=9407+20+Ave+NW,+Edmonton,+AB+T6N+1E5,+Canada&t=&z=15&ie=UTF8&iwloc=&output=embed"
                   width="100%"
                   height="400"
                   style={{ border: 0 }}

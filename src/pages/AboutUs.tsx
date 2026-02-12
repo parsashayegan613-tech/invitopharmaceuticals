@@ -43,8 +43,8 @@ const AboutUs = () => {
       <TopBar />
       <Header />
       <main className="flex-grow">
-        <PageHero title="About us" />
-        
+        <PageHero title="About Us" />
+
         {/* Company Overview */}
         <section className="py-20 bg-background">
           <div className="container mx-auto px-4 max-w-4xl">
@@ -53,7 +53,7 @@ const AboutUs = () => {
             </FadeInOnScroll>
             <FadeInOnScroll delay={0.2}>
               <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8">
-                InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolating, purifying, and characterizing pharmacologically active secondary metabolites from natural resources, including microorganisms. InVitvo Pharmaceuticals was founded in 2021 by a group of experienced pharmaceutical scientists and soon became a home for research scientists in the fields of medicinal and analytical chemistry, pharmacology, and microbiology. InVitvo Pharmaceuticals has great potential to grow and become the leading company of its kind in Canada.
+                InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolating, purifying, and characterizing pharmacologically active secondary metabolites from natural resources, including microorganisms. InVitvo Pharmaceuticals was founded in 2021 by a group of experienced pharmaceutical scientists and soon became a home for research scientists in the fields of medicinal and analytical chemistry, pharmacology, and microbiology. InVitvo Pharmaceuticals is positioned to make meaningful contributions to natural product research in Canada.
               </p>
             </FadeInOnScroll>
           </div>
@@ -123,13 +123,13 @@ const AboutUs = () => {
             <div className="relative">
               {/* Timeline line */}
               <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-primary/30 transform md:-translate-x-1/2" />
-              
+
               {milestones.map((milestone, index) => (
                 <FadeInOnScroll key={index} delay={index * 0.1}>
                   <div className={`relative flex items-center mb-8 ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
                     {/* Dot */}
                     <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-primary rounded-full transform -translate-x-1/2 z-10" />
-                    
+
                     {/* Content */}
                     <div className={`ml-12 md:ml-0 md:w-1/2 ${index % 2 === 0 ? 'md:pr-12 md:text-right' : 'md:pl-12'}`}>
                       <motion.div

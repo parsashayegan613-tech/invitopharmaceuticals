@@ -11,7 +11,7 @@ const Mission = () => {
     },
     {
       icon: MapPin,
-      title: "Canada-Based, Edmonton",
+      title: "Based in Edmonton, Canada",
       description: "Local supplier with reliable North American shipping and responsive customer support"
     },
     {
