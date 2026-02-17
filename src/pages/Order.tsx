@@ -43,6 +43,7 @@ const Order = () => {
   });
   const [acceptRuo, setAcceptRuo] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const products = [
     { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
@@ -66,7 +67,7 @@ const Order = () => {
     { value: "credit", label: "Credit Card", icon: CreditCard },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedProduct) {
       toast({
@@ -84,31 +85,87 @@ const Order = () => {
       });
       return;
     }
-    toast({
-      title: "Request for Quotation Submitted",
-      description: "Thank you for your inquiry. Our team will respond within 1-2 business days.",
-    });
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      institution: "",
-      department: "",
-      piName: "",
-      streetAddress: "",
-      city: "",
-      province: "",
-      postalCode: "",
-      country: "Canada",
-      intendedUse: "",
-      customQuantity: "",
-      paymentMethod: "",
-      poNumber: "",
-      additionalNotes: "",
-    });
-    setSelectedProduct(null);
-    setAcceptRuo(false);
-    setAcceptTerms(false);
+
+    const product = products.find((p) => p.id === selectedProduct);
+    const paymentLabel = paymentMethods.find((m) => m.value === formData.paymentMethod)?.label || formData.paymentMethod || "Not specified";
+
+    const orderData = {
+      product_name: product?.name || "",
+      product_catalog: product?.catalog || "",
+      product_amount: product?.amount || "",
+      product_price: product?.price || "",
+      custom_quantity: formData.customQuantity || null,
+      customer_name: formData.name,
+      customer_email: formData.email,
+      customer_phone: formData.phone || null,
+      institution: formData.institution,
+      department: formData.department || null,
+      pi_name: formData.piName || null,
+      street_address: formData.streetAddress,
+      city: formData.city,
+      province: formData.province,
+      postal_code: formData.postalCode,
+      country: formData.country,
+      intended_use: formData.intendedUse,
+      payment_method: paymentLabel,
+      po_number: formData.poNumber || null,
+      additional_notes: formData.additionalNotes || null,
+    };
+
+    setIsSubmitting(true);
+
+    try {
+      // Send order via Supabase Edge Function (Resend)
+      const response = await fetch("https://xquntpgxrurxjbpebdhn.supabase.co/functions/v1/send-order-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxdW50cGd4cnVyeGpicGViZGhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMjc5MTYsImV4cCI6MjA4NjgwMzkxNn0.khCiYMw7_FM0xZTWBmfHOezIeUjbDqCBUFuUoBP_pJQ",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      const result = await response.json();
+      console.log("Edge function response:", JSON.stringify(result, null, 2));
+      if (!response.ok || result.error) throw new Error(result.error?.message || "Submission failed");
+
+      toast({
+        title: "Request for Quotation Submitted",
+        description: "Thank you for your inquiry. Our team will respond within 1-2 business days.",
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        institution: "",
+        department: "",
+        piName: "",
+        streetAddress: "",
+        city: "",
+        province: "",
+        postalCode: "",
+        country: "Canada",
+        intendedUse: "",
+        customQuantity: "",
+        paymentMethod: "",
+        poNumber: "",
+        additionalNotes: "",
+      });
+      setSelectedProduct(null);
+      setAcceptRuo(false);
+      setAcceptTerms(false);
+    } catch (error) {
+      console.error("Order submission error:", error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error sending your request. Please try again or email us directly at info@invitvo.com.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const whatHappensNext = [
@@ -123,7 +180,7 @@ const Order = () => {
       <Header />
       <main className="flex-grow">
         <PageHero title="Request a Quote" />
-        
+
         {/* RUO Disclaimer */}
         <section className="py-6 bg-muted/30">
           <div className="container mx-auto px-4 max-w-4xl">
@@ -162,11 +219,10 @@ const Order = () => {
                         {products.map((product) => (
                           <motion.tr
                             key={product.id}
-                            className={`cursor-pointer transition-colors duration-200 ${
-                              selectedProduct === product.id 
-                                ? "bg-primary/10" 
-                                : "hover:bg-muted/50"
-                            }`}
+                            className={`cursor-pointer transition-colors duration-200 ${selectedProduct === product.id
+                              ? "bg-primary/10"
+                              : "hover:bg-muted/50"
+                              }`}
                             onClick={() => setSelectedProduct(product.id)}
                             whileHover={{ scale: 1.002 }}
                             transition={{ duration: 0.2 }}
@@ -176,11 +232,10 @@ const Order = () => {
                             <td className="px-4 py-3 text-sm text-muted-foreground">{product.amount}</td>
                             <td className="px-4 py-3 text-sm text-foreground font-medium">{product.price}</td>
                             <td className="px-4 py-3 text-center">
-                              <div className={`w-5 h-5 mx-auto rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${
-                                selectedProduct === product.id 
-                                  ? "border-primary bg-primary" 
-                                  : "border-muted-foreground"
-                              }`}>
+                              <div className={`w-5 h-5 mx-auto rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${selectedProduct === product.id
+                                ? "border-primary bg-primary"
+                                : "border-muted-foreground"
+                                }`}>
                                 {selectedProduct === product.id && (
                                   <Check className="w-3 h-3 text-primary-foreground" />
                                 )}
@@ -191,7 +246,7 @@ const Order = () => {
                       </tbody>
                     </table>
                   </div>
-                  
+
                   {selectedProduct === "terrein-custom" && (
                     <div className="mt-4">
                       <label className="block text-sm font-medium mb-2">
@@ -338,8 +393,8 @@ const Order = () => {
                       <label className="block text-sm font-medium mb-2">
                         Intended Use <span className="text-primary">*</span>
                       </label>
-                      <Select 
-                        value={formData.intendedUse} 
+                      <Select
+                        value={formData.intendedUse}
                         onValueChange={(value) => setFormData({ ...formData, intendedUse: value })}
                       >
                         <SelectTrigger>
@@ -356,8 +411,8 @@ const Order = () => {
                       <label className="block text-sm font-medium mb-2">
                         Preferred Payment Method
                       </label>
-                      <Select 
-                        value={formData.paymentMethod} 
+                      <Select
+                        value={formData.paymentMethod}
                         onValueChange={(value) => setFormData({ ...formData, paymentMethod: value })}
                       >
                         <SelectTrigger>
@@ -381,7 +436,7 @@ const Order = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="mt-4 p-4 bg-muted/50 rounded-lg">
                     <p className="text-sm text-muted-foreground">
                       <strong>Tax Note:</strong> Canadian orders are subject to GST/HST. International orders may be subject to import duties and taxes payable by the recipient.
@@ -407,7 +462,7 @@ const Order = () => {
               <FadeInOnScroll delay={0.6}>
                 <div className="mb-8 space-y-4">
                   <h4 className="text-lg font-medium text-foreground mb-4">5. Terms & Acknowledgements</h4>
-                  
+
                   <div className="flex items-start gap-3">
                     <Checkbox
                       id="ruo"
@@ -438,12 +493,13 @@ const Order = () => {
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
                 >
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
                     size="lg"
+                    disabled={isSubmitting}
                   >
-                    Submit Request for Quotation
+                    {isSubmitting ? "Submitting..." : "Submit Request for Quotation"}
                   </Button>
                 </motion.div>
               </FadeInOnScroll>
@@ -462,7 +518,7 @@ const Order = () => {
                 Our typical response time is 1-2 business days
               </p>
             </FadeInOnScroll>
-            
+
             <div className="grid md:grid-cols-3 gap-6">
               {whatHappensNext.map((step, index) => (
                 <FadeInOnScroll key={index} delay={index * 0.1}>
