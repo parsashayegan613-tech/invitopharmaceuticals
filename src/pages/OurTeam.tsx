@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Linkedin } from "lucide-react";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import PageHero from "@/components/PageHero";
@@ -11,9 +12,10 @@ const OurTeam = () => {
   const teamMembers = [
     {
       name: "Anooshirvan Shayeganpour, Ph.D.",
-      role: "President and Founder",
+      role: "Founder & CEO",
       image: drAnoosh,
-      description: "Dr. Anooshirvan Shayeganpour brings over 20 years of experience in pharmaceutical sciences and biotechnology. With a PhD in pharmaceutical sciences, he has led numerous research initiatives in drug discovery and natural product development. His expertise in analytical chemistry and pharmacokinetics has been instrumental in establishing InVitvo Pharmaceuticals as a leader in microbial secondary metabolite research.",
+      linkedin: "https://www.linkedin.com/in/anoosh-shayeganpour-109679201/",
+      description: "Dr. Anooshirvan Shayeganpour is the visionary behind InVitvo Pharmaceuticals, bringing over two decades of expertise in pharmaceutical sciences and drug development. He holds a Ph.D. in Pharmaceutical Sciences from the University of Alberta and previously served as an Associate Professor at Saba University School of Medicine. A prolific researcher with over 24 peer-reviewed publications and 1,300+ citations, Dr. Shayeganpour specializes in pharmacokinetics, drug metabolism, and the complex interplay between the gut microbiome and CYP450 enzymes. His expertise in advanced analytical techniques including LC-MS has been instrumental in establishing InVitvo as a leader in high-purity microbial secondary metabolite research.",
     },
     {
       name: "Heidi Rashidi, Pharm.D.",
@@ -48,9 +50,22 @@ const OurTeam = () => {
                       />
                     </motion.div>
                     <div className="flex flex-col justify-center flex-1">
-                      <h3 className="text-xl font-medium text-foreground mb-2">
-                        {member.name}
-                      </h3>
+                      <div className="flex items-center gap-3 mb-2">
+                        <h3 className="text-xl font-medium text-foreground">
+                          {member.name}
+                        </h3>
+                        {member.linkedin && (
+                          <a
+                            href={member.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-muted-foreground hover:text-primary transition-colors"
+                            aria-label={`${member.name} on LinkedIn`}
+                          >
+                            <Linkedin className="w-5 h-5" />
+                          </a>
+                        )}
+                      </div>
                       <p className="text-primary mb-4">{member.role}</p>
                       <p className="text-muted-foreground leading-relaxed">
                         {member.description}

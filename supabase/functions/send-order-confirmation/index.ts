@@ -25,8 +25,8 @@ Deno.serve(async (req) => {
 
     const emailHtml = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: #e8eaf0; padding: 30px; text-align: center;">
-          <img src="https://invitopharmaceuticals.vercel.app/logo-email.png" alt="InVitvo Pharmaceuticals Ltd." style="max-width: 280px; height: auto;" />
+        <div style="text-align: center; padding: 20px 0 5px;">
+          <img src="https://invitopharmaceuticals.vercel.app/logo-email.png" alt="InVitvo Pharmaceuticals Ltd." style="max-width: 180px; height: auto;" />
         </div>
         
         <div style="padding: 30px; background: #ffffff;">
