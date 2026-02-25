@@ -42,6 +42,16 @@ const ContactUs = () => {
 
       if (error) throw error;
 
+      // Invoke the edge function to send an email notification
+      const { error: edgeError } = await supabase.functions.invoke('send-contact-email', {
+        body: formData,
+      });
+
+      if (edgeError) {
+        console.error("Error sending email notification:", edgeError);
+        // We still show success since the DB insert succeeded, but we log the email error
+      }
+
       toast({
         title: "Message sent",
         description: "Thank you for contacting us. We will get back to you soon.",
