@@ -159,6 +159,15 @@ const Order = () => {
       console.log("Edge function response:", edgeData);
       if (edgeError) throw new Error(edgeError.message || "Email submission failed");
 
+      // 3. Send confirmation email to the customer
+      const { error: confirmError } = await supabase.functions.invoke('send-order-confirmation', {
+        body: orderData,
+      });
+      if (confirmError) {
+        console.error("Customer confirmation email error:", confirmError);
+        // Don't throw — the order was already submitted successfully
+      }
+
       toast({
         title: "Request for Quotation Submitted",
         description: "Thank you for your inquiry. Our team will respond within 1-2 business days.",
