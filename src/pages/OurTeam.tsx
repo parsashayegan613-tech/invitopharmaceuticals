@@ -7,8 +7,10 @@ import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/animations/FadeInOnScroll";
 import drAnoosh from "@/assets/dr-anoosh.jpg";
 import heidi from "@/assets/heidi.jpg";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const OurTeam = () => {
+  usePageTitle("Our Team");
   const teamMembers = [
     {
       name: "Anooshirvan Shayeganpour, Ph.D.",

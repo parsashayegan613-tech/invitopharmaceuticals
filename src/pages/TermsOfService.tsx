@@ -4,15 +4,17 @@ import PageHero from "@/components/PageHero";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/animations/FadeInOnScroll";
 import RuoDisclaimer from "@/components/RuoDisclaimer";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const TermsOfService = () => {
+  usePageTitle("Terms of Service");
   return (
     <div className="min-h-screen flex flex-col">
       <TopBar />
       <Header />
       <main className="flex-grow">
         <PageHero title="Terms of Service" />
-        
+
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-4xl">
             <FadeInOnScroll>

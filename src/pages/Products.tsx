@@ -9,8 +9,10 @@ import RuoDisclaimer from "@/components/RuoDisclaimer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Beaker, Activity, Award, Download, Thermometer, Truck, BookOpen, FlaskConical } from "lucide-react";
 import terreinMolecule from "@/assets/terrein-molecule.png";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const Products = () => {
+  usePageTitle("Products — Terrein >95%");
   const features = [
     {
       icon: Shield,
@@ -74,7 +76,7 @@ const Products = () => {
       <Header />
       <main className="flex-grow">
         <PageHero title="Products" />
-        
+
         {/* RUO Disclaimer */}
         <section className="py-6 bg-muted/30">
           <div className="container mx-auto px-4 max-w-5xl">
@@ -102,9 +104,9 @@ const Products = () => {
                   whileHover={{ scale: 1.02 }}
                   className="bg-card border border-border rounded-lg p-8 text-center"
                 >
-                  <img 
-                    src={terreinMolecule} 
-                    alt="Terrein molecular structure" 
+                  <img
+                    src={terreinMolecule}
+                    alt="Terrein molecular structure"
                     className="w-full max-w-xs mx-auto mb-4"
                   />
                   <p className="text-sm text-muted-foreground">Terrein Molecular Structure (C₈H₁₀O₃)</p>

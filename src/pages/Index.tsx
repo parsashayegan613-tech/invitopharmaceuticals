@@ -7,8 +7,10 @@ import Stats from "@/components/Stats";
 import Research from "@/components/Research";
 import LatestUpdates from "@/components/LatestUpdates";
 import Footer from "@/components/Footer";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const Index = () => {
+  usePageTitle("Research Compounds & Microbial Metabolites");
   return (
     <div className="min-h-screen flex flex-col">
       <TopBar />

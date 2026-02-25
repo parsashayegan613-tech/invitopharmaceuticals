@@ -7,9 +7,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Home, ArrowLeft, Mail } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const NotFound = () => {
   const location = useLocation();
+  usePageTitle("Page Not Found");
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);

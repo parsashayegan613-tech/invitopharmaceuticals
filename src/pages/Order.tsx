@@ -23,10 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const Order = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  usePageTitle("Request a Quote");
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -51,6 +53,23 @@ const Order = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [countryCode, setCountryCode] = useState("CA");
   const [stateCode, setStateCode] = useState("");
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const getFieldError = (field: string, value: string, label: string) => {
+    if (!touched[field]) return null;
+    if (!value.trim()) return `${label} is required`;
+    if (field === "email" && !isValidEmail(value)) return "Please enter a valid email address";
+    return null;
+  };
+
+  const fieldClass = (field: string, value: string) =>
+    `transition-all duration-300 focus:shadow-md ${touched[field] && !value.trim() ? "border-red-400 focus:border-red-500" : ""}${touched.email && field === "email" && value.trim() && !isValidEmail(value) ? "border-red-400 focus:border-red-500" : ""}`;
 
   const products = [
     { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
@@ -302,8 +321,13 @@ const Order = () => {
                       <Input
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        onBlur={() => handleBlur("name")}
+                        className={fieldClass("name", formData.name)}
                         required
                       />
+                      {getFieldError("name", formData.name, "Full name") && (
+                        <span className="text-xs text-red-500 mt-1">{getFieldError("name", formData.name, "Full name")}</span>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">
@@ -313,8 +337,13 @@ const Order = () => {
                         type="email"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onBlur={() => handleBlur("email")}
+                        className={fieldClass("email", formData.email)}
                         required
                       />
+                      {getFieldError("email", formData.email, "Email") && (
+                        <span className="text-xs text-red-500 mt-1">{getFieldError("email", formData.email, "Email")}</span>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">Phone</label>
@@ -331,8 +360,13 @@ const Order = () => {
                       <Input
                         value={formData.institution}
                         onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
+                        onBlur={() => handleBlur("institution")}
+                        className={fieldClass("institution", formData.institution)}
                         required
                       />
+                      {getFieldError("institution", formData.institution, "Institution") && (
+                        <span className="text-xs text-red-500 mt-1">{getFieldError("institution", formData.institution, "Institution")}</span>
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">Department</label>

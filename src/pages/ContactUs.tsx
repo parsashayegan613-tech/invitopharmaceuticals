@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
@@ -11,9 +12,12 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Clock, ChevronDown, ChevronUp } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const ContactUs = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
+  usePageTitle("Contact Us");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -22,8 +26,24 @@ const ContactUs = () => {
     message: "",
   });
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  const handleBlur = (field: string) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+  };
+
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const getFieldError = (field: string, value: string, label: string) => {
+    if (!touched[field]) return null;
+    if (!value.trim()) return `${label} is required`;
+    if (field === "email" && !isValidEmail(value)) return "Please enter a valid email address";
+    return null;
+  };
+
+  const fieldClass = (field: string, value: string) =>
+    `transition-all duration-300 focus:shadow-md ${touched[field] && !value.trim() ? "border-red-400 focus:border-red-500" : ""}${touched.email && field === "email" && value.trim() && !isValidEmail(value) ? "border-red-400 focus:border-red-500" : ""}`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,16 +72,13 @@ const ContactUs = () => {
         // We still show success since the DB insert succeeded, but we log the email error
       }
 
-      toast({
-        title: "Message sent",
-        description: "Thank you for contacting us. We will get back to you soon.",
-      });
-      setFormData({
-        firstName: "",
-        lastName: "",
-        phone: "",
-        email: "",
-        message: "",
+      // Redirect to Thank You page
+      navigate("/thank-you", {
+        state: {
+          contactForm: true,
+          customer_name: `${formData.firstName} ${formData.lastName}`,
+          customer_email: formData.email,
+        },
       });
     } catch (error) {
       console.error("Error submitting contact form:", error);
@@ -153,18 +170,26 @@ const ContactUs = () => {
                         <Input
                           value={formData.firstName}
                           onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                          onBlur={() => handleBlur("firstName")}
+                          className={fieldClass("firstName", formData.firstName)}
                           required
-                          className="transition-all duration-300 focus:shadow-md"
                         />
+                        {getFieldError("firstName", formData.firstName, "First name") && (
+                          <span className="text-xs text-red-500">{getFieldError("firstName", formData.firstName, "First name")}</span>
+                        )}
                         <span className="text-xs text-muted-foreground mt-1 block">First</span>
                       </div>
                       <div>
                         <Input
                           value={formData.lastName}
                           onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                          onBlur={() => handleBlur("lastName")}
+                          className={fieldClass("lastName", formData.lastName)}
                           required
-                          className="transition-all duration-300 focus:shadow-md"
                         />
+                        {getFieldError("lastName", formData.lastName, "Last name") && (
+                          <span className="text-xs text-red-500">{getFieldError("lastName", formData.lastName, "Last name")}</span>
+                        )}
                         <span className="text-xs text-muted-foreground mt-1 block">Last</span>
                       </div>
                     </div>
@@ -188,9 +213,13 @@ const ContactUs = () => {
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onBlur={() => handleBlur("email")}
+                      className={fieldClass("email", formData.email)}
                       required
-                      className="transition-all duration-300 focus:shadow-md"
                     />
+                    {getFieldError("email", formData.email, "Email") && (
+                      <span className="text-xs text-red-500 mt-1">{getFieldError("email", formData.email, "Email")}</span>
+                    )}
                   </div>
 
                   <div>

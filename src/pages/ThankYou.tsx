@@ -4,7 +4,8 @@ import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Mail, FileCheck, Clock, Home, ArrowLeft } from "lucide-react";
+import { CheckCircle, Mail, FileCheck, Clock, Home, ArrowLeft, MessageSquare } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 interface OrderSummary {
     product_name: string;
@@ -18,12 +19,25 @@ interface OrderSummary {
 const ThankYou = () => {
     const location = useLocation();
     const order = location.state?.order as OrderSummary | undefined;
+    const isContactForm = location.state?.contactForm as boolean | undefined;
+    const customerName = order?.customer_name || location.state?.customer_name;
+    const customerEmail = order?.customer_email || location.state?.customer_email;
 
-    const steps = [
+    usePageTitle("Thank You");
+
+    const orderSteps = [
         { icon: Mail, title: "RFQ Review", description: "Our team will review your request within 1-2 business days." },
         { icon: FileCheck, title: "Formal Quote", description: "You'll receive a detailed quotation with pricing and lead times." },
         { icon: Clock, title: "Order Confirmation", description: "Confirm your order via email and submit payment or PO." },
     ];
+
+    const contactSteps = [
+        { icon: Mail, title: "Message Received", description: "Our team has received your message and will review it shortly." },
+        { icon: MessageSquare, title: "We'll Respond", description: "Expect a reply within 1-2 business days at the email you provided." },
+        { icon: Clock, title: "Follow Up", description: "If your inquiry is urgent, call us at 780.709.5678." },
+    ];
+
+    const steps = isContactForm ? contactSteps : orderSteps;
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -47,14 +61,18 @@ const ThankYou = () => {
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
                         <h1 className="text-3xl md:text-4xl font-light text-foreground mb-3">
-                            Thank You{order?.customer_name ? `, ${order.customer_name.split(" ")[0]}` : ""}!
+                            Thank You{customerName ? `, ${customerName.split(" ")[0]}` : ""}!
                         </h1>
                         <p className="text-muted-foreground text-lg mb-2">
-                            Your Request for Quotation has been submitted successfully.
+                            {isContactForm
+                                ? "Your message has been sent successfully."
+                                : "Your Request for Quotation has been submitted successfully."}
                         </p>
-                        {order?.customer_email && (
+                        {customerEmail && (
                             <p className="text-sm text-muted-foreground mb-8">
-                                A confirmation email has been sent to <strong className="text-foreground">{order.customer_email}</strong>
+                                {isContactForm
+                                    ? <>We'll respond to <strong className="text-foreground">{customerEmail}</strong> as soon as possible.</>
+                                    : <>A confirmation email has been sent to <strong className="text-foreground">{customerEmail}</strong></>}
                             </p>
                         )}
                     </motion.div>

@@ -3,15 +3,17 @@ import Header from "@/components/Header";
 import PageHero from "@/components/PageHero";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/animations/FadeInOnScroll";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const PrivacyPolicy = () => {
+  usePageTitle("Privacy Policy");
   return (
     <div className="min-h-screen flex flex-col">
       <TopBar />
       <Header />
       <main className="flex-grow">
         <PageHero title="Privacy Policy" />
-        
+
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4 max-w-4xl">
             <FadeInOnScroll>

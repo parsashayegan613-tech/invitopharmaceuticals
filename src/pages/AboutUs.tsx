@@ -5,8 +5,10 @@ import PageHero from "@/components/PageHero";
 import Footer from "@/components/Footer";
 import FadeInOnScroll from "@/components/animations/FadeInOnScroll";
 import { Microscope, FlaskConical, Users, Target, Lightbulb, Award } from "lucide-react";
+import { usePageTitle } from "@/hooks/use-page-title";
 
 const AboutUs = () => {
+  usePageTitle("About Us");
   const coreValues = [
     {
       icon: Microscope,
