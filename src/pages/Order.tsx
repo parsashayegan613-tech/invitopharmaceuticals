@@ -367,7 +367,7 @@ const Order = () => {
                         Street Address <span className="text-primary">*</span>
                       </label>
                       <ReactGoogleAutocomplete
-                        apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+                        apiKey="AIzaSyACjTws8WGOCQ0nE5BjZSMKxNzIdo-VQAs"
                         onPlaceSelected={(place: any) => {
                           let streetNumber = "";
                           let route = "";
