@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
@@ -25,6 +26,7 @@ import {
 
 const Order = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -168,35 +170,19 @@ const Order = () => {
         // Don't throw — the order was already submitted successfully
       }
 
-      toast({
-        title: "Request for Quotation Submitted",
-        description: "Thank you for your inquiry. Our team will respond within 1-2 business days.",
+      // 4. Redirect to the Thank You page with order summary
+      navigate("/thank-you", {
+        state: {
+          order: {
+            product_name: orderData.product_name,
+            product_catalog: orderData.product_catalog,
+            product_amount: orderData.product_amount,
+            product_price: orderData.product_price,
+            customer_name: orderData.customer_name,
+            customer_email: orderData.customer_email,
+          },
+        },
       });
-
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        institution: "",
-        department: "",
-        piName: "",
-        streetAddress: "",
-        city: "",
-        province: "",
-        postalCode: "",
-        country: "Canada",
-        intendedUse: "",
-        customQuantity: "",
-        paymentMethod: "",
-        poNumber: "",
-        additionalNotes: "",
-      });
-      setSelectedProduct(null);
-      setAcceptRuo(false);
-      setAcceptTerms(false);
-      setCountryCode("CA");
-      setStateCode("");
     } catch (error) {
       console.error("Order submission error:", error);
       toast({
