@@ -490,13 +490,11 @@ const Order = () => {
                           <SelectValue placeholder="Select country" />
                         </SelectTrigger>
                         <SelectContent>
-                          {Country.getAllCountries()
-                            .filter((c) => ["CA", "US"].includes(c.isoCode))
-                            .map((country) => (
-                              <SelectItem key={country.isoCode} value={country.isoCode}>
-                                {country.name}
-                              </SelectItem>
-                            ))}
+                          {Country.getAllCountries().map((country) => (
+                            <SelectItem key={country.isoCode} value={country.isoCode}>
+                              {country.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                     </div>
