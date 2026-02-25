@@ -3,31 +3,30 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 Deno.serve(async (req) => {
-    if (req.method === "OPTIONS") {
-        return new Response("ok", { headers: corsHeaders });
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
+
+  try {
+    let order;
+    try {
+      order = await req.json();
+    } catch (e) {
+      return new Response(JSON.stringify({ error: "Invalid request body" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
     }
 
-    try {
-        let order;
-        try {
-            order = await req.json();
-        } catch (e) {
-            return new Response(JSON.stringify({ error: "Invalid request body" }), {
-                status: 400,
-                headers: { ...corsHeaders, "Content-Type": "application/json" }
-            });
-        }
-
-        const emailHtml = `
+    const emailHtml = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background: #1a2332; padding: 30px; text-align: center;">
-          <h1 style="color: #ffffff; margin: 0; font-size: 28px; letter-spacing: 3px;">INVITVO</h1>
-          <p style="color: #94a3b8; margin: 5px 0 0; font-size: 12px; letter-spacing: 4px;">PHARMACEUTICALS LTD.</p>
+        <div style="background: #e8eaf0; padding: 30px; text-align: center;">
+          <img src="https://invitvo.com/logo-email.png" alt="InVitvo Pharmaceuticals Ltd." style="max-width: 280px; height: auto;" />
         </div>
         
         <div style="padding: 30px; background: #ffffff;">
@@ -107,39 +106,39 @@ Deno.serve(async (req) => {
       </div>
     `;
 
-        const res = await fetch("https://api.resend.com/emails", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${RESEND_API_KEY}`,
-            },
-            body: JSON.stringify({
-                from: "InVitvo Pharmaceuticals <onboarding@resend.dev>",
-                to: [order.customer_email],
-                subject: `Order Confirmation — ${order.product_name} (${order.product_catalog})`,
-                html: emailHtml,
-                reply_to: "info@invitvo.com",
-            }),
-        });
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "InVitvo Pharmaceuticals <onboarding@resend.dev>",
+        to: [order.customer_email],
+        subject: `Order Confirmation — ${order.product_name} (${order.product_catalog})`,
+        html: emailHtml,
+        reply_to: "info@invitvo.com",
+      }),
+    });
 
-        const data = await res.json();
+    const data = await res.json();
 
-        if (!res.ok) {
-            console.error("Resend error:", data);
-            return new Response(JSON.stringify({ error: data }), {
-                status: 400,
-                headers: { ...corsHeaders, "Content-Type": "application/json" },
-            });
-        }
-
-        return new Response(JSON.stringify({ success: true }), {
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-    } catch (error: any) {
-        console.error("Edge function error:", error);
-        return new Response(JSON.stringify({ error: error.message }), {
-            status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
+    if (!res.ok) {
+      console.error("Resend error:", data);
+      return new Response(JSON.stringify({ error: data }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  } catch (error: any) {
+    console.error("Edge function error:", error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
+  }
 });
