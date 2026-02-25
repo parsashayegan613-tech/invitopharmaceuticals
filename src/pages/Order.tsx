@@ -13,6 +13,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Check, Clock, Mail, FileCheck, CreditCard, Building2, Banknote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Country, State } from "country-state-city";
+import ReactGoogleAutocomplete from "react-google-autocomplete";
 import {
   Select,
   SelectContent,
@@ -45,6 +47,8 @@ const Order = () => {
   const [acceptRuo, setAcceptRuo] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [countryCode, setCountryCode] = useState("CA");
+  const [stateCode, setStateCode] = useState("");
 
   const products = [
     { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
@@ -182,6 +186,8 @@ const Order = () => {
       setSelectedProduct(null);
       setAcceptRuo(false);
       setAcceptTerms(false);
+      setCountryCode("CA");
+      setStateCode("");
     } catch (error) {
       console.error("Order submission error:", error);
       toast({
@@ -360,9 +366,55 @@ const Order = () => {
                       <label className="block text-sm font-medium mb-2">
                         Street Address <span className="text-primary">*</span>
                       </label>
-                      <Input
-                        value={formData.streetAddress}
-                        onChange={(e) => setFormData({ ...formData, streetAddress: e.target.value })}
+                      <ReactGoogleAutocomplete
+                        apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
+                        onPlaceSelected={(place: any) => {
+                          let streetNumber = "";
+                          let route = "";
+                          let newCity = "";
+                          let newProvinceName = "";
+                          let newProvinceCode = "";
+                          let newCountryName = "";
+                          let newCountryCode = "";
+                          let newPostalCode = "";
+
+                          place.address_components?.forEach((component: any) => {
+                            const types = component.types;
+                            if (types.includes("street_number")) streetNumber = component.long_name;
+                            if (types.includes("route")) route = component.long_name;
+                            if (types.includes("locality")) newCity = component.long_name;
+                            if (types.includes("administrative_area_level_1")) {
+                              newProvinceName = component.long_name;
+                              newProvinceCode = component.short_name;
+                            }
+                            if (types.includes("country")) {
+                              newCountryName = component.long_name;
+                              newCountryCode = component.short_name;
+                            }
+                            if (types.includes("postal_code")) newPostalCode = component.long_name;
+                          });
+
+                          const newStreetAddress = `${streetNumber} ${route}`.trim();
+
+                          if (newCountryCode) setCountryCode(newCountryCode);
+                          if (newProvinceCode) setStateCode(newProvinceCode);
+
+                          setFormData(prev => ({
+                            ...prev,
+                            streetAddress: newStreetAddress || place.name || prev.streetAddress,
+                            city: newCity || prev.city,
+                            province: newProvinceName || prev.province,
+                            country: newCountryName || prev.country,
+                            postalCode: newPostalCode || prev.postalCode,
+                          }));
+                        }}
+                        options={{
+                          types: ["address"],
+                        }}
+                        defaultValue={formData.streetAddress}
+                        onChange={(e: any) => setFormData({ ...formData, streetAddress: e.target.value })}
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder=""
                         required
                       />
                     </div>
@@ -380,11 +432,36 @@ const Order = () => {
                       <label className="block text-sm font-medium mb-2">
                         Province / State <span className="text-primary">*</span>
                       </label>
-                      <Input
-                        value={formData.province}
-                        onChange={(e) => setFormData({ ...formData, province: e.target.value })}
-                        required
-                      />
+                      {State.getStatesOfCountry(countryCode).length > 0 ? (
+                        <Select
+                          value={stateCode}
+                          onValueChange={(code) => {
+                            setStateCode(code);
+                            const stateName = State.getStateByCodeAndCountry(code, countryCode)?.name || code;
+                            setFormData({ ...formData, province: stateName });
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select state/province" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {State.getStatesOfCountry(countryCode).map((state) => (
+                              <SelectItem key={state.isoCode} value={state.isoCode}>
+                                {state.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      ) : (
+                        <Input
+                          value={formData.province}
+                          onChange={(e) => {
+                            setStateCode("");
+                            setFormData({ ...formData, province: e.target.value });
+                          }}
+                          required
+                        />
+                      )}
                     </div>
                     <div>
                       <label className="block text-sm font-medium mb-2">
@@ -400,11 +477,26 @@ const Order = () => {
                       <label className="block text-sm font-medium mb-2">
                         Country <span className="text-primary">*</span>
                       </label>
-                      <Input
-                        value={formData.country}
-                        onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                        required
-                      />
+                      <Select
+                        value={countryCode}
+                        onValueChange={(code) => {
+                          setCountryCode(code);
+                          setStateCode("");
+                          const countryName = Country.getCountryByCode(code)?.name || code;
+                          setFormData({ ...formData, country: countryName, province: "" });
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Country.getAllCountries().map((country) => (
+                            <SelectItem key={country.isoCode} value={country.isoCode}>
+                              {country.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </div>
                 </div>
