@@ -66,6 +66,7 @@ const Order = () => {
     { value: "po", label: "Institutional Purchase Order", icon: Building2 },
     { value: "wire", label: "Wire Transfer", icon: Banknote },
     { value: "credit", label: "Credit Card", icon: CreditCard },
+    { value: "paypal", label: "PayPal", icon: Banknote },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
