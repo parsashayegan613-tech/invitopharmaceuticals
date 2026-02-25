@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Check, Clock, Mail, FileCheck, CreditCard, Building2, Banknote } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import {
   Select,
   SelectContent,
@@ -115,19 +116,43 @@ const Order = () => {
     setIsSubmitting(true);
 
     try {
-      // Send order via Supabase Edge Function (Resend)
-      const response = await fetch("https://xquntpgxrurxjbpebdhn.supabase.co/functions/v1/send-order-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxdW50cGd4cnVyeGpicGViZGhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEyMjc5MTYsImV4cCI6MjA4NjgwMzkxNn0.khCiYMw7_FM0xZTWBmfHOezIeUjbDqCBUFuUoBP_pJQ",
-        },
-        body: JSON.stringify(orderData),
+      // 1. Save order to the database
+      const { data: insertData, error: dbError } = await supabase
+        .from('orders')
+        .insert([
+          {
+            product_name: orderData.product_name,
+            product_catalog: orderData.product_catalog,
+            product_amount: orderData.product_amount,
+            product_price: orderData.product_price,
+            custom_quantity: orderData.custom_quantity,
+            customer_name: orderData.customer_name,
+            customer_email: orderData.customer_email,
+            customer_phone: orderData.customer_phone,
+            institution: orderData.institution,
+            department: orderData.department,
+            pi_name: orderData.pi_name,
+            street_address: orderData.street_address,
+            city: orderData.city,
+            province: orderData.province,
+            postal_code: orderData.postal_code,
+            country: orderData.country,
+            intended_use: orderData.intended_use,
+            payment_method: orderData.payment_method,
+            po_number: orderData.po_number,
+            additional_notes: orderData.additional_notes,
+          }
+        ]);
+
+      if (dbError) throw dbError;
+
+      // 2. Invoke the edge function securely to send the email
+      const { data: edgeData, error: edgeError } = await supabase.functions.invoke('send-order-email', {
+        body: orderData,
       });
 
-      const result = await response.json();
-      console.log("Edge function response:", JSON.stringify(result, null, 2));
-      if (!response.ok || result.error) throw new Error(result.error?.message || "Submission failed");
+      console.log("Edge function response:", edgeData);
+      if (edgeError) throw new Error(edgeError.message || "Email submission failed");
 
       toast({
         title: "Request for Quotation Submitted",

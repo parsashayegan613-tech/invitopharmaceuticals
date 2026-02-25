@@ -4,8 +4,8 @@ const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 const NOTIFY_EMAIL = "parsashayegan613@gmail.com";
 
 const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 Deno.serve(async (req) => {
@@ -15,7 +15,15 @@ Deno.serve(async (req) => {
     }
 
     try {
-        const order = await req.json();
+        let order;
+        try {
+            const rawBody = await req.json();
+            // Supabase functions.invoke wraps the body in {"record": ...} if it's a webhook, or just sends the payload directly
+            order = rawBody;
+        } catch (e) {
+            console.error("Failed to parse request JSON", e);
+            throw new Error("Invalid request body");
+        }
 
         const emailHtml = `
       <h2 style="color:#2c3e50;">New Request for Quotation</h2>

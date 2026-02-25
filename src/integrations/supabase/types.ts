@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contact_messages: {
+        Row: {
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          message: string
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          first_name: string
+          id?: string
+          last_name: string
+          message: string
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          message?: string
+          phone?: string | null
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          additional_notes: string | null
+          city: string
+          country: string
+          created_at: string | null
+          custom_quantity: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone: string | null
+          department: string | null
+          id: string
+          institution: string
+          intended_use: string
+          payment_method: string | null
+          pi_name: string | null
+          po_number: string | null
+          postal_code: string
+          product_amount: string
+          product_catalog: string
+          product_name: string
+          product_price: string
+          province: string
+          street_address: string
+        }
+        Insert: {
+          additional_notes?: string | null
+          city: string
+          country?: string
+          created_at?: string | null
+          custom_quantity?: string | null
+          customer_email: string
+          customer_name: string
+          customer_phone?: string | null
+          department?: string | null
+          id?: string
+          institution: string
+          intended_use: string
+          payment_method?: string | null
+          pi_name?: string | null
+          po_number?: string | null
+          postal_code: string
+          product_amount: string
+          product_catalog: string
+          product_name: string
+          product_price: string
+          province: string
+          street_address: string
+        }
+        Update: {
+          additional_notes?: string | null
+          city?: string
+          country?: string
+          created_at?: string | null
+          custom_quantity?: string | null
+          customer_email?: string
+          customer_name?: string
+          customer_phone?: string | null
+          department?: string | null
+          id?: string
+          institution?: string
+          intended_use?: string
+          payment_method?: string | null
+          pi_name?: string | null
+          po_number?: string | null
+          postal_code?: string
+          product_amount?: string
+          product_catalog?: string
+          product_name?: string
+          product_price?: string
+          province?: string
+          street_address?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
