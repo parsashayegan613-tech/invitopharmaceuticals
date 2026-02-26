@@ -50,7 +50,7 @@ Deno.serve(async (req) => {
                 Authorization: `Bearer ${RESEND_API_KEY}`,
             },
             body: JSON.stringify({
-                from: "InVitvo Contact <onboarding@resend.dev>",
+                from: "InVitvo Contact <info@invitvo.com>",
                 to: [NOTIFY_EMAIL],
                 subject: `New Contact Form Submission from ${contact.firstName} ${contact.lastName}`,
                 html: emailHtml,

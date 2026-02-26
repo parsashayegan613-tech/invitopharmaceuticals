@@ -113,7 +113,7 @@ Deno.serve(async (req) => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "InVitvo Pharmaceuticals <onboarding@resend.dev>",
+        from: "InVitvo Pharmaceuticals <info@invitvo.com>",
         to: [order.customer_email],
         subject: `Order Confirmation — ${order.product_name} (${order.product_catalog})`,
         html: emailHtml,
