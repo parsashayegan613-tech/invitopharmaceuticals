@@ -26,6 +26,21 @@ Deno.serve(async (req) => {
             });
         }
 
+        // Basic input validation and sanitization to prevent massive payload abuse
+        if (!contact || typeof contact !== 'object') {
+            return new Response(JSON.stringify({ error: "Invalid payload" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
+
+        const sanitize = (str: any) => typeof str === 'string' ? str.slice(0, 1000).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+        contact.firstName = sanitize(contact.firstName);
+        contact.lastName = sanitize(contact.lastName);
+        contact.email = sanitize(contact.email);
+        contact.phone = sanitize(contact.phone);
+        contact.message = typeof contact.message === 'string' ? contact.message.slice(0, 5000).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+
+        if (!contact.firstName || !contact.email || !contact.message) {
+            return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
         const emailHtml = `
       <h2 style="color:#2c3e50;">New Contact Form Submission</h2>
       <hr style="border:1px solid #3498db;" />

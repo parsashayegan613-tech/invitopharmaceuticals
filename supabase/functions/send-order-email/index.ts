@@ -25,6 +25,33 @@ Deno.serve(async (req) => {
             throw new Error("Invalid request body");
         }
 
+        // Basic input validation and sanitization to prevent massive payload abuse
+        if (!order || typeof order !== 'object') {
+            return new Response(JSON.stringify({ error: "Invalid payload" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
+
+        const sanitize = (str: any) => typeof str === 'string' ? str.slice(0, 1000).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+
+        // Sanitize all customer input fields
+        order.customer_name = sanitize(order.customer_name);
+        order.customer_email = sanitize(order.customer_email);
+        order.customer_phone = sanitize(order.customer_phone);
+        order.institution = sanitize(order.institution);
+        order.department = sanitize(order.department);
+        order.pi_name = sanitize(order.pi_name);
+        order.street_address = sanitize(order.street_address);
+        order.city = sanitize(order.city);
+        order.province = sanitize(order.province);
+        order.postal_code = sanitize(order.postal_code);
+        order.country = sanitize(order.country);
+        order.intended_use = sanitize(order.intended_use);
+        order.payment_method = sanitize(order.payment_method);
+        order.po_number = sanitize(order.po_number);
+        order.additional_notes = typeof order.additional_notes === 'string' ? order.additional_notes.slice(0, 5000).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+
+        if (!order.customer_name || !order.customer_email || !order.street_address) {
+            return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
         const emailHtml = `
       <h2 style="color:#2c3e50;">New Request for Quotation</h2>
       <hr style="border:1px solid #3498db;" />
