@@ -17,7 +17,7 @@ const OurTeam = () => {
       role: "Founder & CEO",
       image: drAnoosh,
       linkedin: "https://www.linkedin.com/in/anoosh-shayeganpour-109679201/",
-      description: "Dr. Anooshirvan Shayeganpour is the visionary behind InVitvo Pharmaceuticals, bringing over two decades of expertise in pharmaceutical sciences and drug development. He holds a Ph.D. in Pharmaceutical Sciences from the University of Alberta and previously served as an Associate Professor at Saba University School of Medicine. A prolific researcher with over 24 peer-reviewed publications and 1,300+ citations, Dr. Shayeganpour specializes in pharmacokinetics, drug metabolism, and the complex interplay between the gut microbiome and CYP450 enzymes. His expertise in advanced analytical techniques including LC-MS has been instrumental in establishing InVitvo as a leader in high-purity microbial secondary metabolite research.",
+      description: "Dr. Anooshirvan Shayeganpour is the visionary behind InVitvo Pharmaceuticals, bringing over two decades of expertise in pharmaceutical sciences and drug development. He holds a Ph.D. in Pharmaceutical Sciences from the University of Alberta and previously served as an Associate Professor at Saba University School of Medicine. A prolific researcher with over 21 peer-reviewed publications and book chapters and 1,300+ citations, Dr. Shayeganpour specializes in pharmacokinetics, drug metabolism, and the complex interplay between the gut microbiome and CYP450 enzymes. His expertise in advanced analytical techniques including LC-MS has been instrumental in establishing InVitvo as a leader in high-purity microbial secondary metabolite research.",
     },
     {
       name: "Heidi Rashidi, Pharm.D.",
