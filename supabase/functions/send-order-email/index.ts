@@ -1,7 +1,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const NOTIFY_EMAIL = "parsashayegan613@gmail.com";
+const NOTIFY_EMAIL = "info@invitvo.com";
 
 const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
