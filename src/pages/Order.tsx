@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Check, Clock, Mail, FileCheck, CreditCard, Building2, Banknote } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Country, State } from "country-state-city";
-import ReactGoogleAutocomplete from "react-google-autocomplete";
+import { usePlacesWidget } from "react-google-autocomplete";
 import {
   Select,
   SelectContent,
@@ -33,6 +33,51 @@ const Order = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   usePageTitle("Request a Quote");
+  const { ref: placesRef } = usePlacesWidget<HTMLInputElement>({
+    apiKey: "AIzaSyACjTws8WGOCQ0nE5BjZSMKxNzIdo-VQAs",
+    options: AUTOCOMPLETE_OPTIONS,
+    onPlaceSelected: (place: any) => {
+      let streetNumber = "";
+      let route = "";
+      let newCity = "";
+      let newProvinceName = "";
+      let newProvinceCode = "";
+      let newCountryName = "";
+      let newCountryCode = "";
+      let newPostalCode = "";
+
+      place.address_components?.forEach((component: any) => {
+        const types = component.types;
+        if (types.includes("street_number")) streetNumber = component.long_name;
+        if (types.includes("route")) route = component.long_name;
+        if (types.includes("locality")) newCity = component.long_name;
+        if (types.includes("administrative_area_level_1")) {
+          newProvinceName = component.long_name;
+          newProvinceCode = component.short_name;
+        }
+        if (types.includes("country")) {
+          newCountryName = component.long_name;
+          newCountryCode = component.short_name;
+        }
+        if (types.includes("postal_code")) newPostalCode = component.long_name;
+      });
+
+      const newStreetAddress = `${streetNumber} ${route}`.trim();
+
+      if (newCountryCode) setCountryCode(newCountryCode);
+      if (newProvinceCode) setStateCode(newProvinceCode);
+
+      setFormData(prev => ({
+        ...prev,
+        streetAddress: newStreetAddress || place.name || prev.streetAddress,
+        city: newCity || prev.city,
+        province: newProvinceName || prev.province,
+        country: newCountryName || prev.country,
+        postalCode: newPostalCode || prev.postalCode,
+      }));
+    }
+  });
+
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -399,49 +444,8 @@ const Order = () => {
                       <label className="block text-sm font-medium mb-2">
                         Street Address <span className="text-primary">*</span>
                       </label>
-                      <ReactGoogleAutocomplete
-                        apiKey="AIzaSyACjTws8WGOCQ0nE5BjZSMKxNzIdo-VQAs"
-                        onPlaceSelected={(place: any) => {
-                          let streetNumber = "";
-                          let route = "";
-                          let newCity = "";
-                          let newProvinceName = "";
-                          let newProvinceCode = "";
-                          let newCountryName = "";
-                          let newCountryCode = "";
-                          let newPostalCode = "";
-
-                          place.address_components?.forEach((component: any) => {
-                            const types = component.types;
-                            if (types.includes("street_number")) streetNumber = component.long_name;
-                            if (types.includes("route")) route = component.long_name;
-                            if (types.includes("locality")) newCity = component.long_name;
-                            if (types.includes("administrative_area_level_1")) {
-                              newProvinceName = component.long_name;
-                              newProvinceCode = component.short_name;
-                            }
-                            if (types.includes("country")) {
-                              newCountryName = component.long_name;
-                              newCountryCode = component.short_name;
-                            }
-                            if (types.includes("postal_code")) newPostalCode = component.long_name;
-                          });
-
-                          const newStreetAddress = `${streetNumber} ${route}`.trim();
-
-                          if (newCountryCode) setCountryCode(newCountryCode);
-                          if (newProvinceCode) setStateCode(newProvinceCode);
-
-                          setFormData(prev => ({
-                            ...prev,
-                            streetAddress: newStreetAddress || place.name || prev.streetAddress,
-                            city: newCity || prev.city,
-                            province: newProvinceName || prev.province,
-                            country: newCountryName || prev.country,
-                            postalCode: newPostalCode || prev.postalCode,
-                          }));
-                        }}
-                        options={AUTOCOMPLETE_OPTIONS}
+                      <Input
+                        ref={placesRef}
                         defaultValue={formData.streetAddress}
                         onBlur={(e: any) => setFormData(prev => ({ ...prev, streetAddress: e.target.value }))}
                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
