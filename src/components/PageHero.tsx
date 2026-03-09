@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import pageHeroBg from "@/assets/page-hero-bg.jpg";
 import logo from "@/assets/logo.png";
@@ -9,17 +10,13 @@ interface PageHeroProps {
   subtitle?: string;
 }
 
-// Helper to extract src from either a Next.js StaticImageData object or a plain string (Vite)
-const getSrc = (img: { src: string } | string): string =>
-  typeof img === "string" ? img : img.src;
-
 const PageHero = ({ title, subtitle = "InVitvo Pharmaceuticals" }: PageHeroProps) => {
   return (
     <section className="relative min-h-[300px] md:min-h-[350px] flex items-center justify-center overflow-hidden">
       {/* Background Image with subtle animation */}
       <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${getSrc(pageHeroBg)})` }}
+        style={{ backgroundImage: `url(${pageHeroBg.src})` }}
         initial={{ scale: 1.05 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
@@ -30,11 +27,10 @@ const PageHero = ({ title, subtitle = "InVitvo Pharmaceuticals" }: PageHeroProps
 
       {/* Logo Watermark Background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={getSrc(logo)}
+        <Image
+          src={logo}
           alt=""
-          className="w-64 md:w-80 lg:w-96 h-auto opacity-[0.12]"
+          className="w-64 md:w-80 lg:w-96 h-auto opacity-[0.12] object-contain"
         />
       </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { Button } from "@/components/ui/button";
@@ -52,13 +53,14 @@ const Research = () => {
                   key={index}
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.3 }}
-                  className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                  className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 relative h-64 sm:h-48 md:h-64"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={typeof image.src === "string" ? image.src : (image.src as { src: string }).src}
+                  <Image
+                    src={image.src}
                     alt={image.alt}
-                    className="w-full h-auto object-contain"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 33vw"
                   />
                 </motion.div>
               ))}
@@ -73,7 +75,7 @@ const Research = () => {
               >
                 <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
                   <Link href="/products" className="flex items-center gap-2">
-                    View Products
+                    Start Your Research Today
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>
@@ -84,7 +86,7 @@ const Research = () => {
               >
                 <Button asChild variant="outline">
                   <Link href="/contact-us" className="flex items-center gap-2">
-                    Contact Us
+                    Request Your COA Sample Pack
                   </Link>
                 </Button>
               </motion.div>

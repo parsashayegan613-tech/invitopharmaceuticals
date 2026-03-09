@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
@@ -70,10 +71,6 @@ const ProductsContent = () => {
         },
     ];
 
-    const moleculeSrc = typeof terreinMolecule === "string"
-        ? terreinMolecule
-        : (terreinMolecule as { src: string }).src;
-
     return (
         <div className="min-h-screen flex flex-col">
             <TopBar />
@@ -108,11 +105,10 @@ const ProductsContent = () => {
                                     whileHover={{ scale: 1.02 }}
                                     className="bg-card border border-border rounded-lg p-8 text-center"
                                 >
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
-                                        src={moleculeSrc}
+                                    <Image
+                                        src={terreinMolecule}
                                         alt="Terrein molecular structure"
-                                        className="w-full max-w-xs mx-auto mb-4"
+                                        className="w-full max-w-xs mx-auto mb-4 object-contain"
                                     />
                                     <p className="text-sm text-muted-foreground">Terrein Molecular Structure (C₈H₁₀O₃)</p>
                                 </motion.div>

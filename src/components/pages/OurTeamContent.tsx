@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Linkedin } from "lucide-react";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
@@ -45,9 +46,8 @@ const OurTeamContent = () => {
                                             transition={{ duration: 0.3 }}
                                             className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                                         >
-                                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                                            <img
-                                                src={typeof member.image === "string" ? member.image : (member.image as { src: string }).src}
+                                            <Image
+                                                src={member.image}
                                                 alt={member.name}
                                                 className="w-full md:w-56 h-auto object-cover"
                                             />
