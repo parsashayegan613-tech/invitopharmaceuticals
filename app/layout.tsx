@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Inter, Outfit } from "next/font/google";
 import "../src/index.css";
 import Providers from "@/components/Providers";
 import BackToTop from "@/components/BackToTop";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://invitvo.com"),
@@ -131,7 +135,7 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body>
+            <body className={`${inter.variable} ${outfit.variable}`}>
                 {/* Google Analytics */}
                 <Script
                     src="https://www.googletagmanager.com/gtag/js?id=G-1C75KSQYCL"

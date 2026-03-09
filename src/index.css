@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
-
 /* InVitvo Pharmaceuticals Design System */
 
 @layer base {
@@ -91,13 +89,18 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    font-family: 'Open Sans', sans-serif;
+    font-family: var(--font-inter), sans-serif;
     font-size: 17px;
     line-height: 1.75;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Open Sans', sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-outfit), sans-serif;
     line-height: 1.3;
   }
 
