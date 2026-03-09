@@ -136,19 +136,23 @@ export default function RootLayout({
                 />
             </head>
             <body className={`${inter.variable} ${outfit.variable}`}>
-                {/* Google Analytics */}
-                <Script
-                    src="https://www.googletagmanager.com/gtag/js?id=G-1C75KSQYCL"
-                    strategy="afterInteractive"
-                />
-                <Script id="google-analytics" strategy="afterInteractive">
-                    {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){window.dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-1C75KSQYCL');
-            `}
-                </Script>
+                {/* Google Analytics (Only in Production) */}
+                {process.env.NODE_ENV === "production" && (
+                    <>
+                        <Script
+                            src="https://www.googletagmanager.com/gtag/js?id=G-1C75KSQYCL"
+                            strategy="afterInteractive"
+                        />
+                        <Script id="google-analytics" strategy="afterInteractive">
+                            {`
+                              window.dataLayer = window.dataLayer || [];
+                              function gtag(){window.dataLayer.push(arguments);}
+                              gtag('js', new Date());
+                              gtag('config', 'G-1C75KSQYCL');
+                            `}
+                        </Script>
+                    </>
+                )}
 
                 <Providers>
                     <BackToTop />
