@@ -390,7 +390,7 @@ const ProductsContent = () => {
                                 whileTap={{ scale: 0.98 }}
                                 className="inline-block"
                             >
-                                <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20">
                                     <Link href="/order" className="flex items-center gap-2">
                                         Request Quote
                                         <ArrowRight className="w-4 h-4" />

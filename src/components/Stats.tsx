@@ -23,8 +23,8 @@ const Stats = () => {
                 whileHover={{ scale: 1.05 }}
                 className="text-center"
               >
-                <div className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2">{stat.number}</div>
-                <div className="text-sm md:text-base opacity-80">{stat.label}</div>
+                <div className="text-3xl md:text-4xl lg:text-5xl font-bold mb-2 text-accent">{stat.number}</div>
+                <div className="text-sm md:text-base text-white/90 font-medium">{stat.label}</div>
               </motion.div>
             </FadeInOnScroll>
           ))}
@@ -36,7 +36,7 @@ const Stats = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
               <Link
                 href="/order"
-                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-3 rounded font-semibold hover:bg-white/90 transition-colors"
+                className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-3 rounded font-semibold hover:bg-accent/90 transition-colors shadow-lg shadow-accent/20"
               >
                 Request Quote
                 <ArrowRight className="w-4 h-4" />

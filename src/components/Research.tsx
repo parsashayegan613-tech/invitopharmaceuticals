@@ -11,68 +11,55 @@ import research2 from "@/assets/research-2.png";
 import research3 from "@/assets/research-3.png";
 
 const Research = () => {
-  const images = [
-    { src: research1, alt: "Microbial strain culture under laboratory conditions" },
-    { src: research2, alt: "UHPLC chromatogram showing >95% Terrein purity" },
-    { src: research3, alt: "Terrein molecular structure and metabolite analysis" },
-  ];
-
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="relative py-24 md:py-32 overflow-hidden">
+      {/* Full Bleed Background with subtle animation */}
+      <motion.div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${research1.src})` }}
+        initial={{ scale: 1.05 }}
+        whileInView={{ scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
+        {/* Subtle Dark Overlay */}
+        <div className="absolute inset-0 bg-foreground/90 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-background/5" />
+      </motion.div>
+
+      <div className="container relative z-10 mx-auto px-4">
         <FadeInOnScroll>
-          <h2 className="section-title mb-12">Research Pipeline</h2>
+          <h2 className="text-4xl md:text-5xl font-light text-white mb-12 text-center">Research Pipeline</h2>
         </FadeInOnScroll>
 
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-4xl mx-auto">
           <FadeInOnScroll delay={0.2}>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-center md:text-left">
+            <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-8 text-center md:text-left">
               Our current research focuses on the synthesis and characterization of novel Terrein prodrugs. Preclinical studies have demonstrated promising pharmacokinetic and pharmacodynamic (PKPD) properties. Biological activity has been reported in peer-reviewed literature, including potential applications in cancer research models.
             </p>
           </FadeInOnScroll>
 
           <FadeInOnScroll delay={0.3}>
-            <div className="bg-muted/50 border border-border rounded-lg p-4 mb-8">
-              <p className="text-sm text-muted-foreground italic">
-                <strong>Note:</strong> Research compounds are provided for laboratory investigation only. Reported biological activities are based on preclinical studies and peer-reviewed literature. Products are not intended for therapeutic use.
+            <div className="bg-background/10 backdrop-blur-md border border-white/20 rounded-lg p-6 mb-10">
+              <p className="text-sm md:text-base text-white/80 italic">
+                <strong className="text-white">Note:</strong> Research compounds are provided for laboratory investigation only. Reported biological activities are based on preclinical studies and peer-reviewed literature. Products are not intended for therapeutic use.
               </p>
             </div>
           </FadeInOnScroll>
 
           <FadeInOnScroll delay={0.4}>
-            <p className="text-lg text-muted-foreground leading-relaxed mb-10 text-center md:text-left">
+            <p className="text-lg text-white/90 leading-relaxed mb-12 text-center md:text-left">
               InVitvo Pharmaceuticals welcomes collaboration inquiries from academic institutions and industry partners interested in natural product research.
             </p>
           </FadeInOnScroll>
 
-          {/* Research Images - Side by Side */}
           <FadeInOnScroll delay={0.5}>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
-              {images.map((image, index) => (
-                <motion.div
-                  key={index}
-                  whileHover={{ scale: 1.03 }}
-                  transition={{ duration: 0.3 }}
-                  className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                >
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    placeholder="blur"
-                    className="w-full h-auto object-contain"
-                  />
-                </motion.div>
-              ))}
-            </div>
-          </FadeInOnScroll>
-
-          <FadeInOnScroll delay={0.6}>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20">
                   <Link href="/products" className="flex items-center gap-2">
                     Start Your Research Today
                     <ArrowRight className="w-4 h-4" />
@@ -83,7 +70,7 @@ const Research = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <Button asChild variant="outline">
+                <Button asChild variant="outline" size="lg" className="bg-transparent text-white border-white/30 hover:bg-white/10 hover:text-white">
                   <Link href="/contact-us" className="flex items-center gap-2">
                     Request Your COA Sample Pack
                   </Link>

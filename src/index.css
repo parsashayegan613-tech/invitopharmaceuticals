@@ -25,7 +25,8 @@
     --muted: 210 20% 96%;
     --muted-foreground: 210 11% 35%;
 
-    --accent: 187 71% 40%;
+    /* Vibrant Amber/Orange for CTAs and key stats */
+    --accent: 38 92% 50%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;

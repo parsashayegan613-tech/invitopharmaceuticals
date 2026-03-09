@@ -214,7 +214,7 @@ const ContactUsContent = () => {
                                     >
                                         <Button
                                             type="submit"
-                                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-lg hover:shadow-primary/25 transition-all duration-300"
+                                            className="w-full bg-accent hover:bg-accent/90 text-accent-foreground hover:shadow-lg hover:shadow-accent/25 transition-all duration-300"
                                             disabled={isSubmitting}
                                         >
                                             {isSubmitting ? "Sending..." : "Submit"}

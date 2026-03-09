@@ -55,8 +55,8 @@ const Hero = () => {
           >
             <Link
               href="/products"
-              className="inline-block bg-primary text-primary-foreground px-8 py-3 rounded font-medium 
-                         hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25
+              className="inline-block bg-accent text-accent-foreground px-8 py-3 rounded font-medium 
+                         hover:bg-accent/90 transition-all duration-300 hover:shadow-lg hover:shadow-accent/25
                          hover:-translate-y-0.5"
             >
               View Products
