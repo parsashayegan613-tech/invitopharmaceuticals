@@ -98,6 +98,16 @@ const ProductsContent = () => {
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                                         This compound has been extensively characterized using advanced analytical techniques including UHPLC, tandem mass spectrometry, and NMR spectroscopy. Terrein is available for academic and industrial research applications.
                                     </p>
+                                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
+                                            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto">
+                                                <Link href="/products/terrein" className="flex items-center gap-2">
+                                                    View Detailed Specifications
+                                                    <ArrowRight className="w-4 h-4" />
+                                                </Link>
+                                            </Button>
+                                        </motion.div>
+                                    </div>
                                 </div>
                             </FadeInOnScroll>
                             <FadeInOnScroll direction="right" delay={0.2}>
