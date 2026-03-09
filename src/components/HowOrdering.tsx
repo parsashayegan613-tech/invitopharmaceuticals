@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { ClipboardList, FileText, Package, Truck } from "lucide-react";
@@ -51,12 +53,12 @@ const HowOrdering = () => {
                 {index < steps.length - 1 && (
                   <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-border z-0" />
                 )}
-                
+
                 {/* Step circle */}
                 <div className="relative z-10 inline-flex items-center justify-center w-16 h-16 bg-primary text-primary-foreground rounded-full mb-4 shadow-lg">
                   <item.icon className="w-7 h-7" />
                 </div>
-                
+
                 <div className="text-xs font-medium text-primary mb-2">STEP {item.step}</div>
                 <h4 className="text-lg font-medium text-foreground mb-2">{item.title}</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>

@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+"use client";
+
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { Button } from "@/components/ui/button";

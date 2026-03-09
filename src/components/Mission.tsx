@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { FileCheck, MapPin, FlaskConical } from "lucide-react";

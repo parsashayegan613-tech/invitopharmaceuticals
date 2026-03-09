@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { Button } from "@/components/ui/button";
@@ -20,7 +22,7 @@ const Research = () => {
         <FadeInOnScroll>
           <h2 className="section-title mb-12">Research Pipeline</h2>
         </FadeInOnScroll>
-        
+
         <div className="max-w-5xl mx-auto">
           <FadeInOnScroll delay={0.2}>
             <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-center md:text-left">
@@ -52,9 +54,10 @@ const Research = () => {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 >
-                  <img 
-                    src={image.src} 
-                    alt={image.alt} 
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={typeof image.src === "string" ? image.src : (image.src as { src: string }).src}
+                    alt={image.alt}
                     className="w-full h-auto object-contain"
                   />
                 </motion.div>
@@ -69,7 +72,7 @@ const Research = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                  <Link to="/products" className="flex items-center gap-2">
+                  <Link href="/products" className="flex items-center gap-2">
                     View Products
                     <ArrowRight className="w-4 h-4" />
                   </Link>
@@ -80,7 +83,7 @@ const Research = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Button asChild variant="outline">
-                  <Link to="/contact-us" className="flex items-center gap-2">
+                  <Link href="/contact-us" className="flex items-center gap-2">
                     Contact Us
                   </Link>
                 </Button>

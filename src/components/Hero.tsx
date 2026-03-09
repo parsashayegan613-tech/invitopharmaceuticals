@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-scientist.jpg";
 
@@ -6,9 +8,9 @@ const Hero = () => {
   return (
     <section id="page-top" className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
       {/* Background Image with subtle zoom animation */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroImage})` }}
+        style={{ backgroundImage: `url(${typeof heroImage === "string" ? heroImage : (heroImage as { src: string }).src})` }}
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
@@ -20,7 +22,7 @@ const Hero = () => {
       {/* Content */}
       <div className="relative container mx-auto px-4 py-16">
         <div className="max-w-xl">
-          <motion.h1 
+          <motion.h1
             className="hero-title mb-6 font-bold"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -29,7 +31,7 @@ const Hero = () => {
             InVitvo<br />
             Pharmaceuticals
           </motion.h1>
-          <motion.p 
+          <motion.p
             className="hero-subtitle mb-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -37,7 +39,7 @@ const Hero = () => {
           >
             Microbial Metabolite Discovery & Purification
           </motion.p>
-          <motion.p 
+          <motion.p
             className="text-base md:text-lg text-white/70"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -51,16 +53,16 @@ const Hero = () => {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="mt-8 flex flex-wrap gap-4"
           >
-            <Link 
-              to="/products" 
+            <Link
+              href="/products"
               className="inline-block bg-primary text-primary-foreground px-8 py-3 rounded font-medium 
                          hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25
                          hover:-translate-y-0.5"
             >
               View Products
             </Link>
-            <Link 
-              to="/order" 
+            <Link
+              href="/order"
               className="inline-block bg-white/10 text-white border border-white/30 px-8 py-3 rounded font-medium 
                          hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5"
             >

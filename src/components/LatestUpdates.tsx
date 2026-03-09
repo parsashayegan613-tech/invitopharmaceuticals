@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
 import { Calendar, ArrowRight } from "lucide-react";
@@ -49,8 +51,8 @@ const LatestUpdates = () => {
 
         <FadeInOnScroll delay={0.4}>
           <div className="text-center">
-            <Link 
-              to="/contact-us" 
+            <Link
+              href="/contact-us"
               className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors"
             >
               Contact us for more information

@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, AlertTriangle, Linkedin } from "lucide-react";
 
@@ -36,7 +38,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo & Description */}
           <div className="lg:col-span-2">
-            <Link to="/" className="inline-block mb-4">
+            <Link href="/" className="inline-block mb-4">
               <span className="text-2xl font-bold text-background tracking-wide">INVITVO</span>
               <span className="block text-xs text-background/70 tracking-widest">PHARMACEUTICALS LTD.</span>
             </Link>
@@ -59,7 +61,7 @@ const Footer = () => {
                   transition={{ duration: 0.2 }}
                 >
                   <Link
-                    to={link.href}
+                    href={link.href}
                     className="text-background/70 hover:text-primary transition-colors duration-300 text-sm"
                   >
                     {link.name}
@@ -108,8 +110,8 @@ const Footer = () => {
             © {new Date().getFullYear()} InVitvo Pharmaceuticals Ltd. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-background/60">
-            <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link to="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
+            <Link href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link href="/terms-of-service" className="hover:text-primary transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

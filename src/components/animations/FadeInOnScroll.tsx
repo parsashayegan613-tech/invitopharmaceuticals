@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
@@ -8,11 +10,11 @@ interface FadeInOnScrollProps {
   className?: string;
 }
 
-const FadeInOnScroll = ({ 
-  children, 
-  delay = 0, 
+const FadeInOnScroll = ({
+  children,
+  delay = 0,
   direction = "up",
-  className = "" 
+  className = ""
 }: FadeInOnScrollProps) => {
   const directionOffset = {
     up: { y: 40, x: 0 },
@@ -23,20 +25,20 @@ const FadeInOnScroll = ({
 
   return (
     <motion.div
-      initial={{ 
-        opacity: 0, 
-        ...directionOffset[direction] 
+      initial={{
+        opacity: 0,
+        ...directionOffset[direction]
       }}
-      whileInView={{ 
-        opacity: 1, 
-        x: 0, 
-        y: 0 
+      whileInView={{
+        opacity: 1,
+        x: 0,
+        y: 0
       }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{ 
-        duration: 0.6, 
+      transition={{
+        duration: 0.6,
         delay,
-        ease: [0.25, 0.1, 0.25, 1] 
+        ease: [0.25, 0.1, 0.25, 1]
       }}
       className={className}
     >
