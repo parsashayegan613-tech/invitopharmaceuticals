@@ -9,19 +9,27 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const FAQ = () => {
+interface FAQProps {
+    className?: string;
+}
+
+const FAQ = ({ className = "py-20 bg-section-alt" }: FAQProps) => {
     const faqs = [
+        {
+            question: "How do I place an order or request a quote?",
+            answer: "You can initiate an order by submitting a Request for Quotation (RFQ) through our website. Select your desired quantity or specify custom requirements, and our team will provide a formal quote within 1-2 business days including shipping and payment details."
+        },
         {
             question: "What is your Minimum Order Quantity (MOQ)?",
             answer: "We offer flexible ordering for research labs. Our standard catalog sizes for Terrein are 5mg and 10mg, but we can accommodate bulk research requirements upon consultation."
         },
         {
-            question: "Do you ship internationally?",
-            answer: "Yes. While we are proudly based in Edmonton, Canada with 5-7 day domestic shipping, we regularly fulfill orders to research institutions across the US and internationally. International lead times vary by destination."
+            question: "What is the purity level and documentation provided?",
+            answer: "Our Terrein is purified to >95% purity, verified by UHPLC analysis, with structures confirmed via Tandem Mass Spectroscopy and NMR. Every order is accompanied by a batch-specific Certificate of Analysis (COA) and a full Safety Data Sheet (SDS)."
         },
         {
-            question: "What documentation is provided with shipments?",
-            answer: "Every order is accompanied by a batch-specific Certificate of Analysis (COA) detailing UHPLC purity (>95%), along with a full Safety Data Sheet (SDS)."
+            question: "Do you ship internationally?",
+            answer: "Yes. While we are proudly based in Edmonton, Canada with 5-7 day domestic shipping, we regularly fulfill orders to research institutions across the US and internationally. International lead times vary by destination."
         },
         {
             question: "Are your products intended for clinical use?",
@@ -30,7 +38,7 @@ const FAQ = () => {
     ];
 
     return (
-        <section className="py-20 bg-section-alt">
+        <section className={className}>
             <div className="container mx-auto px-4 max-w-3xl">
                 <FadeInOnScroll>
                     <div className="text-center mb-12">

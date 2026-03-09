@@ -12,8 +12,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { MapPin, Phone, Mail, Clock, ChevronDown, ChevronUp } from "lucide-react";
+import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import FAQ from "@/components/FAQ";
 
 const ContactUsContent = () => {
     const { toast } = useToast();
@@ -25,7 +26,6 @@ const ContactUsContent = () => {
         email: "",
         message: "",
     });
-    const [openFaq, setOpenFaq] = useState<number | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [touched, setTouched] = useState<Record<string, boolean>>({});
 
@@ -96,29 +96,6 @@ const ContactUsContent = () => {
         { icon: Phone, label: "Phone", value: "780.709.5678" },
         { icon: Mail, label: "Email", value: "info@invitvo.com" },
         { icon: Clock, label: "Business Hours", value: "Monday - Friday: 9:00 AM - 5:00 PM MST" },
-    ];
-
-    const faqs = [
-        {
-            question: "How can I place an order for Terrein?",
-            answer: "You can place an order through our Order page. Select your desired quantity and fill out the order request form. Our team will contact you to process your order and discuss payment and shipping details."
-        },
-        {
-            question: "What is the purity level of your Terrein?",
-            answer: "Our Terrein is purified to >95% purity, verified by UHPLC analysis. The structure is confirmed using Tandem Mass spectroscopy and NMR."
-        },
-        {
-            question: "Do you ship internationally?",
-            answer: "Yes, we ship to research institutions worldwide. Shipping costs and delivery times vary by location. Please contact us for specific shipping inquiries."
-        },
-        {
-            question: "Can I request a custom quantity?",
-            answer: "Yes, we can accommodate custom quantity requests for research purposes. Please contact us directly to discuss your specific needs."
-        },
-        {
-            question: "How can I invest in InVitvo Pharmaceuticals?",
-            answer: "We welcome investor inquiries. Please contact our research team through this form or email us directly at info@invitvo.com for more information about investment opportunities."
-        },
     ];
 
     return (
@@ -277,46 +254,7 @@ const ContactUsContent = () => {
                 </section>
 
                 {/* FAQ */}
-                <section className="py-16 bg-background">
-                    <div className="container mx-auto px-4 max-w-3xl">
-                        <FadeInOnScroll>
-                            <h3 className="text-2xl font-light text-foreground mb-8 text-center">Frequently Asked Questions</h3>
-                        </FadeInOnScroll>
-                        <div className="space-y-4">
-                            {faqs.map((faq, index) => (
-                                <FadeInOnScroll key={index} delay={index * 0.1}>
-                                    <motion.div
-                                        className="bg-card border border-border rounded-lg overflow-hidden"
-                                        whileHover={{ scale: 1.01 }}
-                                        transition={{ duration: 0.2 }}
-                                    >
-                                        <button
-                                            onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                                            className="w-full px-6 py-4 flex items-center justify-between text-left hover:bg-muted/50 transition-colors"
-                                        >
-                                            <span className="font-medium text-foreground">{faq.question}</span>
-                                            {openFaq === index ? (
-                                                <ChevronUp className="w-5 h-5 text-primary" />
-                                            ) : (
-                                                <ChevronDown className="w-5 h-5 text-muted-foreground" />
-                                            )}
-                                        </button>
-                                        {openFaq === index && (
-                                            <motion.div
-                                                initial={{ height: 0, opacity: 0 }}
-                                                animate={{ height: "auto", opacity: 1 }}
-                                                exit={{ height: 0, opacity: 0 }}
-                                                className="px-6 pb-4"
-                                            >
-                                                <p className="text-muted-foreground">{faq.answer}</p>
-                                            </motion.div>
-                                        )}
-                                    </motion.div>
-                                </FadeInOnScroll>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+                <FAQ className="py-16 bg-background" />
             </main>
             <Footer />
         </div>
