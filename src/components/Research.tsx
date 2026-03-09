@@ -53,14 +53,13 @@ const Research = () => {
                   key={index}
                   whileHover={{ scale: 1.03 }}
                   transition={{ duration: 0.3 }}
-                  className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 relative h-64 sm:h-48 md:h-64"
+                  className="overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 >
                   <Image
                     src={image.src}
                     alt={image.alt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    placeholder="blur"
+                    className="w-full h-auto object-contain"
                   />
                 </motion.div>
               ))}
