@@ -14,18 +14,18 @@ const Research = () => {
   return (
     <section className="relative py-24 md:py-32 overflow-hidden">
       {/* Full Bleed Background with subtle animation */}
+      <div className="absolute inset-0 bg-zinc-950" /> {/* Dark dark background to blend edges */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-contain bg-center bg-no-repeat opacity-50"
         style={{ backgroundImage: `url(${research1.src})` }}
-        initial={{ scale: 1.05 }}
-        whileInView={{ scale: 1 }}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
         viewport={{ once: true }}
-      >
-        {/* Subtle Dark Overlay */}
-        <div className="absolute inset-0 bg-foreground/90 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-background/5" />
-      </motion.div>
+      />
+
+      {/* Subtle Dark Overlay */}
+      <div className="absolute inset-0 bg-foreground/60 mix-blend-multiply pointer-events-none" />
 
       <div className="container relative z-10 mx-auto px-4">
         <FadeInOnScroll>
