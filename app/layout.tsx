@@ -12,6 +12,14 @@ export const metadata: Metadata = {
     },
     description:
         "Canadian supplier of high-purity research compounds from microbial sources. Terrein and natural product metabolites with COA/SDS documentation. For research use only.",
+    icons: {
+        icon: [
+            { url: "/favicon.png", type: "image/png" },
+        ],
+        apple: [
+            { url: "/favicon.png" },
+        ],
+    },
     keywords: [
         "InVitvo",
         "Pharmaceuticals",
