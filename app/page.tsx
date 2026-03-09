@@ -3,10 +3,12 @@ import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Mission from "@/components/Mission";
+import OurStory from "@/components/OurStory";
+import WhyInVitvo from "@/components/WhyInVitvo";
 import HowOrdering from "@/components/HowOrdering";
 import Stats from "@/components/Stats";
 import Research from "@/components/Research";
-import LatestUpdates from "@/components/LatestUpdates";
+import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
@@ -24,10 +26,12 @@ export default function HomePage() {
             <main className="flex-grow">
                 <Hero />
                 <Mission />
+                <OurStory />
                 <HowOrdering />
                 <Stats />
+                <WhyInVitvo />
                 <Research />
-                <LatestUpdates />
+                <FAQ />
             </main>
             <Footer />
         </div>
