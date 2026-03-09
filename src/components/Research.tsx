@@ -53,6 +53,34 @@ const Research = () => {
             </p>
           </FadeInOnScroll>
 
+          {/* Additional Microscopy/Analytical Data Images */}
+          <FadeInOnScroll delay={0.45}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="overflow-hidden rounded-lg shadow-2xl border border-white/20 bg-background/10 backdrop-blur-sm p-2"
+              >
+                <Image
+                  src={research2}
+                  alt="UHPLC chromatogram showing >95% Terrein purity"
+                  placeholder="blur"
+                  className="w-full h-auto rounded object-contain"
+                />
+              </motion.div>
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="overflow-hidden rounded-lg shadow-2xl border border-white/20 bg-background/10 backdrop-blur-sm p-2"
+              >
+                <Image
+                  src={research3}
+                  alt="Terrein molecular structure and metabolite analysis"
+                  placeholder="blur"
+                  className="w-full h-auto rounded object-contain"
+                />
+              </motion.div>
+            </div>
+          </FadeInOnScroll>
+
           <FadeInOnScroll delay={0.5}>
             <div className="flex flex-col sm:flex-row justify-center md:justify-start gap-4">
               <motion.div
