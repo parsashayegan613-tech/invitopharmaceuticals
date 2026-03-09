@@ -8,18 +8,18 @@ const Mission = () => {
   const trustCards = [
     {
       icon: FileCheck,
-      title: "COA + SDS Available",
-      description: "Full documentation with every order including Certificate of Analysis and Safety Data Sheets"
+      title: "Tired of missing documentation?",
+      description: "Get full transparency. Every order includes a detailed Certificate of Analysis and complete Safety Data Sheets."
     },
     {
       icon: MapPin,
-      title: "Based in Edmonton, Canada",
-      description: "Local supplier with reliable North American shipping and responsive customer support"
+      title: "No 3-week overseas waits",
+      description: "Based in Edmonton, Canada. We offer rapid, reliable North American shipping and highly responsive support."
     },
     {
       icon: FlaskConical,
-      title: "RUO Products for Research",
-      description: "High-purity compounds for academic and industrial research applications"
+      title: "Demanding purity requirements?",
+      description: "Our compounds are independently verified for >95% purity, ensuring consistent, reproducible research results."
     }
   ];
 

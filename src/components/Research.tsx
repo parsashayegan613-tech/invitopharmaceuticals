@@ -11,9 +11,9 @@ import research3 from "@/assets/research-3.png";
 
 const Research = () => {
   const images = [
-    { src: research1, alt: "Microscopy research image 1" },
-    { src: research2, alt: "Microscopy research image 2" },
-    { src: research3, alt: "Microscopy research image 3" },
+    { src: research1, alt: "Microbial strain culture under laboratory conditions" },
+    { src: research2, alt: "UHPLC chromatogram showing >95% Terrein purity" },
+    { src: research3, alt: "Terrein molecular structure and metabolite analysis" },
   ];
 
   return (

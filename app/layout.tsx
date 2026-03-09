@@ -7,7 +7,7 @@ import BackToTop from "@/components/BackToTop";
 export const metadata: Metadata = {
     metadataBase: new URL("https://invitvo.com"),
     title: {
-        default: "InVitvo Pharmaceuticals | Research Compounds & Microbial Metabolites | Edmonton, Canada",
+        default: "Research Compounds & Microbial Metabolites | InVitvo Pharmaceuticals",
         template: "%s | InVitvo Pharmaceuticals",
     },
     description:

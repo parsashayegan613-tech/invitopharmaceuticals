@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import FadeInOnScroll from "./animations/FadeInOnScroll";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const Stats = () => {
@@ -16,7 +16,7 @@ const Stats = () => {
   return (
     <section className="py-16 bg-primary text-primary-foreground">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto mb-12">
           {stats.map((stat, index) => (
             <FadeInOnScroll key={index} delay={index * 0.1}>
               <motion.div
@@ -29,6 +29,21 @@ const Stats = () => {
             </FadeInOnScroll>
           ))}
         </div>
+
+        <FadeInOnScroll delay={0.5}>
+          <div className="text-center">
+            <p className="text-lg md:text-xl font-medium mb-6">Ready to order? Get a quote in under 2 minutes.</p>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
+              <Link
+                href="/order"
+                className="inline-flex items-center gap-2 bg-white text-primary px-8 py-3 rounded font-semibold hover:bg-white/90 transition-colors"
+              >
+                Request Quote
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+          </div>
+        </FadeInOnScroll>
       </div>
     </section>
   );
