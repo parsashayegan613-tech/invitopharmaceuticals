@@ -68,7 +68,7 @@ const ThankYouInner = () => {
                     {customerEmail && (
                         <p className="text-sm text-muted-foreground mb-8">
                             {isContactForm
-                                ? <>We'll respond to <strong className="text-foreground">{customerEmail}</strong> as soon as possible.</>
+                                ? <>We&apos;ll respond to <strong className="text-foreground">{customerEmail}</strong> as soon as possible.</>
                                 : <>A confirmation email has been sent to <strong className="text-foreground">{customerEmail}</strong></>}
                         </p>
                     )}

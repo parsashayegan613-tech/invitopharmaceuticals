@@ -27,7 +27,7 @@ const PrivacyPolicyContent = () => {
                             <div className="prose prose-lg max-w-none">
                                 <h2 className="text-2xl font-medium text-foreground mb-4">1. Introduction</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    InVitvo Pharmaceuticals Ltd. ("we," "our," or "us") is committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you visit our website or interact with our services.
+                                    InVitvo Pharmaceuticals Ltd. (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you visit our website or interact with our services.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">2. Information We Collect</h2>
@@ -99,14 +99,14 @@ const PrivacyPolicyContent = () => {
                                     Our website may contain links to third-party websites. We are not responsible for the privacy practices or content of these external sites. We encourage you to review the privacy policies of any third-party sites you visit.
                                 </p>
 
-                                <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">10. Children's Privacy</h2>
+                                <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">10. Children&apos;s Privacy</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
                                     Our website and services are not directed to individuals under the age of 18. We do not knowingly collect personal information from children.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">11. Changes to This Policy</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated "Last Updated" date. We encourage you to review this policy periodically.
+                                    We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated &quot;Last Updated&quot; date. We encourage you to review this policy periodically.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">12. Governing Law</h2>

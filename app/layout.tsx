@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "../src/index.css";
 import Providers from "@/components/Providers";
 import BackToTop from "@/components/BackToTop";
@@ -66,21 +67,6 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                {/* Google Analytics */}
-                <script
-                    async
-                    src="https://www.googletagmanager.com/gtag/js?id=G-1C75KSQYCL"
-                />
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-1C75KSQYCL');
-            `,
-                    }}
-                />
                 {/* Schema.org Structured Data */}
                 <script
                     type="application/ld+json"
@@ -138,6 +124,20 @@ export default function RootLayout({
                 />
             </head>
             <body>
+                {/* Google Analytics */}
+                <Script
+                    src="https://www.googletagmanager.com/gtag/js?id=G-1C75KSQYCL"
+                    strategy="afterInteractive"
+                />
+                <Script id="google-analytics" strategy="afterInteractive">
+                    {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-1C75KSQYCL');
+            `}
+                </Script>
+
                 <Providers>
                     <BackToTop />
                     {children}

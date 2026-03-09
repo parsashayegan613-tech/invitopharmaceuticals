@@ -26,7 +26,7 @@ const NotFoundContent = () => {
                             Page Not Found
                         </h2>
                         <p className="text-muted-foreground mb-8 leading-relaxed">
-                            The page you're looking for doesn't exist or has been moved.
+                            The page you&apos;re looking for doesn&apos;t exist or has been moved.
                             Please check the URL or navigate back to our homepage.
                         </p>
 
