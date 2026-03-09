@@ -233,17 +233,17 @@ const ContactUsContent = () => {
                             <h3 className="text-2xl font-light text-foreground mb-8 text-center">Our Location</h3>
                         </FadeInOnScroll>
                         <FadeInOnScroll delay={0.2}>
-                            <div className="rounded-lg overflow-hidden shadow-lg">
+                            <div className="rounded-lg overflow-hidden shadow-lg h-[400px]">
                                 <iframe
-                                    src="https://maps.google.com/maps?q=9407+20+Ave+NW,+Edmonton,+AB+T6N+1E5,+Canada&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                                    src="https://maps.google.com/maps?q=9407+20+Ave+NW,+Edmonton,+AB+T6N+1E5,+Canada&t=&z=14&ie=UTF8&iwloc=&output=embed"
                                     width="100%"
-                                    height="400"
+                                    height="100%"
                                     style={{ border: 0 }}
                                     allowFullScreen
                                     loading="lazy"
                                     referrerPolicy="no-referrer-when-downgrade"
                                     title="InVitvo Pharmaceuticals Location"
-                                    className="w-full"
+                                    className="w-full h-full"
                                 />
                             </div>
                             <p className="text-center text-muted-foreground mt-4">
