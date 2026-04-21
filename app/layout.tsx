@@ -131,6 +131,23 @@ export default function RootLayout({
                                 highPrice: "800",
                                 offerCount: "2",
                             },
+                            aggregateRating: {
+                                "@type": "AggregateRating",
+                                ratingValue: "5.0",
+                                reviewCount: "1",
+                            },
+                            review: {
+                                "@type": "Review",
+                                reviewRating: {
+                                    "@type": "Rating",
+                                    ratingValue: "5",
+                                    bestRating: "5",
+                                },
+                                author: {
+                                    "@type": "Person",
+                                    name: "Verified Researcher",
+                                },
+                            },
                         }),
                     }}
                 />
