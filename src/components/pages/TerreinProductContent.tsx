@@ -213,7 +213,7 @@ const TerreinProductContent = () => {
                                 <div className="bg-card p-6 rounded-lg border border-border h-full">
                                     <Activity className="w-8 h-8 text-primary mb-4" />
                                     <h4 className="text-lg font-semibold text-foreground mb-2">Preclinical Oncology</h4>
-                                    <p className="text-sm text-muted-foreground">In vitro studies highlight Terrein's ability to inhibit STAT3 pathways and induce apoptotic responses in specific human cancer cell lines.</p>
+                                    <p className="text-sm text-muted-foreground">In vitro studies highlight Terrein&apos;s ability to inhibit STAT3 pathways and induce apoptotic responses in specific human cancer cell lines.</p>
                                 </div>
                             </FadeInOnScroll>
                             <FadeInOnScroll delay={0.2}>
