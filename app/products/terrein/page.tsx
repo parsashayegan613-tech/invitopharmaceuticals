@@ -3,6 +3,7 @@ import Script from "next/script";
 import TerreinProductContent from "@/components/pages/TerreinProductContent";
 import terreinMolecule from "@/assets/terrein-molecule.png";
 import { terrein } from "@/lib/terrein";
+import { standardProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
     title: { absolute: `Terrein CAS ${terrein.cas} >95% | InVitvo` },
@@ -59,26 +60,15 @@ export default function TerreinPage() {
                     { "@type": "PropertyValue", name: "Source", value: terrein.source },
                     { "@type": "PropertyValue", name: "Use", value: "Research Use Only (RUO)" },
                 ],
-                offers: [
-                    {
-                        "@type": "Offer",
-                        sku: "INV-TER-005",
-                        price: "450",
-                        priceCurrency: "CAD",
-                        availability: "https://schema.org/InStock",
-                        itemCondition: "https://schema.org/NewCondition",
-                        url: "https://www.invitvo.com/order?product=terrein&quantity=5mg",
-                    },
-                    {
-                        "@type": "Offer",
-                        sku: "INV-TER-010",
-                        price: "800",
-                        priceCurrency: "CAD",
-                        availability: "https://schema.org/InStock",
-                        itemCondition: "https://schema.org/NewCondition",
-                        url: "https://www.invitvo.com/order?product=terrein&quantity=10mg",
-                    },
-                ],
+                offers: standardProducts.map((product) => ({
+                    "@type": "Offer",
+                    sku: product.catalog,
+                    price: String(product.priceCad),
+                    priceCurrency: "CAD",
+                    availability: "https://schema.org/InStock",
+                    itemCondition: "https://schema.org/NewCondition",
+                    url: product.orderUrl,
+                })),
             },
             {
                 "@type": "ChemicalSubstance",

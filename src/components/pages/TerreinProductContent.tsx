@@ -15,6 +15,7 @@ import { ArrowRight, Shield, Beaker, Activity, Award, Download, Thermometer, Tru
 import terreinMolecule from "@/assets/terrein-molecule.png";
 import { trackEvent } from "@/lib/analytics";
 import { terrein } from "@/lib/terrein";
+import { productList } from "@/lib/products";
 
 const TerreinProductContent = () => {
     useEffect(() => {
@@ -22,7 +23,7 @@ const TerreinProductContent = () => {
             compound: terrein.name,
             cas: terrein.cas,
             product_id: "INV-TER",
-            quantity: "5 mg, 10 mg, custom",
+            quantity: productList.map((product) => product.amount).join(", "),
         });
     }, []);
 
@@ -39,12 +40,6 @@ const TerreinProductContent = () => {
         { label: "Source", value: <><em>Aspergillus terreus</em> (Canadian soil isolate)</> },
         { label: "Physical Form", value: "Crystalline powder or lyophilized solid" },
         { label: "Solubility", value: "DMSO, Methanol, Ethanol" },
-    ];
-
-    const pricing = [
-        { size: "5 mg", price: "C$450", sku: "INV-TER-005" },
-        { size: "10 mg", price: "C$800", sku: "INV-TER-010" },
-        { size: "Custom / Bulk", price: "Inquire for Quote", sku: "INV-TER-XXX" }
     ];
 
     const qcMethods = [
@@ -150,11 +145,11 @@ const TerreinProductContent = () => {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-border">
-                                        {pricing.map((item, index) => (
-                                            <tr key={index} className="hover:bg-muted/30 transition-colors">
-                                                <td className="break-words px-3 py-4 text-sm text-muted-foreground font-mono sm:px-6">{item.sku}</td>
-                                                <td className="px-3 py-4 text-sm font-medium text-foreground sm:px-6">{item.size}</td>
-                                                <td className="px-3 py-4 text-right text-sm font-bold text-foreground sm:px-6">{item.price}</td>
+                                        {productList.map((item) => (
+                                            <tr key={item.id} className="hover:bg-muted/30 transition-colors">
+                                                <td className="break-words px-3 py-4 text-sm text-muted-foreground font-mono sm:px-6">{item.catalog}</td>
+                                                <td className="px-3 py-4 text-sm font-medium text-foreground sm:px-6">{item.isCustomQuantity ? "Custom / Bulk" : item.amount}</td>
+                                                <td className="px-3 py-4 text-right text-sm font-bold text-foreground sm:px-6">{item.isCustomQuantity ? "Inquire for Quote" : item.price}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -270,6 +265,18 @@ const TerreinProductContent = () => {
                                     </div>
                                 ))}
                             </div>
+                            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                                <Button asChild variant="outline" className="min-h-11">
+                                    <Link href="/research/terrein-in-vitro-models">
+                                        View Terrein Literature Context
+                                    </Link>
+                                </Button>
+                                <Button asChild variant="outline" className="min-h-11">
+                                    <Link href="/research/aspergillus-terreus-metabolites">
+                                        View Source & Metabolite Context
+                                    </Link>
+                                </Button>
+                            </div>
                         </FadeInOnScroll>
                     </div>
                 </section>
@@ -288,6 +295,11 @@ const TerreinProductContent = () => {
                                     <li className="flex gap-3"><span className="text-primary font-bold">•</span> <strong>Handling:</strong> Handle exclusively within a certified fume hood or ventilated environment using standard PPE (nitrile gloves, lab coat, safety glasses).</li>
                                     <li className="flex gap-3"><span className="text-primary font-bold">•</span> <strong>Preparation:</strong> Soluble in DMSO (recommended to make stock solutions immediately before use).</li>
                                 </ul>
+                                <Button asChild variant="outline" className="mt-6 min-h-11">
+                                    <Link href="/resources/terrein-handling">
+                                        View Terrein Handling Guide
+                                    </Link>
+                                </Button>
                             </div>
                         </FadeInOnScroll>
                     </div>

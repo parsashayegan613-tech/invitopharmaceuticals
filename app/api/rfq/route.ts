@@ -8,15 +8,10 @@ import { escapeHtml, sanitizeText } from "@/lib/server/html";
 import { getClientIp, parseJsonBody, rejectInvalidJsonContentType, rejectInvalidOrigin } from "@/lib/server/http";
 import { checkMemoryRateLimit, rateLimitWindowStart } from "@/lib/server/rate-limit";
 import { getSupabaseAdmin } from "@/lib/server/supabase-admin";
+import { productCatalog, productIds, type ProductCatalogItem } from "@/lib/products";
 
 export const runtime = "nodejs";
 export const maxDuration = 10;
-
-const products = {
-    "terrein-5mg": { name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
-    "terrein-10mg": { name: "Terrein >95%", amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
-    "terrein-custom": { name: "Terrein >95%", amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
-} as const;
 
 const freeEmailDomains = new Set([
     "gmail.com",
@@ -38,7 +33,7 @@ const RATE_LIMIT_MAX = 5;
 const rfqPayloadSchema = z
     .object({
         submission_id: z.string().uuid().optional(),
-        product_id: z.enum(["terrein-5mg", "terrein-10mg", "terrein-custom"]),
+        product_id: z.enum(productIds),
         customer_name: z.string().trim().min(1).max(200),
         customer_email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
         customer_phone: z.string().trim().max(100).nullable().optional(),
@@ -103,7 +98,7 @@ const normalizeOptional = (value: string | null | undefined) => {
 
 const buildInternalEmail = (
     payload: RfqPayload,
-    product: typeof products[keyof typeof products],
+    product: ProductCatalogItem,
     now: string,
     freeEmailWarning: string
 ) => {
@@ -194,7 +189,7 @@ const buildInternalEmail = (
 
 const buildCustomerEmail = (
     payload: RfqPayload,
-    product: typeof products[keyof typeof products]
+    product: ProductCatalogItem
 ) => {
     const amount = normalizeOptional(payload.custom_quantity) || product.amount;
     const safeName = escapeHtml(payload.customer_name);
@@ -271,7 +266,7 @@ export async function POST(request: NextRequest) {
     const payload = validation.data;
     if (payload.company_website) return NextResponse.json({ success: true });
 
-    const product = products[payload.product_id];
+    const product = productCatalog[payload.product_id];
     const supabase = getSupabaseAdmin();
 
     const databaseRateLimitOk = await checkDatabaseRateLimit(supabase, payload.customer_email, clientIp);
@@ -325,7 +320,7 @@ export async function POST(request: NextRequest) {
     const internalEmail = buildInternalEmail(payload, product, now, freeEmailWarning);
     const customerEmail = buildCustomerEmail(payload, product);
 
-    const [internalResult] = await Promise.allSettled([
+    const [internalResult, customerResult] = await Promise.allSettled([
         sendTransactionalEmail({
             from: "InVitvo Orders <orders@invitvo.com>",
             to: [getNotifyEmail()],
@@ -344,9 +339,9 @@ export async function POST(request: NextRequest) {
         }),
     ]);
 
-    if (internalResult.status === "rejected") {
+    if (internalResult.status === "rejected" || customerResult.status === "rejected") {
         return NextResponse.json(
-            { error: "RFQ was saved, but notification failed. Please email info@invitvo.com." },
+            { error: "RFQ was saved, but email confirmation failed. Please email info@invitvo.com." },
             { status: 502 }
         );
     }

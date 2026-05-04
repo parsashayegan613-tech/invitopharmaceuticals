@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Beaker, Activity, Award, Download, Thermometer, Truck, BookOpen, FlaskConical } from "lucide-react";
 import terreinMolecule from "@/assets/terrein-molecule.png";
 import { terrein } from "@/lib/terrein";
+import { productList } from "@/lib/products";
 
 const ProductsContent = () => {
     const features = [
@@ -193,6 +194,18 @@ const ProductsContent = () => {
                                     <p className="text-sm text-muted-foreground italic">
                                         <strong>Disclaimer:</strong> Reported biological activities are based on published laboratory studies. This product is for research use only and is not intended for human, veterinary, diagnostic, clinical, or therapeutic use.
                                     </p>
+                                </div>
+                                <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
+                                    <Button asChild variant="outline" className="min-h-11">
+                                        <Link href="/research/terrein-in-vitro-models">
+                                            View Literature Context
+                                        </Link>
+                                    </Button>
+                                    <Button asChild variant="outline" className="min-h-11">
+                                        <Link href="/resources/terrein-handling">
+                                            View Handling Guide
+                                        </Link>
+                                    </Button>
                                 </div>
                             </div>
                         </FadeInOnScroll>
@@ -407,7 +420,7 @@ const ProductsContent = () => {
                                 Submit a Request for Quotation to receive pricing and availability.
                             </p>
                             <p className="text-sm text-muted-foreground mb-8">
-                                Available quantities: 5 mg (C$450) • 10 mg (C$800) • Custom quantities available
+                                Available quantities: {productList.map((product) => product.isCustomQuantity ? "Custom quantities available" : `${product.amount} (${product.price})`).join(" • ")}
                             </p>
                             <motion.div
                                 whileHover={{ scale: 1.02 }}

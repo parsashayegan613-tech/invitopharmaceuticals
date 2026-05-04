@@ -10,6 +10,8 @@ const Footer = () => {
     { name: "Home", href: "/" },
     { name: "About Us", href: "/about-us" },
     { name: "Terrein Product Page", href: "/products/terrein" },
+    { name: "Terrein Handling Guide", href: "/resources/terrein-handling" },
+    { name: "Terrein Literature Context", href: "/research/terrein-in-vitro-models" },
     { name: "Request Quote", href: "/order?product=terrein&quantity=5mg" },
     { name: "Our Team", href: "/our-team" },
     { name: "Contact Us", href: "/contact-us" },

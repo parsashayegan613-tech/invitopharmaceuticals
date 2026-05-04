@@ -17,12 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Check, Clock, Mail, FileCheck, ShieldCheck, Building2, LockKeyhole } from "lucide-react";
 import { trackEmailClick, trackEvent, trackPhoneClick } from "@/lib/analytics";
 import { terrein } from "@/lib/terrein";
-
-const products = [
-    { id: "terrein-5mg", name: `Terrein ${terrein.purity}`, amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
-    { id: "terrein-10mg", name: `Terrein ${terrein.purity}`, amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
-    { id: "terrein-custom", name: `Terrein ${terrein.purity}`, amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
-];
+import { productCatalog, productList, type ProductId } from "@/lib/products";
 
 const howHeardOptions = [
     "PubChem",
@@ -52,7 +47,7 @@ const getEmailDomain = (email: string) => email.trim().toLowerCase().split("@")[
 const OrderContent = () => {
     const { toast } = useToast();
     const router = useRouter();
-    const [selectedProduct, setSelectedProduct] = useState("terrein-5mg");
+    const [selectedProduct, setSelectedProduct] = useState<ProductId>("terrein-5mg");
     const [submissionId] = useState(() =>
         typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : undefined
     );
@@ -113,16 +108,7 @@ const OrderContent = () => {
         e.preventDefault();
         setFormAlert("");
 
-        const product = products.find((p) => p.id === selectedProduct);
-        if (!product) {
-            setFormAlert("Select a product before submitting your RFQ.");
-            toast({
-                title: "Please select a product",
-                description: "Choose a product before submitting your RFQ.",
-                variant: "destructive",
-            });
-            return;
-        }
+        const product = productCatalog[selectedProduct];
 
         const requiredFields = ["name", "email", "institution", "intendedUse"];
         if (selectedProduct === "terrein-custom") {
@@ -319,7 +305,7 @@ const OrderContent = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-border">
-                                                    {products.map((product) => (
+                                                    {productList.map((product) => (
                                                         <motion.tr
                                                             key={product.id}
                                                             className={`transition-colors duration-200 ${selectedProduct === product.id
