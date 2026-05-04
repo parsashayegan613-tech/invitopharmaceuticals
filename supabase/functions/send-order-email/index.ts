@@ -1,102 +1,128 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-const NOTIFY_EMAIL = "info@invitvo.com";
+const NOTIFY_EMAIL = Deno.env.get("RFQ_NOTIFY_EMAIL") || "info@invitvo.com";
 
 const corsHeaders = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const sanitize = (value: unknown, max = 1000) =>
+    typeof value === "string" ? value.trim().slice(0, max) : "";
+
+const escapeHtml = (value: string) =>
+    value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+
 Deno.serve(async (req) => {
-    // Handle CORS preflight
     if (req.method === "OPTIONS") {
         return new Response("ok", { headers: corsHeaders });
     }
 
     try {
-        let order;
-        try {
-            const rawBody = await req.json();
-            // Supabase functions.invoke wraps the body in {"record": ...} if it's a webhook, or just sends the payload directly
-            order = rawBody;
-        } catch (e) {
-            console.error("Failed to parse request JSON", e);
-            throw new Error("Invalid request body");
+        const rawOrder = await req.json();
+        if (!rawOrder || typeof rawOrder !== "object") {
+            return new Response(JSON.stringify({ error: "Invalid payload" }), {
+                status: 400,
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
         }
 
-        // Basic input validation and sanitization to prevent massive payload abuse
-        if (!order || typeof order !== 'object') {
-            return new Response(JSON.stringify({ error: "Invalid payload" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        const order = {
+            product_name: sanitize(rawOrder.product_name, 200),
+            product_catalog: sanitize(rawOrder.product_catalog, 80),
+            product_amount: sanitize(rawOrder.product_amount, 100),
+            product_price: sanitize(rawOrder.product_price, 100),
+            custom_quantity: sanitize(rawOrder.custom_quantity, 100),
+            customer_name: sanitize(rawOrder.customer_name, 200),
+            customer_email: sanitize(rawOrder.customer_email, 320).toLowerCase(),
+            customer_phone: sanitize(rawOrder.customer_phone, 100),
+            institution: sanitize(rawOrder.institution, 250),
+            department: sanitize(rawOrder.department, 250),
+            pi_name: sanitize(rawOrder.pi_name, 250),
+            intended_use: sanitize(rawOrder.intended_use, 3000),
+            how_heard: sanitize(rawOrder.how_heard, 150),
+            additional_notes: sanitize(rawOrder.additional_notes, 5000),
+            ruo_acknowledged_at: sanitize(rawOrder.ruo_acknowledged_at, 80),
+            qualified_acknowledged_at: sanitize(rawOrder.qualified_acknowledged_at, 80),
+            terms_accepted_at: sanitize(rawOrder.terms_accepted_at, 80),
+        };
+
+        if (!order.product_name || !order.customer_name || !order.customer_email || !order.institution || !order.intended_use) {
+            return new Response(JSON.stringify({ error: "Missing required fields" }), {
+                status: 400,
+                headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
         }
 
-        const sanitize = (str: any) => typeof str === 'string' ? str.slice(0, 1000).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+        const safe = Object.fromEntries(
+            Object.entries(order).map(([key, value]) => [key, escapeHtml(value || "Not provided")])
+        );
 
-        // Sanitize all customer input fields
-        order.customer_name = sanitize(order.customer_name);
-        order.customer_email = sanitize(order.customer_email);
-        order.customer_phone = sanitize(order.customer_phone);
-        order.institution = sanitize(order.institution);
-        order.department = sanitize(order.department);
-        order.pi_name = sanitize(order.pi_name);
-        order.street_address = sanitize(order.street_address);
-        order.city = sanitize(order.city);
-        order.province = sanitize(order.province);
-        order.postal_code = sanitize(order.postal_code);
-        order.country = sanitize(order.country);
-        order.intended_use = sanitize(order.intended_use);
-        order.payment_method = sanitize(order.payment_method);
-        order.po_number = sanitize(order.po_number);
-        order.additional_notes = typeof order.additional_notes === 'string' ? order.additional_notes.slice(0, 5000).replace(/</g, "&lt;").replace(/>/g, "&gt;") : '';
+        const emailText = [
+            "New Request for Quotation",
+            "",
+            `Product: ${order.product_name}`,
+            `Catalog #: ${order.product_catalog}`,
+            `Amount: ${order.custom_quantity || order.product_amount}`,
+            `Listed price: ${order.product_price}`,
+            "",
+            `Name: ${order.customer_name}`,
+            `Email: ${order.customer_email}`,
+            `Phone: ${order.customer_phone || "Not provided"}`,
+            `Institution: ${order.institution}`,
+            `Department: ${order.department || "Not provided"}`,
+            `PI name: ${order.pi_name || "Not provided"}`,
+            "",
+            `Intended research application: ${order.intended_use}`,
+            `How heard: ${order.how_heard || "Not provided"}`,
+            `Additional notes: ${order.additional_notes || "Not provided"}`,
+            "",
+            `RUO acknowledged at: ${order.ruo_acknowledged_at || "Not provided"}`,
+            `Qualified researcher acknowledged at: ${order.qualified_acknowledged_at || "Not provided"}`,
+            `Terms accepted at: ${order.terms_accepted_at || "Not provided"}`,
+            "",
+            "All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.",
+        ].join("\n");
 
-        if (!order.customer_name || !order.customer_email || !order.street_address) {
-            return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
-        }
         const emailHtml = `
-      <h2 style="color:#2c3e50;">New Request for Quotation</h2>
-      <hr style="border:1px solid #3498db;" />
-      
-      <h3 style="color:#2980b9;">Product Selection</h3>
-      <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
-        <tr><td style="padding:6px; font-weight:bold; width:40%;">Product:</td><td style="padding:6px;">${order.product_name}</td></tr>
-        <tr style="background:#f8f9fa;"><td style="padding:6px; font-weight:bold;">Catalog #:</td><td style="padding:6px;">${order.product_catalog}</td></tr>
-        <tr><td style="padding:6px; font-weight:bold;">Amount:</td><td style="padding:6px;">${order.product_amount}</td></tr>
-        <tr style="background:#f8f9fa;"><td style="padding:6px; font-weight:bold;">Price:</td><td style="padding:6px;">${order.product_price}</td></tr>
-        ${order.custom_quantity ? `<tr><td style="padding:6px; font-weight:bold;">Custom Quantity:</td><td style="padding:6px;">${order.custom_quantity}</td></tr>` : ""}
-      </table>
-      
-      <h3 style="color:#2980b9;">Contact Information</h3>
-      <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
-        <tr><td style="padding:6px; font-weight:bold; width:40%;">Name:</td><td style="padding:6px;">${order.customer_name}</td></tr>
-        <tr style="background:#f8f9fa;"><td style="padding:6px; font-weight:bold;">Email:</td><td style="padding:6px;"><a href="mailto:${order.customer_email}">${order.customer_email}</a></td></tr>
-        <tr><td style="padding:6px; font-weight:bold;">Phone:</td><td style="padding:6px;">${order.customer_phone || "Not provided"}</td></tr>
-        <tr style="background:#f8f9fa;"><td style="padding:6px; font-weight:bold;">Institution:</td><td style="padding:6px;">${order.institution}</td></tr>
-        <tr><td style="padding:6px; font-weight:bold;">Department:</td><td style="padding:6px;">${order.department || "Not provided"}</td></tr>
-        <tr style="background:#f8f9fa;"><td style="padding:6px; font-weight:bold;">PI Name:</td><td style="padding:6px;">${order.pi_name || "Not provided"}</td></tr>
-      </table>
-      
-      <h3 style="color:#2980b9;">Shipping Address</h3>
-      <p style="margin:5px 0; padding:10px; background:#f8f9fa; border-radius:4px;">
-        ${order.street_address}<br/>
-        ${order.city}, ${order.province} ${order.postal_code}<br/>
-        ${order.country}
-      </p>
-      
-      <h3 style="color:#2980b9;">Order Details</h3>
-      <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
-        <tr><td style="padding:6px; font-weight:bold; width:40%;">Intended Use:</td><td style="padding:6px;">${order.intended_use}</td></tr>
-        <tr style="background:#f8f9fa;"><td style="padding:6px; font-weight:bold;">Payment Method:</td><td style="padding:6px;">${order.payment_method}</td></tr>
-        ${order.po_number ? `<tr><td style="padding:6px; font-weight:bold;">PO Number:</td><td style="padding:6px;">${order.po_number}</td></tr>` : ""}
-      </table>
-      
-      ${order.additional_notes ? `
-      <h3 style="color:#2980b9;">Additional Notes</h3>
-      <p style="padding:10px; background:#f8f9fa; border-radius:4px;">${order.additional_notes}</p>
-      ` : ""}
-      
-      <hr style="border:1px solid #ecf0f1; margin-top:30px;" />
-      <p style="color:#95a5a6; font-size:12px;">This email was automatically generated from the InVitvo Pharmaceuticals website order form.</p>
-    `;
+          <h2>New Request for Quotation</h2>
+          <h3>Product Selection</h3>
+          <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
+            <tr><td style="padding:6px; font-weight:bold;">Product:</td><td style="padding:6px;">${safe.product_name}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Catalog #:</td><td style="padding:6px;">${safe.product_catalog}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Amount:</td><td style="padding:6px;">${order.custom_quantity ? safe.custom_quantity : safe.product_amount}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Listed Price:</td><td style="padding:6px;">${safe.product_price}</td></tr>
+          </table>
+
+          <h3>Contact and Institution</h3>
+          <table style="border-collapse:collapse; width:100%; margin-bottom:20px;">
+            <tr><td style="padding:6px; font-weight:bold;">Name:</td><td style="padding:6px;">${safe.customer_name}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Email:</td><td style="padding:6px;"><a href="mailto:${safe.customer_email}">${safe.customer_email}</a></td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Phone:</td><td style="padding:6px;">${safe.customer_phone}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Institution:</td><td style="padding:6px;">${safe.institution}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">Department:</td><td style="padding:6px;">${safe.department}</td></tr>
+            <tr><td style="padding:6px; font-weight:bold;">PI Name:</td><td style="padding:6px;">${safe.pi_name}</td></tr>
+          </table>
+
+          <h3>Research Qualification</h3>
+          <p><strong>Intended research application:</strong><br/>${safe.intended_use.replace(/\n/g, "<br/>")}</p>
+          <p><strong>How heard:</strong> ${safe.how_heard}</p>
+          <p><strong>Additional notes:</strong><br/>${safe.additional_notes.replace(/\n/g, "<br/>")}</p>
+
+          <h3>Compliance Acknowledgements</h3>
+          <ul>
+            <li>RUO acknowledged at: ${safe.ruo_acknowledged_at}</li>
+            <li>Qualified researcher/entity acknowledged at: ${safe.qualified_acknowledged_at}</li>
+            <li>Terms accepted at: ${safe.terms_accepted_at}</li>
+          </ul>
+          <p style="color:#64748b; font-size:12px;">All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.</p>
+        `;
 
         const res = await fetch("https://api.resend.com/emails", {
             method: "POST",
@@ -107,14 +133,14 @@ Deno.serve(async (req) => {
             body: JSON.stringify({
                 from: "InVitvo Orders <orders@invitvo.com>",
                 to: [NOTIFY_EMAIL],
-                subject: `New RFQ: ${order.product_name} (${order.product_catalog}) — ${order.customer_name}`,
+                subject: `New RFQ: ${order.product_name} (${order.product_catalog}) - ${order.customer_name}`,
                 html: emailHtml,
+                text: emailText,
                 reply_to: order.customer_email,
             }),
         });
 
-        const data = await res.json();
-
+        const data = await res.json().catch(() => ({}));
         if (!res.ok) {
             console.error("Resend error:", data);
             return new Response(JSON.stringify({ error: data }), {
@@ -126,7 +152,7 @@ Deno.serve(async (req) => {
         return new Response(JSON.stringify({ success: true }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Edge function error:", error);
         return new Response(JSON.stringify({ error: error.message }), {
             status: 500,

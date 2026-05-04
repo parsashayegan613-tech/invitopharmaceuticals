@@ -22,8 +22,8 @@ const ProductsContent = () => {
         },
         {
             icon: Activity,
-            title: "Biological Activity",
-            description: "Reported activity in preclinical research literature"
+            title: "Literature Context",
+            description: "Published in vitro and preclinical research references"
         },
         {
             icon: Beaker,
@@ -67,7 +67,7 @@ const ProductsContent = () => {
         },
         {
             citation: "Arakawa M, et al. (2002) Antibacterial and antifungal activity of terrein. Biological & Pharmaceutical Bulletin, 25(5), 645-649.",
-            note: "Antimicrobial activity characterization"
+            note: "Antimicrobial assay characterization"
         },
     ];
 
@@ -173,7 +173,7 @@ const ProductsContent = () => {
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <div className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
-                                        <span className="text-muted-foreground">Antimicrobial activity investigations</span>
+                                        <span className="text-muted-foreground">Antimicrobial assay investigations</span>
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <div className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
@@ -181,7 +181,7 @@ const ProductsContent = () => {
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <div className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
-                                        <span className="text-muted-foreground">Prodrug development and chemical modification research</span>
+                                        <span className="text-muted-foreground">Chemical modification and derivative characterization research</span>
                                     </li>
                                 </ul>
                                 <div className="bg-muted/50 border border-border rounded-lg p-4">
@@ -334,7 +334,7 @@ const ProductsContent = () => {
                                         <h4 className="font-medium text-foreground mb-2">Domestic (Canada)</h4>
                                         <ul className="text-sm text-muted-foreground space-y-2">
                                             <li>• Lead time: 5-7 business days</li>
-                                            <li>• Shipped on dry ice</li>
+                                            <li>• Shipped under conditions specified in the quotation and SDS</li>
                                             <li>• Tracking provided</li>
                                         </ul>
                                     </div>
@@ -401,7 +401,7 @@ const ProductsContent = () => {
                                 className="inline-block"
                             >
                                 <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20">
-                                    <Link href="/order" className="flex items-center gap-2">
+                                    <Link href="/order?product=terrein&quantity=5mg" className="flex items-center gap-2">
                                         Request Quote
                                         <ArrowRight className="w-4 h-4" />
                                     </Link>

@@ -3,9 +3,20 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
+
+const sanitize = (value: unknown, max = 1000) =>
+  typeof value === "string" ? value.trim().slice(0, max) : "";
+
+const escapeHtml = (value: string) =>
+  value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -13,96 +24,76 @@ Deno.serve(async (req) => {
   }
 
   try {
-    let order;
-    try {
-      order = await req.json();
-    } catch (e) {
-      return new Response(JSON.stringify({ error: "Invalid request body" }), {
+    const rawOrder = await req.json();
+    if (!rawOrder || typeof rawOrder !== "object") {
+      return new Response(JSON.stringify({ error: "Invalid payload" }), {
         status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" }
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    const order = {
+      product_name: sanitize(rawOrder.product_name, 200),
+      product_catalog: sanitize(rawOrder.product_catalog, 80),
+      product_amount: sanitize(rawOrder.product_amount, 100),
+      product_price: sanitize(rawOrder.product_price, 100),
+      custom_quantity: sanitize(rawOrder.custom_quantity, 100),
+      customer_name: sanitize(rawOrder.customer_name, 200),
+      customer_email: sanitize(rawOrder.customer_email, 320).toLowerCase(),
+      institution: sanitize(rawOrder.institution, 250),
+    };
+
+    if (!order.customer_name || !order.customer_email || !order.product_name) {
+      return new Response(JSON.stringify({ error: "Missing required fields" }), {
+        status: 400,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const amount = order.custom_quantity || order.product_amount;
+    const safe = Object.fromEntries(
+      Object.entries(order).map(([key, value]) => [key, escapeHtml(value || "Not provided")])
+    );
+    const safeAmount = escapeHtml(amount || "Not provided");
+
+    const emailText = [
+      `Dear ${order.customer_name},`,
+      "",
+      "We received your Request for Quotation. Our team will review it within 1-2 business days.",
+      "",
+      `Product: ${order.product_name}`,
+      `Catalog #: ${order.product_catalog}`,
+      `Amount: ${amount}`,
+      "",
+      "Shipping address, payment method, and purchase order details are collected only after quote acceptance.",
+      "",
+      "All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.",
+      "",
+      "Questions? Reply to this email or contact info@invitvo.com.",
+      "",
+      "InVitvo Pharmaceuticals Ltd.",
+      "Edmonton, AB, Canada",
+    ].join("\n");
+
     const emailHtml = `
-      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
+      <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color:#1a2332;">
         <div style="text-align: center; padding: 20px 0 5px;">
-          <img src="https://invitopharmaceuticals.vercel.app/logo-email.png" alt="InVitvo Pharmaceuticals Ltd." style="max-width: 180px; height: auto;" />
+          <img src="https://www.invitvo.com/logo-email.png" alt="InVitvo Pharmaceuticals Ltd." style="max-width: 180px; height: auto;" />
         </div>
-        
-        <div style="padding: 30px; background: #ffffff;">
-          <h2 style="color: #1a2332; margin-top: 0;">Thank You for Your Request</h2>
-          <p style="color: #64748b; line-height: 1.6;">
-            Dear ${order.customer_name},<br/><br/>
-            We have received your Request for Quotation and our team will review it within <strong>1-2 business days</strong>. 
-            You will receive a formal quotation with pricing and lead times at <strong>${order.customer_email}</strong>.
-          </p>
-          
-          <hr style="border: 1px solid #e2e8f0; margin: 25px 0;" />
-          
-          <h3 style="color: #1a2332; margin-bottom: 10px;">Order Summary</h3>
-          <table style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">
-            <tr style="background: #f8fafc;">
-              <td style="padding: 10px; font-weight: bold; color: #475569; width: 40%;">Product:</td>
-              <td style="padding: 10px; color: #1a2332;">${order.product_name}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; font-weight: bold; color: #475569;">Catalog #:</td>
-              <td style="padding: 10px; color: #1a2332; font-family: monospace;">${order.product_catalog}</td>
-            </tr>
-            <tr style="background: #f8fafc;">
-              <td style="padding: 10px; font-weight: bold; color: #475569;">Amount:</td>
-              <td style="padding: 10px; color: #1a2332;">${order.product_amount}</td>
-            </tr>
-            <tr>
-              <td style="padding: 10px; font-weight: bold; color: #475569;">Listed Price:</td>
-              <td style="padding: 10px; color: #1a2332; font-weight: bold;">${order.product_price}</td>
-            </tr>
-            ${order.custom_quantity ? `
-            <tr style="background: #f8fafc;">
-              <td style="padding: 10px; font-weight: bold; color: #475569;">Custom Quantity:</td>
-              <td style="padding: 10px; color: #1a2332;">${order.custom_quantity}</td>
-            </tr>` : ""}
-          </table>
-          
-          <h3 style="color: #1a2332; margin-bottom: 10px;">Shipping To</h3>
-          <p style="color: #475569; background: #f8fafc; padding: 12px; border-radius: 6px; line-height: 1.6; margin: 0;">
-            ${order.customer_name}<br/>
-            ${order.institution}<br/>
-            ${order.street_address}<br/>
-            ${order.city}, ${order.province} ${order.postal_code}<br/>
-            ${order.country}
-          </p>
-          
-          <hr style="border: 1px solid #e2e8f0; margin: 25px 0;" />
-          
-          <h3 style="color: #1a2332; margin-bottom: 15px;">What Happens Next?</h3>
-          <table style="width: 100%;">
-            <tr>
-              <td style="padding: 8px 12px; vertical-align: top; width: 30px; color: #0f766e; font-weight: bold;">1.</td>
-              <td style="padding: 8px 0; color: #475569;">Our team reviews your request (1-2 business days)</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 12px; vertical-align: top; color: #0f766e; font-weight: bold;">2.</td>
-              <td style="padding: 8px 0; color: #475569;">You'll receive a formal quotation with final pricing</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px 12px; vertical-align: top; color: #0f766e; font-weight: bold;">3.</td>
-              <td style="padding: 8px 0; color: #475569;">Confirm your order and submit payment or PO</td>
-            </tr>
-          </table>
-        </div>
-        
-        <div style="background: #f1f5f9; padding: 20px; text-align: center;">
-          <p style="color: #64748b; font-size: 13px; margin: 0 0 5px;">
-            Questions? Reply to this email or contact us at <a href="mailto:info@invitvo.com" style="color: #0f766e;">info@invitvo.com</a>
-          </p>
-          <p style="color: #94a3b8; font-size: 11px; margin: 0;">
-            © ${new Date().getFullYear()} InVitvo Pharmaceuticals Ltd. | Edmonton, AB, Canada
-          </p>
-          <p style="color: #cbd5e1; font-size: 10px; margin: 8px 0 0;">
-            All products are for Research Use Only (RUO). Not for human or veterinary use.
-          </p>
-        </div>
+
+        <h2>RFQ Received</h2>
+        <p>Dear ${safe.customer_name},</p>
+        <p>We received your Request for Quotation. Our team will review it within <strong>1-2 business days</strong>.</p>
+
+        <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+          <tr><td style="padding: 8px; font-weight: bold;">Product:</td><td style="padding: 8px;">${safe.product_name}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Catalog #:</td><td style="padding: 8px;">${safe.product_catalog}</td></tr>
+          <tr><td style="padding: 8px; font-weight: bold;">Amount:</td><td style="padding: 8px;">${safeAmount}</td></tr>
+        </table>
+
+        <p>Shipping address, payment method, and purchase order details are collected only after quote acceptance.</p>
+        <p style="font-size: 12px; color: #64748b;">All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.</p>
+        <p>Questions? Reply to this email or contact <a href="mailto:info@invitvo.com">info@invitvo.com</a>.</p>
       </div>
     `;
 
@@ -115,14 +106,14 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "InVitvo Pharmaceuticals <info@invitvo.com>",
         to: [order.customer_email],
-        subject: `Order Confirmation — ${order.product_name} (${order.product_catalog})`,
+        subject: `RFQ received - ${order.product_name} (${order.product_catalog})`,
         html: emailHtml,
+        text: emailText,
         reply_to: "info@invitvo.com",
       }),
     });
 
-    const data = await res.json();
-
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       console.error("Resend error:", data);
       return new Response(JSON.stringify({ error: data }), {

@@ -20,7 +20,7 @@ const TermsOfServiceContent = () => {
                         <FadeInOnScroll>
                             <p className="text-muted-foreground mb-8">
                                 <strong>Effective Date:</strong> January 1, 2024<br />
-                                <strong>Last Updated:</strong> January 1, 2024
+                                <strong>Last Updated:</strong> May 3, 2026
                             </p>
                         </FadeInOnScroll>
 
@@ -43,6 +43,7 @@ const TermsOfServiceContent = () => {
                                     <li>Products are not for human or veterinary diagnostic or therapeutic use</li>
                                     <li>Products are not intended to diagnose, treat, cure, or prevent any disease</li>
                                     <li>Products may only be used by qualified researchers in appropriate laboratory settings</li>
+                                    <li>You represent that you are ordering on behalf of a qualified research institution, company, or researcher able to safely handle the compound</li>
                                     <li>You will not resell, distribute, or transfer products for any prohibited use</li>
                                     <li>You assume all responsibility for ensuring compliance with applicable regulations in your jurisdiction</li>
                                 </ul>
@@ -66,7 +67,7 @@ const TermsOfServiceContent = () => {
                                     <strong>Shipping Terms:</strong> Products are shipped FOB origin. Risk of loss transfers to the buyer upon delivery to the carrier.
                                 </p>
                                 <p className="text-muted-foreground mb-4 leading-relaxed">
-                                    <strong>Lead Times:</strong> Standard lead times are 5-10 business days for in-stock items. Custom synthesis or bulk orders may require additional time.
+                                    <strong>Lead Times:</strong> Standard lead times are typically 5-7 business days for Canadian delivery and 7-14 business days for international delivery after order confirmation. Custom quantities or bulk orders may require additional time.
                                 </p>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
                                     <strong>International Orders:</strong> Buyer is responsible for all import duties, taxes, and customs clearance requirements. Additional documentation may be required for international shipments.
@@ -100,7 +101,7 @@ const TermsOfServiceContent = () => {
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">9. Regulatory Compliance</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    Purchasers are responsible for ensuring that their use of products complies with all applicable local, provincial, federal, and international laws and regulations. This includes but is not limited to laboratory safety requirements, import/export regulations, and biosafety guidelines.
+                                    Purchasers are responsible for ensuring that their purchase, import, export, storage, handling, transfer, and use of products complies with all applicable local, provincial, federal, and international laws and regulations. This includes laboratory safety requirements, import/export controls, sanctions restrictions, customs requirements, biosafety guidelines, and any compound-specific scheduling or restricted-substance status in the purchaser&apos;s jurisdiction. InVitvo may decline or cancel any request that cannot be qualified for lawful RUO laboratory research use.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">10. Governing Law and Jurisdiction</h2>

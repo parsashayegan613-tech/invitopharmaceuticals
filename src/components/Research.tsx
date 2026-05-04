@@ -35,7 +35,7 @@ const Research = () => {
         <div className="max-w-4xl mx-auto">
           <FadeInOnScroll delay={0.2}>
             <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-8 text-center md:text-left">
-              Our current research focuses on the synthesis and characterization of novel Terrein prodrugs. Preclinical studies have demonstrated promising pharmacokinetic and pharmacodynamic (PKPD) properties. Biological activity has been reported in peer-reviewed literature, including potential applications in cancer research models.
+              Our current research focuses on synthesis and analytical characterization of Terrein derivatives. Reported biological activities should be interpreted only in the context of cited preclinical and in vitro literature.
             </p>
           </FadeInOnScroll>
 
@@ -89,7 +89,7 @@ const Research = () => {
               >
                 <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20">
                   <Link href="/products" className="flex items-center gap-2">
-                    Start Your Research Today
+                    View Research Compounds
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>

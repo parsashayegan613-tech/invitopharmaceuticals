@@ -41,6 +41,17 @@ Deno.serve(async (req) => {
         if (!contact.firstName || !contact.email || !contact.message) {
             return new Response(JSON.stringify({ error: "Missing required fields" }), { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } });
         }
+        const emailText = [
+            "New Contact Form Submission",
+            "",
+            `Name: ${contact.firstName} ${contact.lastName}`,
+            `Email: ${contact.email}`,
+            `Phone: ${contact.phone || "Not provided"}`,
+            "",
+            "Message:",
+            contact.message,
+        ].join("\n");
+
         const emailHtml = `
       <h2 style="color:#2c3e50;">New Contact Form Submission</h2>
       <hr style="border:1px solid #3498db;" />
@@ -69,6 +80,7 @@ Deno.serve(async (req) => {
                 to: [NOTIFY_EMAIL],
                 subject: `New Contact Form Submission from ${contact.firstName} ${contact.lastName}`,
                 html: emailHtml,
+                text: emailText,
                 reply_to: contact.email,
             }),
         });

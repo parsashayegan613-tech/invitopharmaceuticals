@@ -21,7 +21,7 @@ const TerreinProductContent = () => {
         { label: "Molecular Weight", value: "154.16 g/mol" },
         { label: "CAS Number", value: "16014-58-7" },
         { label: "Purity", value: ">95% (UHPLC)" },
-        { label: "Source", value: "Aspergillus terreus (Canadian Endemic Strain)" },
+        { label: "Source", value: "Aspergillus terreus (Canadian soil isolate)" },
         { label: "Physical Form", value: "Crystalline powder or lyophilized solid" },
         { label: "Solubility", value: "DMSO, Methanol, Ethanol" },
     ];
@@ -45,11 +45,11 @@ const TerreinProductContent = () => {
         },
         {
             citation: "Lee JC, et al. (2010) Terrein inhibits STAT3 activity and induces apoptosis in human cancer cells. Anticancer Research, 30(10), 3951-3955.",
-            note: "Provides an in vitro baseline for terrein's anticancer potential."
+            note: "Provides cited in vitro cancer cell line context for laboratory research."
         },
         {
             citation: "Arakawa M, et al. (2002) Antibacterial and antifungal activity of terrein. Biological & Pharmaceutical Bulletin, 25(5), 645-649.",
-            note: "Fundamental antimicrobial activity assays spanning gram-positive and fungal strains."
+            note: "Reports antimicrobial assay conditions used in laboratory research."
         },
     ];
 
@@ -74,17 +74,17 @@ const TerreinProductContent = () => {
                             <FadeInOnScroll direction="left">
                                 <div>
                                     <h1 className="text-3xl font-light text-foreground mb-4">High Purity Terrein for Research</h1>
-                                    <h2 className="text-xl text-primary mb-6">Bioactive Fungal Metabolite (CAS: 16014-58-7)</h2>
+                                    <h2 className="text-xl text-primary mb-6">Fungal Secondary Metabolite (CAS: 16014-58-7)</h2>
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                                        Terrein is a highly bioactive secondary metabolite natively isolated from endemic Canadian soil strains of <em>Aspergillus terreus</em>. At InVitvo Pharmaceuticals, we utilize proprietary semi-industrial fungal fermentation to produce Terrein at analytical grades exceeding 95% purity.
+                                        Terrein is a secondary metabolite isolated from Canadian soil strains of <em>Aspergillus terreus</em>. At InVitvo Pharmaceuticals, we use fungal fermentation and analytical purification workflows to produce Terrein at grades exceeding 95% UHPLC purity.
                                     </p>
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                                        As a potent inhibitor of biological pathways, Terrein has become a molecule of significant interest in preclinical oncology, dermatology (melanogenesis inhibition), and antimicrobial resistance research.
+                                        Terrein has been investigated in peer-reviewed in vitro literature, including cancer cell line, pigmentation pathway, and antimicrobial assay models. InVitvo supplies Terrein only as an RUO research compound and makes no therapeutic, diagnostic, clinical, human, or veterinary-use claims.
                                     </p>
 
                                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
                                         <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-sm shadow-accent/20">
-                                            <Link href="/order" className="flex items-center gap-2">
+                                            <Link href="/order?product=terrein&quantity=5mg" className="flex items-center gap-2">
                                                 Request Quote
                                                 <ArrowRight className="w-4 h-4" />
                                             </Link>
@@ -117,7 +117,7 @@ const TerreinProductContent = () => {
                         <FadeInOnScroll>
                             <h2 className="section-title mb-8">Available Quantities & Pricing</h2>
                             <p className="text-center text-muted-foreground mb-8 text-lg">
-                                We supply standard analytical amounts and offer scalable bulk custom synthesis for extensive lead optimization campaigns.
+                                We supply standard analytical quantities and quote custom purification amounts for larger laboratory research programs.
                             </p>
                         </FadeInOnScroll>
                         <FadeInOnScroll delay={0.2}>
@@ -201,10 +201,10 @@ const TerreinProductContent = () => {
                         <FadeInOnScroll>
                             <div className="flex items-center justify-center gap-3 mb-10">
                                 <FlaskConical className="w-8 h-8 text-primary" />
-                                <h2 className="section-title mb-0">Preclinical Applications & Literature</h2>
+                                <h2 className="section-title mb-0">Research Applications & Literature</h2>
                             </div>
                             <p className="text-center text-muted-foreground max-w-3xl mx-auto mb-10">
-                                Terrein demonstrates pleiotropic biological activities that make it an exceptional compound for diverse laboratory investigations.
+                                Published studies have investigated Terrein in multiple laboratory model systems. These references are provided for research context only.
                             </p>
                         </FadeInOnScroll>
 
@@ -212,22 +212,22 @@ const TerreinProductContent = () => {
                             <FadeInOnScroll delay={0.1}>
                                 <div className="bg-card p-6 rounded-lg border border-border h-full">
                                     <Activity className="w-8 h-8 text-primary mb-4" />
-                                    <h4 className="text-lg font-semibold text-foreground mb-2">Preclinical Oncology</h4>
-                                    <p className="text-sm text-muted-foreground">In vitro studies highlight Terrein&apos;s ability to inhibit STAT3 pathways and induce apoptotic responses in specific human cancer cell lines.</p>
+                                    <h4 className="text-lg font-semibold text-foreground mb-2">Cancer Cell Line Research</h4>
+                                    <p className="text-sm text-muted-foreground">Cited in vitro studies report Terrein effects in specific human cancer cell line assays, including STAT3 pathway and apoptosis-marker readouts.</p>
                                 </div>
                             </FadeInOnScroll>
                             <FadeInOnScroll delay={0.2}>
                                 <div className="bg-card p-6 rounded-lg border border-border h-full">
                                     <Thermometer className="w-8 h-8 text-primary mb-4" />
-                                    <h4 className="text-lg font-semibold text-foreground mb-2">Dermatology Models</h4>
-                                    <p className="text-sm text-muted-foreground">Demonstrated as a powerful melanogenesis inhibitor by causing MITF protein degradation, making it valuable for pigmentation research.</p>
+                                    <h4 className="text-lg font-semibold text-foreground mb-2">Pigmentation Pathway Models</h4>
+                                    <p className="text-sm text-muted-foreground">Reported in literature for melanogenesis-associated pathway studies in laboratory model systems.</p>
                                 </div>
                             </FadeInOnScroll>
                             <FadeInOnScroll delay={0.3}>
                                 <div className="bg-card p-6 rounded-lg border border-border h-full">
                                     <Shield className="w-8 h-8 text-primary mb-4" />
-                                    <h4 className="text-lg font-semibold text-foreground mb-2">Antimicrobial Research</h4>
-                                    <p className="text-sm text-muted-foreground">Serves as a reference compound for baseline antifungal and antibacterial assays when isolating novel soil metabolites.</p>
+                                    <h4 className="text-lg font-semibold text-foreground mb-2">Antimicrobial Assay Research</h4>
+                                    <p className="text-sm text-muted-foreground">Used as a literature-referenced compound in antifungal and antibacterial assay design for natural product research.</p>
                                 </div>
                             </FadeInOnScroll>
                         </div>
@@ -270,10 +270,10 @@ const TerreinProductContent = () => {
                     <div className="container mx-auto px-4 max-w-2xl text-center">
                         <FadeInOnScroll>
                             <h2 className="text-2xl md:text-3xl font-light text-foreground mb-6">
-                                Advance Your Assays with Premium Terrein
+                                Request Terrein for Laboratory Research
                             </h2>
                             <p className="text-lg text-muted-foreground mb-8">
-                                Fast academic institutional processing available. Request a quote to check our current inventory block.
+                                Request a quote to confirm current inventory, documentation, and lead time for your research-use quantity.
                             </p>
                             <motion.div
                                 whileHover={{ scale: 1.02 }}
@@ -281,7 +281,7 @@ const TerreinProductContent = () => {
                                 className="inline-block"
                             >
                                 <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20">
-                                    <Link href="/order" className="flex items-center gap-2">
+                                    <Link href="/order?product=terrein&quantity=5mg" className="flex items-center gap-2">
                                         Request RFQ Now
                                         <ArrowRight className="w-4 h-4" />
                                     </Link>

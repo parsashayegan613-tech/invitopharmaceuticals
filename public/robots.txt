@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /thank-you
 
-Sitemap: https://invitvo.com/sitemap.xml
+Sitemap: https://www.invitvo.com/sitemap.xml

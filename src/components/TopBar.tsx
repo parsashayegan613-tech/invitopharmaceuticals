@@ -10,7 +10,9 @@ const TopBar = () => {
         </div>
         <div className="flex items-center gap-2">
           <Phone className="w-4 h-4" />
-          <span>780-709-5678</span>
+          <a href="tel:+17807095678" className="hover:text-primary transition-colors">
+            +1-780-709-5678
+          </a>
         </div>
         <div className="flex items-center gap-2">
           <Mail className="w-4 h-4" />

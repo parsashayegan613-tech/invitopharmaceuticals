@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     title: "Research Compounds & Microbial Metabolites",
     description:
         "Canadian supplier of high-purity research compounds from microbial sources. Terrein and natural product metabolites with COA/SDS documentation. For research use only.",
-    alternates: { canonical: "https://invitvo.com" },
+    alternates: { canonical: "https://www.invitvo.com" },
 };
 
 export default function HomePage() {

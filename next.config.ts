@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    outputFileTracingRoot: process.cwd(),
     // Allow importing images from the src/assets directory
     // Next.js static imports for images work fine, but we expose them via /public copies
     // Images in src/assets are imported as modules → Next.js handles this with webpack

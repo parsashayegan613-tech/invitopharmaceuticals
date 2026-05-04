@@ -93,8 +93,8 @@ const ContactUsContent = () => {
 
     const contactInfo = [
         { icon: MapPin, label: "Address", value: "9407-20 Ave, NW, Edmonton, AB, Canada, T6N 1E5" },
-        { icon: Phone, label: "Phone", value: "780.709.5678" },
-        { icon: Mail, label: "Email", value: "info@invitvo.com" },
+        { icon: Phone, label: "Phone", value: "+1-780-709-5678", href: "tel:+17807095678" },
+        { icon: Mail, label: "Email", value: "info@invitvo.com", href: "mailto:info@invitvo.com" },
         { icon: Clock, label: "Business Hours", value: "Monday - Friday: 9:00 AM - 5:00 PM MST" },
     ];
 
@@ -126,7 +126,13 @@ const ContactUsContent = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">{item.label}</p>
-                                                    <p className="text-foreground">{item.value}</p>
+                                                    {item.href ? (
+                                                        <a href={item.href} className="text-foreground hover:text-primary transition-colors">
+                                                            {item.value}
+                                                        </a>
+                                                    ) : (
+                                                        <p className="text-foreground">{item.value}</p>
+                                                    )}
                                                 </div>
                                             </motion.div>
                                         ))}
@@ -199,12 +205,13 @@ const ContactUsContent = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium mb-2">Comment or Message</label>
+                                        <label className="block text-sm font-medium mb-2">Comment or Message <span className="text-primary">*</span></label>
                                         <Textarea
                                             value={formData.message}
                                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                             rows={5}
                                             className="transition-all duration-300 focus:shadow-md"
+                                            required
                                         />
                                     </div>
 

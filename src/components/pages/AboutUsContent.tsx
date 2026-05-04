@@ -72,7 +72,7 @@ const AboutUsContent = () => {
                                     </div>
                                     <h3 className="text-2xl font-medium text-foreground mb-4">Our Vision</h3>
                                     <p className="text-lg text-muted-foreground leading-relaxed">
-                                        To become the leading pharmaceutical company in Canada specializing in natural product discovery and development, providing innovative therapeutic solutions derived from Canadian biodiversity.
+                                        To become a leading Canadian supplier of well-characterized natural product research compounds derived from Canadian biodiversity.
                                     </p>
                                 </div>
                             </FadeInOnScroll>
@@ -83,7 +83,7 @@ const AboutUsContent = () => {
                                     </div>
                                     <h3 className="text-2xl font-medium text-foreground mb-4">Our Mission</h3>
                                     <p className="text-lg text-muted-foreground leading-relaxed">
-                                        Providing the best possible pharmaceutical products derived from microorganisms isolated from the Canadian environment, through rigorous scientific research and innovative biotechnology.
+                                        Providing high-purity research compounds derived from Canadian microorganisms, with rigorous analytical characterization and documentation for laboratory research use only.
                                     </p>
                                 </div>
                             </FadeInOnScroll>

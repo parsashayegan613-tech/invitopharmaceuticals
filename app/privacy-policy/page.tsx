@@ -5,7 +5,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy",
     description:
         "Read InVitvo Pharmaceuticals' Privacy Policy to understand how we collect, use, and protect your personal information.",
-    alternates: { canonical: "https://invitvo.com/privacy-policy" },
+    alternates: { canonical: "https://www.invitvo.com/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {

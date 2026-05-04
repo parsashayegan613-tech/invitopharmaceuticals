@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
@@ -14,9 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Check, Clock, Mail, FileCheck, CreditCard, Building2, Banknote } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { Country, State } from "country-state-city";
+import { Check, Clock, Mail, FileCheck, ShieldCheck, Building2, LockKeyhole } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -25,10 +23,42 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
+const products = [
+    { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
+    { id: "terrein-10mg", name: "Terrein >95%", amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
+    { id: "terrein-custom", name: "Terrein >95%", amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
+];
+
+const howHeardOptions = [
+    "PubChem",
+    "Paper citation",
+    "Google/search",
+    "Referral",
+    "SciFinder/vendor platform",
+    "Other",
+];
+
+const freeEmailDomains = new Set([
+    "gmail.com",
+    "googlemail.com",
+    "hotmail.com",
+    "outlook.com",
+    "live.com",
+    "msn.com",
+    "yahoo.com",
+    "icloud.com",
+    "aol.com",
+    "proton.me",
+    "protonmail.com",
+]);
+
+const getEmailDomain = (email: string) => email.trim().toLowerCase().split("@")[1] || "";
+
 const OrderContent = () => {
     const { toast } = useToast();
     const router = useRouter();
-    const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState("terrein-5mg");
+    const [formStartedAt] = useState(() => new Date().toISOString());
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -36,29 +66,39 @@ const OrderContent = () => {
         institution: "",
         department: "",
         piName: "",
-        streetAddress: "",
-        city: "",
-        province: "",
-        postalCode: "",
-        country: "Canada",
         intendedUse: "",
         customQuantity: "",
-        paymentMethod: "",
-        poNumber: "",
+        howHeard: "",
         additionalNotes: "",
+        companyWebsite: "",
     });
     const [acceptRuo, setAcceptRuo] = useState(false);
+    const [acceptQualified, setAcceptQualified] = useState(false);
     const [acceptTerms, setAcceptTerms] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [countryCode, setCountryCode] = useState("CA");
-    const [stateCode, setStateCode] = useState("");
     const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const quantity = params.get("quantity")?.toLowerCase().replace(/\s+/g, "");
+        const sku = params.get("sku")?.toLowerCase();
+
+        if (quantity === "10mg" || sku === "inv-ter-010") {
+            setSelectedProduct("terrein-10mg");
+        } else if (quantity === "custom" || sku === "inv-ter-xxx") {
+            setSelectedProduct("terrein-custom");
+        } else if (quantity === "5mg" || sku === "inv-ter-005" || params.get("product") === "terrein") {
+            setSelectedProduct("terrein-5mg");
+        }
+    }, []);
 
     const handleBlur = (field: string) => {
         setTouched((prev) => ({ ...prev, [field]: true }));
     };
 
     const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailDomain = getEmailDomain(formData.email);
+    const usesFreeEmailDomain = emailDomain ? freeEmailDomains.has(emailDomain) : false;
 
     const getFieldError = (field: string, value: string, label: string) => {
         if (!touched[field]) return null;
@@ -70,140 +110,76 @@ const OrderContent = () => {
     const fieldClass = (field: string, value: string) =>
         `transition-all duration-300 focus:shadow-md ${touched[field] && !value.trim() ? "border-red-400 focus:border-red-500" : ""}${touched.email && field === "email" && value.trim() && !isValidEmail(value) ? "border-red-400 focus:border-red-500" : ""}`;
 
-    const products = [
-        { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
-        { id: "terrein-10mg", name: "Terrein >95%", amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
-        { id: "terrein-custom", name: "Terrein >95%", amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
-    ];
-
-    const intendedUseOptions = [
-        "Academic research",
-        "Industrial R&D",
-        "Analytical method development",
-        "Reference standard",
-        "Compound screening",
-        "Other (specify in notes)",
-    ];
-
-    const paymentMethods = [
-        { value: "invoice", label: "Invoice (Net 30)", icon: FileCheck },
-        { value: "po", label: "Institutional Purchase Order", icon: Building2 },
-        { value: "wire", label: "Wire Transfer", icon: Banknote },
-        { value: "credit", label: "Credit Card", icon: CreditCard },
-        { value: "paypal", label: "PayPal", icon: Banknote },
-    ];
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!selectedProduct) {
-            toast({
-                title: "Please select a product",
-                description: "Choose a product from the table before submitting your request.",
-                variant: "destructive",
-            });
-            return;
-        }
-        if (!acceptRuo || !acceptTerms) {
-            toast({
-                title: "Please accept the required terms",
-                description: "You must acknowledge the RUO disclaimer and accept the Terms of Service.",
-                variant: "destructive",
-            });
-            return;
-        }
 
         const product = products.find((p) => p.id === selectedProduct);
-        const paymentLabel = paymentMethods.find((m) => m.value === formData.paymentMethod)?.label || formData.paymentMethod || "Not specified";
+        if (!product) {
+            toast({
+                title: "Please select a product",
+                description: "Choose a product before submitting your RFQ.",
+                variant: "destructive",
+            });
+            return;
+        }
 
-        const orderData = {
-            product_name: product?.name || "",
-            product_catalog: product?.catalog || "",
-            product_amount: product?.amount || "",
-            product_price: product?.price || "",
-            custom_quantity: formData.customQuantity || null,
+        if (selectedProduct === "terrein-custom" && !formData.customQuantity.trim()) {
+            toast({
+                title: "Custom quantity required",
+                description: "Specify the quantity you want quoted.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        if (!acceptRuo || !acceptQualified || !acceptTerms) {
+            toast({
+                title: "Please accept the required terms",
+                description: "RUO, qualified researcher, and terms acknowledgements are required.",
+                variant: "destructive",
+            });
+            return;
+        }
+
+        const payload = {
+            product_id: product.id,
             customer_name: formData.name,
             customer_email: formData.email,
             customer_phone: formData.phone || null,
             institution: formData.institution,
             department: formData.department || null,
             pi_name: formData.piName || null,
-            street_address: formData.streetAddress,
-            city: formData.city,
-            province: formData.province,
-            postal_code: formData.postalCode,
-            country: formData.country,
             intended_use: formData.intendedUse,
-            payment_method: paymentLabel,
-            po_number: formData.poNumber || null,
+            custom_quantity: formData.customQuantity || null,
+            how_heard: formData.howHeard || null,
             additional_notes: formData.additionalNotes || null,
+            ruo_acknowledged: acceptRuo,
+            qualified_acknowledged: acceptQualified,
+            terms_accepted: acceptTerms,
+            company_website: formData.companyWebsite,
+            form_started_at: formStartedAt,
         };
 
         setIsSubmitting(true);
 
         try {
-            // 1. Save order to the database
-            const { error: dbError } = await supabase
-                .from('orders')
-                .insert([
-                    {
-                        product_name: orderData.product_name,
-                        product_catalog: orderData.product_catalog,
-                        product_amount: orderData.product_amount,
-                        product_price: orderData.product_price,
-                        custom_quantity: orderData.custom_quantity,
-                        customer_name: orderData.customer_name,
-                        customer_email: orderData.customer_email,
-                        customer_phone: orderData.customer_phone,
-                        institution: orderData.institution,
-                        department: orderData.department,
-                        pi_name: orderData.pi_name,
-                        street_address: orderData.street_address,
-                        city: orderData.city,
-                        province: orderData.province,
-                        postal_code: orderData.postal_code,
-                        country: orderData.country,
-                        intended_use: orderData.intended_use,
-                        payment_method: orderData.payment_method,
-                        po_number: orderData.po_number,
-                        additional_notes: orderData.additional_notes,
-                    }
-                ]);
-
-            if (dbError) throw dbError;
-
-            // 2. Invoke the edge function securely to send the email
-            const { data: edgeData, error: edgeError } = await supabase.functions.invoke('send-order-email', {
-                body: orderData,
+            const response = await fetch("/api/rfq", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
             });
+            const data = await response.json().catch(() => ({}));
 
-            console.log("Edge function response:", edgeData);
-            if (edgeError) throw new Error(edgeError.message || "Email submission failed");
-
-            // 3. Send confirmation email to the customer
-            const { error: confirmError } = await supabase.functions.invoke('send-order-confirmation', {
-                body: orderData,
-            });
-            if (confirmError) {
-                console.error("Customer confirmation email error:", confirmError);
-                // Don't throw — the order was already submitted successfully
+            if (!response.ok) {
+                throw new Error(data.error || "RFQ submission failed");
             }
 
-            // 4. Redirect to the Thank You page with order summary via query params
-            const params = new URLSearchParams({
-                type: "order",
-                name: orderData.customer_name,
-                email: orderData.customer_email,
-                product_name: orderData.product_name,
-                product_catalog: orderData.product_catalog,
-                product_amount: orderData.product_amount,
-                product_price: orderData.product_price,
-            });
-            router.push(`/thank-you?${params.toString()}`);
+            router.push("/thank-you?type=order");
         } catch (error) {
-            console.error("Order submission error:", error);
+            console.error("RFQ submission error:", error);
             toast({
-                title: "Submission Failed",
-                description: "There was an error sending your request. Please try again or email us directly at info@invitvo.com.",
+                title: "Submission failed",
+                description: "There was an error sending your RFQ. Please try again or email us directly at info@invitvo.com.",
                 variant: "destructive",
             });
         } finally {
@@ -213,8 +189,14 @@ const OrderContent = () => {
 
     const whatHappensNext = [
         { icon: Mail, title: "RFQ Review", description: "Our team reviews your request within 1-2 business days" },
-        { icon: FileCheck, title: "Formal Quote", description: "You'll receive a detailed quotation with pricing and lead times" },
-        { icon: Clock, title: "Order Confirmation", description: "Confirm your order via email and submit payment/PO" },
+        { icon: FileCheck, title: "Formal Quote", description: "You'll receive a quotation with final pricing and lead times" },
+        { icon: Clock, title: "Order Confirmation", description: "Shipping details and payment are collected after quote acceptance" },
+    ];
+
+    const trustSignals = [
+        { icon: Building2, title: "Founded in Edmonton", description: "Canadian research compound supplier founded in 2021" },
+        { icon: FileCheck, title: "COA and SDS included", description: "Batch documentation is provided with every order" },
+        { icon: LockKeyhole, title: "Confidential RFQs", description: "Research details are used only to qualify and quote the request" },
     ];
 
     return (
@@ -224,7 +206,6 @@ const OrderContent = () => {
             <main className="flex-grow">
                 <PageHero title="Request a Quote" />
 
-                {/* RUO Disclaimer */}
                 <section className="py-6 bg-muted/30">
                     <div className="container mx-auto px-4 max-w-4xl">
                         <RuoDisclaimer />
@@ -238,15 +219,39 @@ const OrderContent = () => {
                                 Request for Quotation (RFQ)
                             </h3>
                             <p className="text-muted-foreground text-center mb-8">
-                                Complete the form below to receive a formal quotation for your research needs
+                                Submit the minimum details needed for a formal research-use quote within 1-2 business days.
                             </p>
                         </FadeInOnScroll>
 
+                        <FadeInOnScroll delay={0.05}>
+                            <div className="grid md:grid-cols-3 gap-4 mb-10">
+                                {trustSignals.map((signal) => (
+                                    <div key={signal.title} className="border border-border rounded-lg p-4 bg-card h-full">
+                                        <signal.icon className="w-5 h-5 text-primary mb-3" />
+                                        <h4 className="font-medium text-foreground mb-1">{signal.title}</h4>
+                                        <p className="text-sm text-muted-foreground leading-relaxed">{signal.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </FadeInOnScroll>
+
                         <form onSubmit={handleSubmit}>
-                            {/* Product Selection */}
+                            <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
+                                <label htmlFor="company_website">Company website</label>
+                                <input
+                                    id="company_website"
+                                    name="company_website"
+                                    type="text"
+                                    tabIndex={-1}
+                                    autoComplete="off"
+                                    value={formData.companyWebsite}
+                                    onChange={(e) => setFormData({ ...formData, companyWebsite: e.target.value })}
+                                />
+                            </div>
+
                             <FadeInOnScroll delay={0.1}>
                                 <div className="mb-10">
-                                    <h4 className="text-lg font-medium text-foreground mb-4">1. Product Selection</h4>
+                                    <h4 className="text-lg font-medium text-foreground mb-4">1. Product and Quantity</h4>
                                     <div className="overflow-hidden rounded-lg border border-border">
                                         <table className="w-full">
                                             <thead className="bg-muted">
@@ -254,7 +259,7 @@ const OrderContent = () => {
                                                     <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Catalog #</th>
                                                     <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Product</th>
                                                     <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Amount</th>
-                                                    <th className="px-4 py-3 text-left text-sm font-medium text-foreground">Price</th>
+                                                    <th className="px-4 py-3 text-right text-sm font-medium text-foreground">Price</th>
                                                     <th className="px-4 py-3 text-center text-sm font-medium text-foreground">Select</th>
                                                 </tr>
                                             </thead>
@@ -273,7 +278,7 @@ const OrderContent = () => {
                                                         <td className="px-4 py-3 text-sm text-muted-foreground font-mono">{product.catalog}</td>
                                                         <td className="px-4 py-3 text-sm text-muted-foreground">{product.name}</td>
                                                         <td className="px-4 py-3 text-sm text-muted-foreground">{product.amount}</td>
-                                                        <td className="px-4 py-3 text-sm text-foreground font-medium">{product.price}</td>
+                                                        <td className="px-4 py-3 text-sm text-foreground font-medium text-right">{product.price}</td>
                                                         <td className="px-4 py-3 text-center">
                                                             <div className={`w-5 h-5 mx-auto rounded-full border-2 flex items-center justify-center transition-colors duration-200 ${selectedProduct === product.id
                                                                 ? "border-primary bg-primary"
@@ -293,23 +298,23 @@ const OrderContent = () => {
                                     {selectedProduct === "terrein-custom" && (
                                         <div className="mt-4">
                                             <label className="block text-sm font-medium mb-2">
-                                                Specify Custom Quantity
+                                                Specify custom quantity <span className="text-primary">*</span>
                                             </label>
                                             <Input
                                                 value={formData.customQuantity}
                                                 onChange={(e) => setFormData({ ...formData, customQuantity: e.target.value })}
                                                 placeholder="e.g., 25 mg, 50 mg, 100 mg"
                                                 className="max-w-xs"
+                                                required
                                             />
                                         </div>
                                     )}
                                 </div>
                             </FadeInOnScroll>
 
-                            {/* Contact Information */}
                             <FadeInOnScroll delay={0.2}>
                                 <div className="mb-10">
-                                    <h4 className="text-lg font-medium text-foreground mb-4">2. Contact Information</h4>
+                                    <h4 className="text-lg font-medium text-foreground mb-4">2. Contact and Institution</h4>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div>
                                             <label className="block text-sm font-medium mb-2">
@@ -328,7 +333,7 @@ const OrderContent = () => {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium mb-2">
-                                                Email <span className="text-primary">*</span>
+                                                Institutional Email <span className="text-primary">*</span>
                                             </label>
                                             <Input
                                                 type="email"
@@ -336,10 +341,16 @@ const OrderContent = () => {
                                                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                 onBlur={() => handleBlur("email")}
                                                 className={fieldClass("email", formData.email)}
+                                                placeholder="name@institution.edu"
                                                 required
                                             />
                                             {getFieldError("email", formData.email, "Email") && (
                                                 <span className="text-xs text-red-500 mt-1">{getFieldError("email", formData.email, "Email")}</span>
+                                            )}
+                                            {isValidEmail(formData.email) && usesFreeEmailDomain && (
+                                                <span className="text-xs text-amber-600 mt-1 block">
+                                                    Institutional email is recommended for faster supplier qualification. This does not block submission.
+                                                </span>
                                             )}
                                         </div>
                                         <div>
@@ -348,6 +359,7 @@ const OrderContent = () => {
                                                 type="tel"
                                                 value={formData.phone}
                                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                placeholder="+1 780 709 5678"
                                             />
                                         </div>
                                         <div>
@@ -383,183 +395,58 @@ const OrderContent = () => {
                                 </div>
                             </FadeInOnScroll>
 
-                            {/* Shipping Address */}
                             <FadeInOnScroll delay={0.3}>
                                 <div className="mb-10">
-                                    <h4 className="text-lg font-medium text-foreground mb-4">3. Shipping Address</h4>
+                                    <h4 className="text-lg font-medium text-foreground mb-4">3. Research Use</h4>
                                     <div className="grid md:grid-cols-2 gap-4">
                                         <div className="md:col-span-2">
                                             <label className="block text-sm font-medium mb-2">
-                                                Street Address <span className="text-primary">*</span>
+                                                Intended research application <span className="text-primary">*</span>
                                             </label>
-                                            <Input
-                                                value={formData.streetAddress}
-                                                onChange={(e) => setFormData({ ...formData, streetAddress: e.target.value })}
+                                            <Textarea
+                                                value={formData.intendedUse}
+                                                onChange={(e) => setFormData({ ...formData, intendedUse: e.target.value })}
+                                                onBlur={() => handleBlur("intendedUse")}
+                                                rows={4}
+                                                placeholder="Briefly describe the in vitro, analytical, or other laboratory research use for this compound."
                                                 required
                                             />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2">
-                                                City <span className="text-primary">*</span>
-                                            </label>
-                                            <Input
-                                                value={formData.city}
-                                                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2">
-                                                Province / State <span className="text-primary">*</span>
-                                            </label>
-                                            {State.getStatesOfCountry(countryCode).length > 0 ? (
-                                                <Select
-                                                    value={stateCode}
-                                                    onValueChange={(code) => {
-                                                        setStateCode(code);
-                                                        const stateName = State.getStateByCodeAndCountry(code, countryCode)?.name || code;
-                                                        setFormData({ ...formData, province: stateName });
-                                                    }}
-                                                >
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Select state/province" />
-                                                    </SelectTrigger>
-                                                    <SelectContent>
-                                                        {State.getStatesOfCountry(countryCode).map((state) => (
-                                                            <SelectItem key={state.isoCode} value={state.isoCode}>
-                                                                {state.name}
-                                                            </SelectItem>
-                                                        ))}
-                                                    </SelectContent>
-                                                </Select>
-                                            ) : (
-                                                <Input
-                                                    value={formData.province}
-                                                    onChange={(e) => {
-                                                        setStateCode("");
-                                                        setFormData({ ...formData, province: e.target.value });
-                                                    }}
-                                                    required
-                                                />
+                                            {getFieldError("intendedUse", formData.intendedUse, "Intended research application") && (
+                                                <span className="text-xs text-red-500 mt-1">{getFieldError("intendedUse", formData.intendedUse, "Intended research application")}</span>
                                             )}
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-2">
-                                                Postal / ZIP Code <span className="text-primary">*</span>
-                                            </label>
-                                            <Input
-                                                value={formData.postalCode}
-                                                onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
-                                                required
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2">
-                                                Country <span className="text-primary">*</span>
-                                            </label>
+                                            <label className="block text-sm font-medium mb-2">How did you hear about us?</label>
                                             <Select
-                                                value={countryCode}
-                                                onValueChange={(code) => {
-                                                    setCountryCode(code);
-                                                    setStateCode("");
-                                                    const countryName = Country.getCountryByCode(code)?.name || code;
-                                                    setFormData({ ...formData, country: countryName, province: "" });
-                                                }}
+                                                value={formData.howHeard}
+                                                onValueChange={(value) => setFormData({ ...formData, howHeard: value })}
                                             >
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="Select country" />
+                                                    <SelectValue placeholder="Select one" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {Country.getAllCountries().map((country) => (
-                                                        <SelectItem key={country.isoCode} value={country.isoCode}>
-                                                            {country.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </FadeInOnScroll>
-
-                            {/* Intended Use & Payment */}
-                            <FadeInOnScroll delay={0.4}>
-                                <div className="mb-10">
-                                    <h4 className="text-lg font-medium text-foreground mb-4">4. Order Details</h4>
-                                    <div className="grid md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label className="block text-sm font-medium mb-2">
-                                                Intended Use <span className="text-primary">*</span>
-                                            </label>
-                                            <Select
-                                                value={formData.intendedUse}
-                                                onValueChange={(value) => setFormData({ ...formData, intendedUse: value })}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select intended use" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {intendedUseOptions.map((option) => (
+                                                    {howHeardOptions.map((option) => (
                                                         <SelectItem key={option} value={option}>{option}</SelectItem>
                                                     ))}
                                                 </SelectContent>
                                             </Select>
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium mb-2">
-                                                Preferred Payment Method
-                                            </label>
-                                            <Select
-                                                value={formData.paymentMethod}
-                                                onValueChange={(value) => setFormData({ ...formData, paymentMethod: value })}
-                                            >
-                                                <SelectTrigger>
-                                                    <SelectValue placeholder="Select payment method" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {paymentMethods.map((method) => (
-                                                        <SelectItem key={method.value} value={method.value}>{method.label}</SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                            <label className="block text-sm font-medium mb-2">Additional notes</label>
+                                            <Textarea
+                                                value={formData.additionalNotes}
+                                                onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
+                                                rows={3}
+                                                placeholder="Special documentation needs, quote references, or timing constraints."
+                                            />
                                         </div>
-                                        {formData.paymentMethod === "po" && (
-                                            <div>
-                                                <label className="block text-sm font-medium mb-2">PO Number (if available)</label>
-                                                <Input
-                                                    value={formData.poNumber}
-                                                    onChange={(e) => setFormData({ ...formData, poNumber: e.target.value })}
-                                                    placeholder="Enter PO number"
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    <div className="mt-4 p-4 bg-muted/50 rounded-lg">
-                                        <p className="text-sm text-muted-foreground">
-                                            <strong>Tax Note:</strong> Canadian orders are subject to GST/HST. International orders may be subject to import duties and taxes payable by the recipient.
-                                        </p>
                                     </div>
                                 </div>
                             </FadeInOnScroll>
 
-                            {/* Additional Notes */}
-                            <FadeInOnScroll delay={0.5}>
-                                <div className="mb-10">
-                                    <label className="block text-sm font-medium mb-2">Additional Notes</label>
-                                    <Textarea
-                                        value={formData.additionalNotes}
-                                        onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
-                                        rows={3}
-                                        placeholder="Special requirements, shipping instructions, or other notes..."
-                                    />
-                                </div>
-                            </FadeInOnScroll>
-
-                            {/* Terms Acceptance */}
-                            <FadeInOnScroll delay={0.6}>
+                            <FadeInOnScroll delay={0.4}>
                                 <div className="mb-8 space-y-4">
-                                    <h4 className="text-lg font-medium text-foreground mb-4">5. Terms & Acknowledgements</h4>
+                                    <h4 className="text-lg font-medium text-foreground mb-4">4. Required Acknowledgements</h4>
 
                                     <div className="flex items-start gap-3">
                                         <Checkbox
@@ -569,6 +456,17 @@ const OrderContent = () => {
                                         />
                                         <label htmlFor="ruo" className="text-sm text-muted-foreground cursor-pointer">
                                             I acknowledge that all products are for <strong>Research Use Only (RUO)</strong>. Not for human or veterinary use. Not intended to diagnose, treat, cure, or prevent any disease. <span className="text-primary">*</span>
+                                        </label>
+                                    </div>
+
+                                    <div className="flex items-start gap-3">
+                                        <Checkbox
+                                            id="qualified"
+                                            checked={acceptQualified}
+                                            onCheckedChange={(checked) => setAcceptQualified(checked as boolean)}
+                                        />
+                                        <label htmlFor="qualified" className="text-sm text-muted-foreground cursor-pointer">
+                                            I confirm that I am submitting this RFQ on behalf of a qualified research entity or qualified researcher able to handle the compound in an appropriate laboratory setting. <span className="text-primary">*</span>
                                         </label>
                                     </div>
 
@@ -585,19 +483,15 @@ const OrderContent = () => {
                                 </div>
                             </FadeInOnScroll>
 
-                            {/* Submit Button */}
-                            <FadeInOnScroll delay={0.7}>
-                                <motion.div
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
-                                >
+                            <FadeInOnScroll delay={0.5}>
+                                <motion.div whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}>
                                     <Button
                                         type="submit"
                                         className="w-full bg-accent hover:bg-accent/90 text-accent-foreground hover:shadow-lg hover:shadow-accent/25 transition-all duration-300"
                                         size="lg"
                                         disabled={isSubmitting}
                                     >
-                                        {isSubmitting ? "Submitting..." : "Submit Request for Quotation"}
+                                        {isSubmitting ? "Submitting RFQ..." : "Submit Request for Quotation"}
                                     </Button>
                                 </motion.div>
                             </FadeInOnScroll>
@@ -605,7 +499,6 @@ const OrderContent = () => {
                     </div>
                 </section>
 
-                {/* What Happens Next */}
                 <section className="py-16 bg-section-alt">
                     <div className="container mx-auto px-4 max-w-4xl">
                         <FadeInOnScroll>
@@ -613,7 +506,7 @@ const OrderContent = () => {
                                 What Happens Next?
                             </h3>
                             <p className="text-muted-foreground text-center mb-10">
-                                Our typical response time is 1-2 business days
+                                Our typical response time is 1-2 business days.
                             </p>
                         </FadeInOnScroll>
 
@@ -637,10 +530,21 @@ const OrderContent = () => {
                         <FadeInOnScroll delay={0.4}>
                             <div className="mt-10 text-center">
                                 <p className="text-muted-foreground">
-                                    Questions? Contact us at <a href="mailto:info@invitvo.com" className="text-primary hover:underline">info@invitvo.com</a> or call <strong>780.709.5678</strong>
+                                    Questions? Contact us at <a href="mailto:info@invitvo.com" className="text-primary hover:underline">info@invitvo.com</a> or call <a href="tel:+17807095678" className="text-primary hover:underline">+1-780-709-5678</a>
                                 </p>
                             </div>
                         </FadeInOnScroll>
+                    </div>
+                </section>
+
+                <section className="py-10 bg-background">
+                    <div className="container mx-auto px-4 max-w-3xl">
+                        <div className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-5">
+                            <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                                Shipping address, payment method, and purchase order details are collected only after quote acceptance.
+                            </p>
+                        </div>
                     </div>
                 </section>
             </main>

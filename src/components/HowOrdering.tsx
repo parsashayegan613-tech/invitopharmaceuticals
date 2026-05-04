@@ -10,7 +10,7 @@ const HowOrdering = () => {
       icon: ClipboardList,
       step: "1",
       title: "Submit RFQ",
-      description: "Complete the Request for Quotation form with your product selection and shipping details"
+      description: "Submit product quantity, institutional contact details, and intended research use"
     },
     {
       icon: FileText,
@@ -28,7 +28,7 @@ const HowOrdering = () => {
       icon: Truck,
       step: "4",
       title: "Receive Shipment",
-      description: "Products shipped with COA and SDS. Standard lead time is 5-10 business days"
+      description: "Products ship with COA and SDS. Canada: 5-7 business days; international: typically 7-14 business days"
     }
   ];
 

@@ -19,7 +19,7 @@ const PrivacyPolicyContent = () => {
                         <FadeInOnScroll>
                             <p className="text-muted-foreground mb-8">
                                 <strong>Effective Date:</strong> January 1, 2024<br />
-                                <strong>Last Updated:</strong> January 1, 2024
+                                <strong>Last Updated:</strong> May 3, 2026
                             </p>
                         </FadeInOnScroll>
 
@@ -27,7 +27,7 @@ const PrivacyPolicyContent = () => {
                             <div className="prose prose-lg max-w-none">
                                 <h2 className="text-2xl font-medium text-foreground mb-4">1. Introduction</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    InVitvo Pharmaceuticals Ltd. (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you visit our website or interact with our services.
+                                    InVitvo Pharmaceuticals Ltd. (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you visit our website or interact with our services, and is intended to align with applicable Canadian privacy requirements including PIPEDA.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">2. Information We Collect</h2>
@@ -36,7 +36,7 @@ const PrivacyPolicyContent = () => {
                                 </p>
                                 <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-2">
                                     <li><strong>Personal Information:</strong> Name, email address, phone number, institutional affiliation, and job title when you submit inquiries or orders.</li>
-                                    <li><strong>Business Information:</strong> Organization name, department, shipping addresses, and purchase order details.</li>
+                                    <li><strong>Business Information:</strong> Organization name, department, intended research application, RUO acknowledgements, qualification acknowledgements, shipping addresses when needed after quote acceptance, and purchase order details.</li>
                                     <li><strong>Technical Data:</strong> IP address, browser type, device information, and website usage data collected through cookies and similar technologies.</li>
                                     <li><strong>Communication Records:</strong> Records of correspondence when you contact us via email or our contact forms.</li>
                                 </ul>
@@ -47,6 +47,7 @@ const PrivacyPolicyContent = () => {
                                 </p>
                                 <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-2">
                                     <li>Processing and fulfilling product orders and requests for quotations</li>
+                                    <li>Documenting RUO qualification, intended research use, and required customer acknowledgements</li>
                                     <li>Communicating with you about your orders, inquiries, and our products</li>
                                     <li>Providing technical documentation and certificates of analysis</li>
                                     <li>Improving our website, products, and services</li>
@@ -64,7 +65,7 @@ const PrivacyPolicyContent = () => {
                                     We do not sell, trade, or rent your personal information to third parties. We may share your information with:
                                 </p>
                                 <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-2">
-                                    <li><strong>Service Providers:</strong> Third parties who assist with shipping, payment processing, and website hosting</li>
+                                    <li><strong>Service Providers:</strong> Third parties who assist with website hosting, database hosting, transactional email, shipping, and payment processing</li>
                                     <li><strong>Legal Compliance:</strong> When required by law, regulation, or legal process</li>
                                     <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
                                 </ul>

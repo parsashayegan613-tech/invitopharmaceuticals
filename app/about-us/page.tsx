@@ -4,8 +4,8 @@ import AboutUsContent from "@/components/pages/AboutUsContent";
 export const metadata: Metadata = {
     title: "About Us",
     description:
-        "Learn about InVitvo Pharmaceuticals — a research-based scientific company founded in Edmonton, Alberta, dedicated to isolating and characterizing pharmacologically active secondary metabolites from natural resources.",
-    alternates: { canonical: "https://invitvo.com/about-us" },
+        "Learn about InVitvo Pharmaceuticals, an Edmonton-based supplier isolating and characterizing natural product research compounds from Canadian microorganisms.",
+    alternates: { canonical: "https://www.invitvo.com/about-us" },
 };
 
 export default function AboutUsPage() {

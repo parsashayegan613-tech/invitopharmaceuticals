@@ -16,8 +16,8 @@ const Footer = () => {
 
   const contactInfo = [
     { icon: MapPin, text: "Edmonton, AB, Canada" },
-    { icon: Phone, text: "780.709.5678" },
-    { icon: Mail, text: "info@invitvo.com" },
+    { icon: Phone, text: "+1-780-709-5678", href: "tel:+17807095678" },
+    { icon: Mail, text: "info@invitvo.com", href: "mailto:info@invitvo.com" },
   ];
 
   return (
@@ -43,7 +43,7 @@ const Footer = () => {
               <span className="block text-xs text-background/70 tracking-widest">PHARMACEUTICALS LTD.</span>
             </Link>
             <p className="text-background/70 text-sm leading-relaxed max-w-md mb-4">
-              InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolating, purifying and characterizing pharmacologically active secondary metabolites from natural resources.
+              InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolating, purifying, and characterizing secondary metabolites from natural resources for laboratory research use.
             </p>
             <p className="text-background/60 text-xs">
               Based in Edmonton, Alberta, Canada
@@ -78,7 +78,13 @@ const Footer = () => {
               {contactInfo.map((item, index) => (
                 <div key={index} className="flex items-start gap-3">
                   <item.icon className="w-5 h-5 mt-0.5 text-primary" />
-                  <span className="text-background/70 text-sm">{item.text}</span>
+                  {item.href ? (
+                    <a href={item.href} className="text-background/70 text-sm hover:text-primary transition-colors">
+                      {item.text}
+                    </a>
+                  ) : (
+                    <span className="text-background/70 text-sm">{item.text}</span>
+                  )}
                 </div>
               ))}
             </div>
