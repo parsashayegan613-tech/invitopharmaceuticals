@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
@@ -10,17 +11,36 @@ import Stats from "@/components/Stats";
 import Research from "@/components/Research";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import { faqs } from "@/lib/faqs";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
     title: "Research Compounds & Microbial Metabolites",
-    description:
-        "Canadian supplier of high-purity research compounds from microbial sources. Terrein and natural product metabolites with COA/SDS documentation. For research use only.",
-    alternates: { canonical: "https://www.invitvo.com" },
-};
+    description: "Canadian supplier of high-purity microbial research compounds. Terrein with COA/SDS documentation. RUO only.",
+    path: "",
+});
 
 export default function HomePage() {
+    const faqJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+            },
+        })),
+    };
+
     return (
         <div className="min-h-screen flex flex-col">
+            <Script
+                id="homepage-faq-schema"
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+            />
             <TopBar />
             <Header />
             <main className="flex-grow">

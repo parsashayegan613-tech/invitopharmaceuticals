@@ -14,8 +14,8 @@ const Header = () => {
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "About Us", href: "/about-us" },
-    { name: "Products", href: "/products" },
-    { name: "Request Quote", href: "/order" },
+    { name: "Terrein", href: "/products/terrein" },
+    { name: "Request Quote", href: "/order?product=terrein&quantity=5mg" },
     { name: "Our Team", href: "/our-team" },
     { name: "Contact Us", href: "/contact-us" },
   ];
@@ -24,7 +24,7 @@ const Header = () => {
     if (href === "/") {
       return pathname === "/";
     }
-    return pathname === href;
+    return pathname === href || (href.startsWith("/order") && pathname === "/order");
   };
 
   return (

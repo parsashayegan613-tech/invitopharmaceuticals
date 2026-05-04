@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
 import ContactUsContent from "@/components/pages/ContactUsContent";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
     title: "Contact Us",
-    description:
-        "Get in touch with InVitvo Pharmaceuticals. Located in Edmonton, Alberta. Reach us by phone, email, or our contact form for product inquiries and investor relations.",
-    alternates: { canonical: "https://www.invitvo.com/contact-us" },
-};
+    description: "Contact InVitvo Pharmaceuticals in Edmonton for RUO research compound quotes and product inquiries.",
+    path: "/contact-us",
+});
 
 export default function ContactUsPage() {
     return <ContactUsContent />;

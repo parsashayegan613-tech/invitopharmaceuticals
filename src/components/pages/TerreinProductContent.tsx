@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -12,16 +13,29 @@ import RuoDisclaimer from "@/components/RuoDisclaimer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Beaker, Activity, Award, Download, Thermometer, Truck, BookOpen, FlaskConical, CheckCircle2 } from "lucide-react";
 import terreinMolecule from "@/assets/terrein-molecule.png";
+import { trackEvent } from "@/lib/analytics";
+import { terrein } from "@/lib/terrein";
 
 const TerreinProductContent = () => {
+    useEffect(() => {
+        trackEvent("product_page_view", {
+            compound: terrein.name,
+            cas: terrein.cas,
+            product_id: "INV-TER",
+        });
+    }, []);
+
     const specifications = [
-        { label: "Chemical Name", value: "Terrein" },
-        { label: "IUPAC Name", value: "(4S,5R)-4,5-dihydroxy-3-[(1E)-prop-1-en-1-yl]cyclopent-2-en-1-one" },
-        { label: "Molecular Formula", value: "C₈H₁₀O₃" },
-        { label: "Molecular Weight", value: "154.16 g/mol" },
-        { label: "CAS Number", value: "16014-58-7" },
+        { label: "Chemical Name", value: terrein.name },
+        { label: "Synonyms", value: terrein.synonyms.join(", ") },
+        { label: "IUPAC Name", value: terrein.iupacName },
+        { label: "Molecular Formula", value: `${terrein.displayFormula} (${terrein.formula})` },
+        { label: "Molecular Weight", value: terrein.molecularWeight },
+        { label: "CAS Number", value: terrein.cas },
+        { label: "InChIKey", value: terrein.inChIKey },
+        { label: "SMILES", value: terrein.smiles },
         { label: "Purity", value: ">95% (UHPLC)" },
-        { label: "Source", value: "Aspergillus terreus (Canadian soil isolate)" },
+        { label: "Source", value: terrein.sourceDetail },
         { label: "Physical Form", value: "Crystalline powder or lyophilized solid" },
         { label: "Solubility", value: "DMSO, Methanol, Ethanol" },
     ];
@@ -58,7 +72,7 @@ const TerreinProductContent = () => {
             <TopBar />
             <Header />
             <main className="flex-grow">
-                <PageHero title="Terrein (>95% Purity)" />
+                <PageHero title={`Terrein CAS ${terrein.cas}`} />
 
                 {/* RUO Disclaimer */}
                 <section className="py-6 bg-muted/30">
@@ -73,8 +87,8 @@ const TerreinProductContent = () => {
                         <div className="grid md:grid-cols-2 gap-12 items-center">
                             <FadeInOnScroll direction="left">
                                 <div>
-                                    <h1 className="text-3xl font-light text-foreground mb-4">High Purity Terrein for Research</h1>
-                                    <h2 className="text-xl text-primary mb-6">Fungal Secondary Metabolite (CAS: 16014-58-7)</h2>
+                                    <h2 className="text-3xl font-light text-foreground mb-4">High Purity Terrein for Research</h2>
+                                    <p className="text-xl text-primary mb-6">Fungal Secondary Metabolite ({terrein.displayFormula}; CAS: {terrein.cas})</p>
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                                         Terrein is a secondary metabolite isolated from Canadian soil strains of <em>Aspergillus terreus</em>. At InVitvo Pharmaceuticals, we use fungal fermentation and analytical purification workflows to produce Terrein at grades exceeding 95% UHPLC purity.
                                     </p>
@@ -99,11 +113,11 @@ const TerreinProductContent = () => {
                                 >
                                     <Image
                                         src={terreinMolecule}
-                                        alt="Terrein molecular structure"
+                                        alt={`Terrein molecular structure ${terrein.formula} CAS ${terrein.cas}`}
                                         className="w-full max-w-xs mx-auto mb-4 object-contain"
                                         priority
                                     />
-                                    <p className="text-sm text-muted-foreground">Terrein Molecular Structure (C₈H₁₀O₃)</p>
+                                    <p className="text-sm text-muted-foreground">Terrein Molecular Structure ({terrein.displayFormula})</p>
 
                                 </motion.div>
                             </FadeInOnScroll>
@@ -157,7 +171,7 @@ const TerreinProductContent = () => {
                                             {specifications.map((spec, index) => (
                                                 <tr key={index} className="hover:bg-muted/20">
                                                     <td className="px-4 py-3 font-medium text-foreground text-sm">{spec.label}</td>
-                                                    <td className="px-4 py-3 text-muted-foreground text-right text-sm">{spec.value}</td>
+                                                    <td className="px-4 py-3 text-muted-foreground text-right text-sm break-all">{spec.value}</td>
                                                 </tr>
                                             ))}
                                         </tbody>

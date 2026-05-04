@@ -12,6 +12,7 @@ import RuoDisclaimer from "@/components/RuoDisclaimer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Beaker, Activity, Award, Download, Thermometer, Truck, BookOpen, FlaskConical } from "lucide-react";
 import terreinMolecule from "@/assets/terrein-molecule.png";
+import { terrein } from "@/lib/terrein";
 
 const ProductsContent = () => {
     const features = [
@@ -38,12 +39,13 @@ const ProductsContent = () => {
     ];
 
     const specifications = [
-        { label: "Chemical Name", value: "Terrein" },
-        { label: "Molecular Formula", value: "C₈H₁₀O₃" },
-        { label: "Molecular Weight", value: "154.16 g/mol" },
-        { label: "CAS Number", value: "16014-58-7" },
+        { label: "Chemical Name", value: terrein.name },
+        { label: "Molecular Formula", value: `${terrein.displayFormula} (${terrein.formula})` },
+        { label: "Molecular Weight", value: terrein.molecularWeight },
+        { label: "CAS Number", value: terrein.cas },
+        { label: "InChIKey", value: terrein.inChIKey },
         { label: "Purity", value: ">95% (UHPLC)" },
-        { label: "Source", value: "Aspergillus terreus" },
+        { label: "Source", value: terrein.source },
         { label: "Origin", value: "Canadian soil isolates" },
         { label: "Physical Form", value: "Crystalline powder" },
         { label: "Solubility", value: "DMSO, Methanol, Ethanol" },
@@ -102,7 +104,7 @@ const ProductsContent = () => {
                                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
                                             <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto">
                                                 <Link href="/products/terrein" className="flex items-center gap-2">
-                                                    View Detailed Specifications
+                                                    View Terrein CAS {terrein.cas} Specifications
                                                     <ArrowRight className="w-4 h-4" />
                                                 </Link>
                                             </Button>
@@ -117,10 +119,10 @@ const ProductsContent = () => {
                                 >
                                     <Image
                                         src={terreinMolecule}
-                                        alt="Terrein molecular structure"
+                                        alt={`Terrein molecular structure ${terrein.formula} CAS ${terrein.cas}`}
                                         className="w-full max-w-xs mx-auto mb-4 object-contain"
                                     />
-                                    <p className="text-sm text-muted-foreground">Terrein Molecular Structure (C₈H₁₀O₃)</p>
+                                    <p className="text-sm text-muted-foreground">Terrein Molecular Structure ({terrein.displayFormula})</p>
                                 </motion.div>
                             </FadeInOnScroll>
                         </div>

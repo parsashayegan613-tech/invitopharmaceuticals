@@ -1,0 +1,17 @@
+export const terrein = {
+    name: "Terrein",
+    purity: ">95% UHPLC",
+    cas: "582-46-7",
+    formula: "C8H10O3",
+    displayFormula: "C₈H₁₀O₃",
+    molecularWeight: "154.16 g/mol",
+    iupacName: "(4S,5R)-4,5-dihydroxy-3-[(E)-prop-1-enyl]cyclopent-2-en-1-one",
+    inChI: "InChI=1S/C8H10O3/c1-2-3-5-4-6(9)8(11)7(5)10/h2-4,7-8,10-11H,1H3/b3-2+/t7-,8-/m0/s1",
+    inChIKey: "MHOOPNKRBMHHEC-HZIBQTDNSA-N",
+    smiles: "C/C=C/C1=CC(=O)[C@@H]([C@H]1O)O",
+    synonyms: ["(+)-Terrein", "NSC-291308", "MFCD09752761"],
+    source: "Aspergillus terreus",
+    sourceDetail: "Aspergillus terreus (Canadian soil isolate)",
+    productUrl: "https://www.invitvo.com/products/terrein",
+    pubChemUrl: "https://pubchem.ncbi.nlm.nih.gov/compound/6436830",
+} as const;

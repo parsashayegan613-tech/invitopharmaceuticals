@@ -35,7 +35,7 @@ const Stats = () => {
             <p className="text-lg md:text-xl font-medium mb-6">Ready to order? Get a quote in under 2 minutes.</p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
               <Link
-                href="/order"
+                href="/order?product=terrein&quantity=5mg"
                 className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-8 py-3 rounded font-semibold hover:bg-accent/90 transition-colors shadow-lg shadow-accent/20"
               >
                 Request Quote

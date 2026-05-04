@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
 import PrivacyPolicyContent from "@/components/pages/PrivacyPolicyContent";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
     title: "Privacy Policy",
-    description:
-        "Read InVitvo Pharmaceuticals' Privacy Policy to understand how we collect, use, and protect your personal information.",
-    alternates: { canonical: "https://www.invitvo.com/privacy-policy" },
-};
+    description: "Read how InVitvo Pharmaceuticals collects, uses, and protects website and RFQ information.",
+    path: "/privacy-policy",
+});
 
 export default function PrivacyPolicyPage() {
     return <PrivacyPolicyContent />;

@@ -1,12 +1,12 @@
-import type { Metadata } from "next";
 import OrderContent from "@/components/pages/OrderContent";
+import { pageMetadata } from "@/lib/metadata";
+import { terrein } from "@/lib/terrein";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
     title: "Request a Terrein Quote",
-    description:
-        "Submit a low-friction RFQ for Terrein CAS 16014-58-7. Quote turnaround is typically 1-2 business days. For research use only.",
-    alternates: { canonical: "https://www.invitvo.com/order" },
-};
+    description: `Submit an RFQ for Terrein CAS ${terrein.cas}. Quote turnaround is typically 1-2 business days. For research use only.`,
+    path: "/order",
+});
 
 export default function OrderPage() {
     return <OrderContent />;

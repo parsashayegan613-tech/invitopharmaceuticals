@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
 import TermsOfServiceContent from "@/components/pages/TermsOfServiceContent";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
     title: "Terms of Service",
-    description:
-        "Review the Terms of Service for InVitvo Pharmaceuticals. All products are for research use only.",
-    alternates: { canonical: "https://www.invitvo.com/terms-of-service" },
-};
+    description: "Review InVitvo Pharmaceuticals terms for RUO research compounds, quotations, and website use.",
+    path: "/terms-of-service",
+});
 
 export default function TermsOfServicePage() {
     return <TermsOfServiceContent />;

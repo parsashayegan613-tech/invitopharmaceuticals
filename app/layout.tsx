@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Inter, Outfit } from "next/font/google";
 import "../src/index.css";
 import Providers from "@/components/Providers";
 import BackToTop from "@/components/BackToTop";
+import Analytics from "@/components/Analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
@@ -11,11 +11,11 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: 
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.invitvo.com"),
     title: {
-        default: "Research Compounds & Microbial Metabolites | InVitvo Pharmaceuticals",
+        default: "Research Compounds & Microbial Metabolites | InVitvo",
         template: "%s | InVitvo Pharmaceuticals",
     },
     description:
-        "Canadian supplier of high-purity research compounds from microbial sources. Terrein and natural product metabolites with COA/SDS documentation. For research use only.",
+        "Canadian supplier of high-purity microbial research compounds. Terrein with COA/SDS documentation. For research use only.",
     icons: {
         icon: [
             { url: "/favicon.png", type: "image/png" },
@@ -86,15 +86,22 @@ export default function RootLayout({
                         __html: JSON.stringify({
                             "@context": "https://schema.org",
                             "@type": "Organization",
+                            "@id": "https://www.invitvo.com/#organization",
                             name: "InVitvo Pharmaceuticals Ltd.",
+                            legalName: "InVitvo Pharmaceuticals Ltd.",
                             url: "https://www.invitvo.com",
                             logo: "https://www.invitvo.com/logo-email.png",
+                            foundingDate: "2021",
                             description:
                                 "Canadian supplier of high-purity research compounds from microbial sources. Terrein and natural product metabolites with COA/SDS documentation. For research use only.",
+                            telephone: "+1-780-709-5678",
+                            email: "info@invitvo.com",
                             address: {
                                 "@type": "PostalAddress",
+                                streetAddress: "9407 20 Ave NW",
                                 addressLocality: "Edmonton",
                                 addressRegion: "AB",
+                                postalCode: "T6N 1E5",
                                 addressCountry: "CA",
                             },
                             contactPoint: {
@@ -111,25 +118,8 @@ export default function RootLayout({
                 />
             </head>
             <body className={`${inter.variable} ${outfit.variable}`}>
-                {/* Google Analytics (Only in Production) */}
-                {process.env.NODE_ENV === "production" && (
-                    <>
-                        <Script
-                            src="https://www.googletagmanager.com/gtag/js?id=G-1C75KSQYCL"
-                            strategy="afterInteractive"
-                        />
-                        <Script id="google-analytics" strategy="afterInteractive">
-                            {`
-                              window.dataLayer = window.dataLayer || [];
-                              function gtag(){window.dataLayer.push(arguments);}
-                              gtag('js', new Date());
-                              gtag('config', 'G-1C75KSQYCL');
-                            `}
-                        </Script>
-                    </>
-                )}
-
                 <Providers>
+                    <Analytics />
                     <BackToTop />
                     {children}
                 </Providers>

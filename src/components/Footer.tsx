@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, AlertTriangle, Linkedin } from "lucide-react";
+import { trackEmailClick, trackPhoneClick } from "@/lib/analytics";
 
 const Footer = () => {
   const quickLinks = [
     { name: "Home", href: "/" },
     { name: "About Us", href: "/about-us" },
-    { name: "Products", href: "/products" },
-    { name: "Request Quote", href: "/order" },
+    { name: "Terrein Product Page", href: "/products/terrein" },
+    { name: "Request Quote", href: "/order?product=terrein&quantity=5mg" },
     { name: "Our Team", href: "/our-team" },
     { name: "Contact Us", href: "/contact-us" },
   ];
@@ -79,7 +80,14 @@ const Footer = () => {
                 <div key={index} className="flex items-start gap-3">
                   <item.icon className="w-5 h-5 mt-0.5 text-primary" />
                   {item.href ? (
-                    <a href={item.href} className="text-background/70 text-sm hover:text-primary transition-colors">
+                    <a
+                      href={item.href}
+                      onClick={() => {
+                        if (item.href?.startsWith("tel:")) trackPhoneClick("footer");
+                        if (item.href?.startsWith("mailto:")) trackEmailClick("footer");
+                      }}
+                      className="text-background/70 text-sm hover:text-primary transition-colors"
+                    >
                       {item.text}
                     </a>
                   ) : (
@@ -101,6 +109,7 @@ const Footer = () => {
               </a>
               <a
                 href="mailto:info@invitvo.com"
+                onClick={() => trackEmailClick("footer_social")}
                 className="inline-flex items-center justify-center w-9 h-9 bg-background/10 rounded-full hover:bg-primary/80 transition-colors duration-200"
                 aria-label="Email"
               >

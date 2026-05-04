@@ -1,12 +1,11 @@
-import type { Metadata } from "next";
 import AboutUsContent from "@/components/pages/AboutUsContent";
+import { pageMetadata } from "@/lib/metadata";
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
     title: "About Us",
-    description:
-        "Learn about InVitvo Pharmaceuticals, an Edmonton-based supplier isolating and characterizing natural product research compounds from Canadian microorganisms.",
-    alternates: { canonical: "https://www.invitvo.com/about-us" },
-};
+    description: "Edmonton supplier isolating and characterizing natural product research compounds from Canadian microorganisms.",
+    path: "/about-us",
+});
 
 export default function AboutUsPage() {
     return <AboutUsContent />;

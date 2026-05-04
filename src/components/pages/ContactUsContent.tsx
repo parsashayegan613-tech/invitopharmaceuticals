@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import FAQ from "@/components/FAQ";
+import { trackEmailClick, trackEvent, trackPhoneClick } from "@/lib/analytics";
 
 const ContactUsContent = () => {
     const { toast } = useToast();
@@ -72,13 +73,12 @@ const ContactUsContent = () => {
                 // We still show success since the DB insert succeeded, but we log the email error
             }
 
-            // Redirect to Thank You page using query params (Next.js App Router has no router state)
-            const params = new URLSearchParams({
-                type: "contact",
-                name: `${formData.firstName} ${formData.lastName}`,
-                email: formData.email,
+            trackEvent("contact_submit", {
+                form_type: "contact",
+                has_phone: Boolean(formData.phone.trim()),
             });
-            router.push(`/thank-you?${params.toString()}`);
+
+            router.push("/thank-you?type=contact");
         } catch (error) {
             console.error("Error submitting contact form:", error);
             toast({
@@ -127,7 +127,14 @@ const ContactUsContent = () => {
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">{item.label}</p>
                                                     {item.href ? (
-                                                        <a href={item.href} className="text-foreground hover:text-primary transition-colors">
+                                                        <a
+                                                            href={item.href}
+                                                            onClick={() => {
+                                                                if (item.label === "Phone") trackPhoneClick("contact_page");
+                                                                if (item.label === "Email") trackEmailClick("contact_page");
+                                                            }}
+                                                            className="text-foreground hover:text-primary transition-colors"
+                                                        >
                                                             {item.value}
                                                         </a>
                                                     ) : (

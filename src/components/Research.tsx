@@ -9,6 +9,7 @@ import { ArrowRight } from "lucide-react";
 import research1 from "@/assets/research-1.png";
 import research2 from "@/assets/research-2.png";
 import research3 from "@/assets/research-3.png";
+import { terrein } from "@/lib/terrein";
 
 const Research = () => {
   return (
@@ -73,7 +74,7 @@ const Research = () => {
               >
                 <Image
                   src={research3}
-                  alt="Terrein molecular structure and metabolite analysis"
+                  alt={`Terrein molecular structure ${terrein.formula} CAS ${terrein.cas} and metabolite analysis`}
                   placeholder="blur"
                   className="w-full h-auto rounded object-contain"
                 />
@@ -88,8 +89,8 @@ const Research = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Button asChild size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground shadow-lg shadow-accent/20">
-                  <Link href="/products" className="flex items-center gap-2">
-                    View Research Compounds
+                  <Link href="/products/terrein" className="flex items-center gap-2">
+                    View Terrein CAS {terrein.cas}
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>

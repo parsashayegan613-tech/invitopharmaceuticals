@@ -6,7 +6,7 @@ import TopBar from "@/components/TopBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Home, Mail } from "lucide-react";
+import { Beaker, Home, Mail } from "lucide-react";
 
 const NotFoundContent = () => {
     return (
@@ -35,6 +35,12 @@ const NotFoundContent = () => {
                                 <Button className="gap-2">
                                     <Home className="w-4 h-4" />
                                     Back to Home
+                                </Button>
+                            </Link>
+                            <Link href="/products/terrein">
+                                <Button variant="secondary" className="gap-2">
+                                    <Beaker className="w-4 h-4" />
+                                    View Terrein
                                 </Button>
                             </Link>
                             <Link href="/contact-us">

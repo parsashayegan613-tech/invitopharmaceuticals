@@ -22,11 +22,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { trackEmailClick, trackEvent, trackPhoneClick } from "@/lib/analytics";
+import { terrein } from "@/lib/terrein";
 
 const products = [
-    { id: "terrein-5mg", name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
-    { id: "terrein-10mg", name: "Terrein >95%", amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
-    { id: "terrein-custom", name: "Terrein >95%", amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
+    { id: "terrein-5mg", name: `Terrein ${terrein.purity}`, amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
+    { id: "terrein-10mg", name: `Terrein ${terrein.purity}`, amount: "10 mg", price: "C$800", catalog: "INV-TER-010" },
+    { id: "terrein-custom", name: `Terrein ${terrein.purity}`, amount: "Custom", price: "Quote", catalog: "INV-TER-XXX" },
 ];
 
 const howHeardOptions = [
@@ -173,6 +175,16 @@ const OrderContent = () => {
             if (!response.ok) {
                 throw new Error(data.error || "RFQ submission failed");
             }
+
+            trackEvent("rfq_submit", {
+                compound: terrein.name,
+                cas: terrein.cas,
+                quantity: product.amount,
+                catalog: product.catalog,
+                custom_quantity_requested: selectedProduct === "terrein-custom",
+                free_email_domain: usesFreeEmailDomain,
+                how_heard: formData.howHeard || "not_provided",
+            });
 
             router.push("/thank-you?type=order");
         } catch (error) {
@@ -530,7 +542,7 @@ const OrderContent = () => {
                         <FadeInOnScroll delay={0.4}>
                             <div className="mt-10 text-center">
                                 <p className="text-muted-foreground">
-                                    Questions? Contact us at <a href="mailto:info@invitvo.com" className="text-primary hover:underline">info@invitvo.com</a> or call <a href="tel:+17807095678" className="text-primary hover:underline">+1-780-709-5678</a>
+                                    Questions? Contact us at <a href="mailto:info@invitvo.com" onClick={() => trackEmailClick("order_next_steps")} className="text-primary hover:underline">info@invitvo.com</a> or call <a href="tel:+17807095678" onClick={() => trackPhoneClick("order_next_steps")} className="text-primary hover:underline">+1-780-709-5678</a>
                                 </p>
                             </div>
                         </FadeInOnScroll>

@@ -138,10 +138,10 @@ const ThankYouInner = () => {
                             Back to Home
                         </Button>
                     </Link>
-                    <Link href="/products">
+                    <Link href="/products/terrein">
                         <Button variant="outline" className="gap-2">
                             <ArrowLeft className="w-4 h-4" />
-                            Browse Products
+                            View Terrein
                         </Button>
                     </Link>
                 </motion.div>

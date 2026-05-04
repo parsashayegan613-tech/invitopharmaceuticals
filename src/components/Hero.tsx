@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-scientist.jpg";
+import { trackEvent } from "@/lib/analytics";
+import { terrein } from "@/lib/terrein";
 
 const Hero = () => {
   return (
@@ -54,15 +56,17 @@ const Hero = () => {
             className="mt-8 flex flex-wrap gap-4"
           >
             <Link
-              href="/products"
+              href="/products/terrein"
+              onClick={() => trackEvent("cta_clicked", { location: "homepage_hero", destination: "products_terrein" })}
               className="inline-block bg-accent text-accent-foreground px-8 py-3 rounded font-medium 
                          hover:bg-accent/90 transition-all duration-300 hover:shadow-lg hover:shadow-accent/25
                          hover:-translate-y-0.5"
             >
-              View Products
+              View Terrein CAS {terrein.cas}
             </Link>
             <Link
-              href="/order"
+              href="/order?product=terrein&quantity=5mg"
+              onClick={() => trackEvent("cta_clicked", { location: "homepage_hero", destination: "order", compound: terrein.name, quantity: "5 mg" })}
               className="inline-block bg-white/10 text-white border border-white/30 px-8 py-3 rounded font-medium 
                          hover:bg-white/20 transition-all duration-300 hover:-translate-y-0.5"
             >
