@@ -58,7 +58,7 @@ const WhyInVitvo = () => {
                                     </div>
                                     <div>
                                         <p className="font-semibold text-foreground text-lg">Pharmaceutical R&D</p>
-                                        <p className="text-muted-foreground text-sm mt-1 leading-relaxed">Biotech firms and researchers utilizing unique metabolites for assay development and pre-clinical models.</p>
+                                        <p className="text-muted-foreground text-sm mt-1 leading-relaxed">Biotech firms and researchers using unique metabolites for assay development and laboratory model systems.</p>
                                     </div>
                                 </div>
 

@@ -43,7 +43,7 @@ export default function HomePage() {
             />
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <Hero />
                 <Mission />
                 <OurStory />

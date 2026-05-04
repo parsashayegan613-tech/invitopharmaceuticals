@@ -44,7 +44,7 @@ const AboutUsContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title="About Us" />
 
                 {/* Company Overview */}

@@ -22,6 +22,7 @@ const TerreinProductContent = () => {
             compound: terrein.name,
             cas: terrein.cas,
             product_id: "INV-TER",
+            quantity: "5 mg, 10 mg, custom",
         });
     }, []);
 
@@ -35,7 +36,7 @@ const TerreinProductContent = () => {
         { label: "InChIKey", value: terrein.inChIKey },
         { label: "SMILES", value: terrein.smiles },
         { label: "Purity", value: ">95% (UHPLC)" },
-        { label: "Source", value: terrein.sourceDetail },
+        { label: "Source", value: <><em>Aspergillus terreus</em> (Canadian soil isolate)</> },
         { label: "Physical Form", value: "Crystalline powder or lyophilized solid" },
         { label: "Solubility", value: "DMSO, Methanol, Ethanol" },
     ];
@@ -55,15 +56,18 @@ const TerreinProductContent = () => {
     const references = [
         {
             citation: "Zaehle C, et al. (2014) Terrein biosynthesis in Aspergillus terreus and its impact on phytotoxicity. Chemistry & Biology, 21(6), 719-731.",
-            note: "Key insights into the multi-gene cluster responsible for terrein biosynthesis."
+            note: "Key insights into the multi-gene cluster responsible for terrein biosynthesis.",
+            url: "https://doi.org/10.1016/j.chembiol.2014.03.010",
         },
         {
-            citation: "Lee JC, et al. (2010) Terrein inhibits STAT3 activity and induces apoptosis in human cancer cells. Anticancer Research, 30(10), 3951-3955.",
-            note: "Provides cited in vitro cancer cell line context for laboratory research."
+            citation: "Goutam J, et al. (2017) Isolation and characterization of terrein from Aspergillus terreus JAS-2. Frontiers in Microbiology, 8, 1334.",
+            note: "Reports isolation, characterization, and laboratory bioassay context for terrein.",
+            url: "https://doi.org/10.3389/fmicb.2017.01334",
         },
         {
-            citation: "Arakawa M, et al. (2002) Antibacterial and antifungal activity of terrein. Biological & Pharmaceutical Bulletin, 25(5), 645-649.",
-            note: "Reports antimicrobial assay conditions used in laboratory research."
+            citation: "Ali I, et al. (2019) Large-scale production of terrein by Aspergillus terreus strain S020. Biomolecules, 9(9), 480.",
+            note: "Describes production and analytical characterization context for terrein.",
+            url: "https://doi.org/10.3390/biom9090480",
         },
     ];
 
@@ -71,7 +75,7 @@ const TerreinProductContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title={`Terrein CAS ${terrein.cas}`} />
 
                 {/* RUO Disclaimer */}
@@ -93,7 +97,7 @@ const TerreinProductContent = () => {
                                         Terrein is a secondary metabolite isolated from Canadian soil strains of <em>Aspergillus terreus</em>. At InVitvo Pharmaceuticals, we use fungal fermentation and analytical purification workflows to produce Terrein at grades exceeding 95% UHPLC purity.
                                     </p>
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                                        Terrein has been investigated in peer-reviewed in vitro literature, including cancer cell line, pigmentation pathway, and antimicrobial assay models. InVitvo supplies Terrein only as an RUO research compound and makes no therapeutic, diagnostic, clinical, human, or veterinary-use claims.
+                                        Terrein has been investigated in peer-reviewed <em>in vitro</em> literature, including cancer cell line, pigmentation pathway, and antimicrobial assay models. InVitvo supplies Terrein only as an RUO research compound and makes no therapeutic, diagnostic, clinical, human, or veterinary-use claims.
                                     </p>
 
                                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
@@ -135,21 +139,22 @@ const TerreinProductContent = () => {
                             </p>
                         </FadeInOnScroll>
                         <FadeInOnScroll delay={0.2}>
-                            <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-                                <table className="w-full">
+                            <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+                                <table className="w-full table-fixed">
+                                    <caption className="sr-only">Terrein pricing by quantity</caption>
                                     <thead className="bg-muted">
                                         <tr>
-                                            <th className="px-6 py-4 text-left font-medium text-foreground">SKU / Catalog</th>
-                                            <th className="px-6 py-4 text-left font-medium text-foreground">Quantity</th>
-                                            <th className="px-6 py-4 text-right font-medium text-foreground">Price</th>
+                                            <th scope="col" className="px-3 py-4 text-left text-sm font-medium text-foreground sm:px-6 sm:text-base">SKU / Catalog</th>
+                                            <th scope="col" className="px-3 py-4 text-left text-sm font-medium text-foreground sm:px-6 sm:text-base">Quantity</th>
+                                            <th scope="col" className="px-3 py-4 text-right text-sm font-medium text-foreground sm:px-6 sm:text-base">Price</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-border">
                                         {pricing.map((item, index) => (
                                             <tr key={index} className="hover:bg-muted/30 transition-colors">
-                                                <td className="px-6 py-4 text-muted-foreground font-mono">{item.sku}</td>
-                                                <td className="px-6 py-4 font-medium text-foreground">{item.size}</td>
-                                                <td className="px-6 py-4 text-right font-bold text-foreground">{item.price}</td>
+                                                <td className="break-words px-3 py-4 text-sm text-muted-foreground font-mono sm:px-6">{item.sku}</td>
+                                                <td className="px-3 py-4 text-sm font-medium text-foreground sm:px-6">{item.size}</td>
+                                                <td className="px-3 py-4 text-right text-sm font-bold text-foreground sm:px-6">{item.price}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -165,13 +170,14 @@ const TerreinProductContent = () => {
                         <div className="grid md:grid-cols-2 gap-12">
                             <FadeInOnScroll>
                                 <h3 className="text-2xl font-light text-foreground mb-6">Technical Specifications</h3>
-                                <div className="bg-card border border-border rounded-lg overflow-hidden border-t-4 border-t-primary">
-                                    <table className="w-full">
+                                <div className="overflow-hidden rounded-lg border border-border border-t-4 border-t-primary bg-card">
+                                    <table className="w-full table-fixed">
+                                        <caption className="sr-only">Terrein technical specifications</caption>
                                         <tbody className="divide-y divide-border">
                                             {specifications.map((spec, index) => (
                                                 <tr key={index} className="hover:bg-muted/20">
-                                                    <td className="px-4 py-3 font-medium text-foreground text-sm">{spec.label}</td>
-                                                    <td className="px-4 py-3 text-muted-foreground text-right text-sm break-all">{spec.value}</td>
+                                                    <th scope="row" className="px-3 py-3 text-left font-medium text-foreground text-sm sm:px-4">{spec.label}</th>
+                                                    <td className="px-3 py-3 text-muted-foreground text-right text-sm break-all sm:px-4">{spec.value}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -227,7 +233,7 @@ const TerreinProductContent = () => {
                                 <div className="bg-card p-6 rounded-lg border border-border h-full">
                                     <Activity className="w-8 h-8 text-primary mb-4" />
                                     <h4 className="text-lg font-semibold text-foreground mb-2">Cancer Cell Line Research</h4>
-                                    <p className="text-sm text-muted-foreground">Cited in vitro studies report Terrein effects in specific human cancer cell line assays, including STAT3 pathway and apoptosis-marker readouts.</p>
+                                    <p className="text-sm text-muted-foreground">Cited <em>in vitro</em> studies report Terrein effects in specific human cancer cell line assays, including STAT3 pathway and apoptosis-marker readouts.</p>
                                 </div>
                             </FadeInOnScroll>
                             <FadeInOnScroll delay={0.2}>
@@ -253,6 +259,14 @@ const TerreinProductContent = () => {
                                     <div key={index} className="bg-background rounded p-4 text-sm border-l-2 border-primary">
                                         <p className="text-muted-foreground mb-1 font-medium">{ref.citation}</p>
                                         <p className="text-primary/80 italic">{ref.note}</p>
+                                        <a
+                                            href={ref.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-2 inline-flex min-h-11 items-center text-primary hover:underline"
+                                        >
+                                            View DOI
+                                        </a>
                                     </div>
                                 ))}
                             </div>

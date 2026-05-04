@@ -28,7 +28,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-background py-3 sticky top-0 z-50 shadow-sm">
+	    <header className="bg-background py-3 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Text Logo */}
         <Link
@@ -56,12 +56,14 @@ const Header = () => {
         </nav>
 
         {/* Mobile Menu Button */}
-        <motion.button
-          className="md:hidden text-nav"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-          whileTap={{ scale: 0.95 }}
-        >
+	        <motion.button
+	          className="md:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded text-nav"
+	          onClick={() => setIsMenuOpen(!isMenuOpen)}
+	          aria-label="Toggle menu"
+	          aria-controls="mobile-navigation"
+	          aria-expanded={isMenuOpen}
+	          whileTap={{ scale: 0.95 }}
+	        >
           {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </motion.button>
       </div>
@@ -69,8 +71,10 @@ const Header = () => {
       {/* Mobile Navigation */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.nav
-            className="md:hidden bg-background border-t border-border mt-4 overflow-hidden relative"
+	          <motion.nav
+	            id="mobile-navigation"
+	            aria-label="Mobile navigation"
+	            className="md:hidden bg-background border-t border-border mt-4 overflow-hidden relative"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -96,8 +100,8 @@ const Header = () => {
                   transition={{ delay: index * 0.08 }}
                 >
                   <Link
-                    href={link.href}
-                    className={`block text-lg ${isActive(link.href) ? "text-primary font-medium border-l-2 border-primary pl-3" : "text-nav hover:text-primary transition-colors pl-3"}`}
+	                    href={link.href}
+	                    className={`block min-h-11 py-2 text-lg ${isActive(link.href) ? "text-primary font-medium border-l-2 border-primary pl-3" : "text-nav hover:text-primary transition-colors pl-3"}`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {link.name}

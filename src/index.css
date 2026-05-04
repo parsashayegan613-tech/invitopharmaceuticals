@@ -16,7 +16,7 @@
     --popover-foreground: 210 11% 15%;
 
     /* Teal/Cyan brand color */
-    --primary: 187 71% 40%;
+    --primary: 187 78% 28%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 20% 96%;
@@ -27,7 +27,7 @@
 
     /* Vibrant Amber/Orange for CTAs and key stats */
     --accent: 38 92% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent-foreground: 210 11% 15%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
@@ -40,7 +40,7 @@
 
     /* Custom colors */
     --topbar-bg: 210 20% 96%;
-    --topbar-text: 210 11% 45%;
+    --topbar-text: 210 11% 30%;
     --nav-text: 210 11% 25%;
     --hero-overlay: 210 20% 30%;
     --section-alt: 210 20% 97%;
@@ -95,6 +95,11 @@
     line-height: 1.75;
   }
 
+  :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 3px;
+  }
+
   h1,
   h2,
   h3,
@@ -111,6 +116,15 @@
 }
 
 @layer components {
+  .skip-link {
+    @apply sr-only fixed left-4 top-4 z-[100] rounded bg-background px-4 py-3 text-foreground shadow-lg ring-2 ring-ring;
+  }
+
+  .skip-link:focus,
+  .skip-link:focus-visible {
+    @apply not-sr-only;
+  }
+
   .nav-link {
     @apply text-nav uppercase tracking-wider text-sm font-medium transition-colors hover:text-primary;
   }
@@ -133,5 +147,16 @@
 
   .page-content {
     @apply text-base md:text-lg leading-relaxed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }

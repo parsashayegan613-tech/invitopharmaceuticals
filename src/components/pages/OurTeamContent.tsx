@@ -32,7 +32,7 @@ const OurTeamContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title="Our Team" />
 
                 <section className="py-16 bg-background">

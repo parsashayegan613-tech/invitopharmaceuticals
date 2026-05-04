@@ -12,7 +12,7 @@ const TermsOfServiceContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title="Terms of Service" />
 
                 <section className="py-16 bg-background">
@@ -128,7 +128,7 @@ const TermsOfServiceContent = () => {
                                     <p className="text-muted-foreground">9407-20 Ave, NW</p>
                                     <p className="text-muted-foreground">Edmonton, AB, Canada T6N 1E5</p>
                                     <p className="text-muted-foreground mt-2">Email: info@invitvo.com</p>
-                                    <p className="text-muted-foreground">Phone: 780.709.5678</p>
+                                    <p className="text-muted-foreground">Phone: +1-780-709-5678</p>
                                 </div>
                             </div>
                         </FadeInOnScroll>

@@ -11,15 +11,15 @@ const PrivacyPolicyContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title="Privacy Policy" />
 
                 <section className="py-16 bg-background">
                     <div className="container mx-auto px-4 max-w-4xl">
                         <FadeInOnScroll>
                             <p className="text-muted-foreground mb-8">
-                                <strong>Effective Date:</strong> January 1, 2024<br />
-                                <strong>Last Updated:</strong> May 3, 2026
+                                <strong>Effective Date:</strong> May 4, 2026<br />
+                                <strong>Last Updated:</strong> May 4, 2026
                             </p>
                         </FadeInOnScroll>
 
@@ -27,26 +27,29 @@ const PrivacyPolicyContent = () => {
                             <div className="prose prose-lg max-w-none">
                                 <h2 className="text-2xl font-medium text-foreground mb-4">1. Introduction</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    InVitvo Pharmaceuticals Ltd. (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy describes how we collect, use, disclose, and safeguard your information when you visit our website or interact with our services, and is intended to align with applicable Canadian privacy requirements including PIPEDA.
+                                    InVitvo Pharmaceuticals Ltd. (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting personal information and confidential research details submitted through our website. This Privacy Policy describes how we collect, use, disclose, retain, and safeguard information when you visit invitvo.com, submit a Request for Quotation (RFQ), or contact us. It is intended to align with applicable Canadian privacy requirements, including PIPEDA.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">2. Information We Collect</h2>
                                 <p className="text-muted-foreground mb-4 leading-relaxed">
-                                    We may collect the following types of information:
+                                    We collect only the information needed to respond to inquiries, qualify RFQs, prepare quotes, and operate the website:
                                 </p>
                                 <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-2">
-                                    <li><strong>Personal Information:</strong> Name, email address, phone number, institutional affiliation, and job title when you submit inquiries or orders.</li>
-                                    <li><strong>Business Information:</strong> Organization name, department, intended research application, RUO acknowledgements, qualification acknowledgements, shipping addresses when needed after quote acceptance, and purchase order details.</li>
-                                    <li><strong>Technical Data:</strong> IP address, browser type, device information, and website usage data collected through cookies and similar technologies.</li>
-                                    <li><strong>Communication Records:</strong> Records of correspondence when you contact us via email or our contact forms.</li>
+                                    <li><strong>RFQ information:</strong> Name, institutional email, optional phone number, institution or organization, optional department, optional principal investigator name, selected compound and quantity, intended research application, how you heard about us, optional notes, and required RUO, qualified researcher, and terms acknowledgements.</li>
+                                    <li><strong>Order information after quote acceptance:</strong> Shipping address, billing details, purchase order information, customs/import information, and correspondence needed to complete a confirmed order.</li>
+                                    <li><strong>Contact form information:</strong> Name, email, optional phone number, message content, and related correspondence.</li>
+                                    <li><strong>Technical and security data:</strong> IP address, user agent, submission timestamps, consent preferences, and limited website usage data used for security, abuse prevention, analytics, and troubleshooting.</li>
                                 </ul>
+                                <p className="text-muted-foreground mb-6 leading-relaxed">
+                                    We treat intended research applications and related RFQ details as confidential business information. We do not place customer names, email addresses, institutional affiliations, or research details in public URL parameters.
+                                </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">3. How We Use Your Information</h2>
                                 <p className="text-muted-foreground mb-4 leading-relaxed">
                                     We use the collected information for the following purposes:
                                 </p>
                                 <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-2">
-                                    <li>Processing and fulfilling product orders and requests for quotations</li>
+                                    <li>Processing, qualifying, and responding to product RFQs</li>
                                     <li>Documenting RUO qualification, intended research use, and required customer acknowledgements</li>
                                     <li>Communicating with you about your orders, inquiries, and our products</li>
                                     <li>Providing technical documentation and certificates of analysis</li>
@@ -57,7 +60,7 @@ const PrivacyPolicyContent = () => {
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">4. Cookies and Tracking Technologies</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    Our website may use cookies and similar tracking technologies to enhance your browsing experience, analyze website traffic, and understand how visitors interact with our site. You may configure your browser to refuse cookies; however, some website features may not function properly without them.
+                                    We use a consent-based analytics preference on the website. Google Analytics is loaded only after you accept analytics. Analytics events are designed to measure activity such as RFQ submissions, contact submissions, phone clicks, email clicks, and product page views without sending names, email addresses, institutions, phone numbers, or research-use details to analytics. You may decline analytics without affecting your ability to submit an RFQ or contact us.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">5. Information Sharing and Disclosure</h2>
@@ -65,19 +68,26 @@ const PrivacyPolicyContent = () => {
                                     We do not sell, trade, or rent your personal information to third parties. We may share your information with:
                                 </p>
                                 <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-2">
-                                    <li><strong>Service Providers:</strong> Third parties who assist with website hosting, database hosting, transactional email, shipping, and payment processing</li>
-                                    <li><strong>Legal Compliance:</strong> When required by law, regulation, or legal process</li>
+                                    <li><strong>Website hosting:</strong> Vercel, used to host and secure the website and server-side RFQ/contact endpoints.</li>
+                                    <li><strong>Database storage:</strong> Supabase, used to store RFQ and contact submissions.</li>
+                                    <li><strong>Transactional email:</strong> Resend and Microsoft 365, used to send RFQ confirmations, internal RFQ notifications, and business correspondence.</li>
+                                    <li><strong>Analytics:</strong> Google Analytics, only after consent, and without customer names, emails, institutions, or research details.</li>
+                                    <li><strong>Shipping, customs, and payment providers:</strong> Used only after quote acceptance when needed to fulfill a confirmed order.</li>
+                                    <li><strong>Legal Compliance:</strong> When required by law, regulation, court order, sanctions/export review, customs process, or other legal process.</li>
                                     <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
                                 </ul>
+                                <p className="text-muted-foreground mb-6 leading-relaxed">
+                                    These providers may process or store information in Canada, the United States, or other jurisdictions where they or their subprocessors operate. Information may be subject to lawful access requests in those jurisdictions.
+                                </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">6. Data Security</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    We implement appropriate technical and organizational security measures to protect your personal information against unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the Internet or electronic storage is 100% secure.
+                                    Form submissions are transmitted over HTTPS. We use access controls, server-side validation, spam controls, rate limiting, and restricted server credentials to protect RFQ and contact records. However, no method of transmission over the Internet or electronic storage is 100% secure.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">7. Data Retention</h2>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    We retain your personal information only for as long as necessary to fulfill the purposes for which it was collected, comply with legal obligations, resolve disputes, and enforce our agreements. Business records related to orders may be retained for up to seven (7) years for accounting and regulatory purposes.
+                                    We retain RFQ, quote, order, compliance acknowledgement, and related business records for up to seven (7) years unless a longer period is required for accounting, tax, export, regulatory, dispute, or legal purposes. Contact-form messages that do not become RFQs or orders are generally retained for up to three (3) years. We may retain limited technical logs for security and abuse-prevention purposes.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">8. Your Rights</h2>
@@ -92,7 +102,7 @@ const PrivacyPolicyContent = () => {
                                     <li>Object to certain processing activities</li>
                                 </ul>
                                 <p className="text-muted-foreground mb-6 leading-relaxed">
-                                    To exercise these rights, please contact us using the information provided below.
+                                    To exercise these rights or ask about cross-border processing, please contact us using the information provided below. We may need to verify your identity before responding.
                                 </p>
 
                                 <h2 className="text-2xl font-medium text-foreground mb-4 mt-8">9. Third-Party Links</h2>
@@ -124,7 +134,7 @@ const PrivacyPolicyContent = () => {
                                     <p className="text-muted-foreground">9407-20 Ave, NW</p>
                                     <p className="text-muted-foreground">Edmonton, AB, Canada T6N 1E5</p>
                                     <p className="text-muted-foreground mt-2">Email: info@invitvo.com</p>
-                                    <p className="text-muted-foreground">Phone: 780.709.5678</p>
+                                    <p className="text-muted-foreground">Phone: +1-780-709-5678</p>
                                 </div>
                             </div>
                         </FadeInOnScroll>

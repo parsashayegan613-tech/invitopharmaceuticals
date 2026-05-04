@@ -13,7 +13,7 @@ const NotFoundContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow flex items-center justify-center bg-gradient-to-b from-background to-muted/30 py-20">
+            <main id="main-content" tabIndex={-1} className="flex-grow flex items-center justify-center bg-gradient-to-b from-background to-muted/30 py-20">
                 <div className="container mx-auto px-4 text-center max-w-xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface StaggerContainerProps {
@@ -14,10 +14,12 @@ const StaggerContainer = ({
   className = "",
   staggerDelay = 0.1
 }: StaggerContainerProps) => {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
+      initial={shouldReduceMotion ? false : "hidden"}
+      whileInView={shouldReduceMotion ? undefined : "visible"}
       viewport={{ once: true, margin: "-50px" }}
       variants={{
         hidden: {},
@@ -41,9 +43,11 @@ export const StaggerItem = ({
   children: ReactNode;
   className?: string;
 }) => {
+  const shouldReduceMotion = useReducedMotion();
+
   return (
     <motion.div
-      variants={{
+      variants={shouldReduceMotion ? undefined : {
         hidden: { opacity: 0, y: 30 },
         visible: {
           opacity: 1,

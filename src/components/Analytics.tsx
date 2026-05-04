@@ -71,7 +71,11 @@ const Analytics = () => {
             )}
 
             {hasLoadedPreference && consent === null && (
-                <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85">
+                <div
+                    role="region"
+                    aria-label="Analytics consent"
+                    className="fixed inset-x-0 bottom-0 z-[60] border-t border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/85"
+                >
                     <div className="container mx-auto flex flex-col gap-3 px-4 py-4 text-sm text-muted-foreground md:flex-row md:items-center md:justify-between">
                         <p className="max-w-3xl">
                             InVitvo uses analytics to understand RFQ and contact activity. We do not send names,
@@ -81,14 +85,14 @@ const Analytics = () => {
                             <button
                                 type="button"
                                 onClick={() => updateConsent("declined")}
-                                className="rounded border border-border px-4 py-2 text-foreground transition-colors hover:bg-muted"
+                                className="min-h-11 rounded border border-border px-4 py-2 text-foreground transition-colors hover:bg-muted"
                             >
                                 Decline
                             </button>
                             <button
                                 type="button"
                                 onClick={() => updateConsent("accepted")}
-                                className="rounded bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
+                                className="min-h-11 rounded bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
                             >
                                 Accept
                             </button>

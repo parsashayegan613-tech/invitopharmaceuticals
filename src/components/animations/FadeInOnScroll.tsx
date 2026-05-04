@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { ReactNode } from "react";
 
 interface FadeInOnScrollProps {
@@ -16,26 +16,27 @@ const FadeInOnScroll = ({
   direction = "up",
   className = ""
 }: FadeInOnScrollProps) => {
+  const shouldReduceMotion = useReducedMotion();
   const directionOffset = {
     up: { y: 40, x: 0 },
     down: { y: -40, x: 0 },
-    left: { x: 40, y: 0 },
-    right: { x: -40, y: 0 },
+    left: { x: 0, y: 40 },
+    right: { x: 0, y: 40 },
   };
 
   return (
     <motion.div
-      initial={{
+      initial={shouldReduceMotion ? false : {
         opacity: 0,
         ...directionOffset[direction]
       }}
-      whileInView={{
+      whileInView={shouldReduceMotion ? undefined : {
         opacity: 1,
         x: 0,
         y: 0
       }}
       viewport={{ once: true, margin: "-100px" }}
-      transition={{
+      transition={shouldReduceMotion ? undefined : {
         duration: 0.6,
         delay,
         ease: [0.25, 0.1, 0.25, 1]

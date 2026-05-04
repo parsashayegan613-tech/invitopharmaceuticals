@@ -32,6 +32,7 @@ const ContactUsContent = () => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [touched, setTouched] = useState<Record<string, boolean>>({});
+    const [formAlert, setFormAlert] = useState("");
 
     const handleBlur = (field: string) => {
         setTouched((prev) => ({ ...prev, [field]: true }));
@@ -51,6 +52,22 @@ const ContactUsContent = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setFormAlert("");
+
+        const requiredFields = ["firstName", "lastName", "email", "message"];
+        setTouched((prev) => ({
+            ...prev,
+            ...Object.fromEntries(requiredFields.map((field) => [field, true])),
+        }));
+
+        const missingFields = requiredFields.filter((field) => !formData[field as keyof typeof formData].trim());
+        const invalidEmail = formData.email.trim() && !isValidEmail(formData.email);
+
+        if (missingFields.length > 0 || invalidEmail) {
+            setFormAlert("Please fix the highlighted fields before submitting your message.");
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
@@ -85,6 +102,7 @@ const ContactUsContent = () => {
                 description: "There was an error sending your message. Please try again later.",
                 variant: "destructive",
             });
+            setFormAlert("Your message could not be sent. Please try again or email info@invitvo.com.");
         } finally {
             setIsSubmitting(false);
         }
@@ -97,11 +115,16 @@ const ContactUsContent = () => {
         { icon: Clock, label: "Business Hours", value: "Monday - Friday: 9:00 AM - 5:00 PM MST" },
     ];
 
+    const firstNameError = getFieldError("firstName", formData.firstName, "First name");
+    const lastNameError = getFieldError("lastName", formData.lastName, "Last name");
+    const emailError = getFieldError("email", formData.email, "Email");
+    const messageError = getFieldError("message", formData.message, "Message");
+
     return (
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title="Contact Us" />
 
                 {/* Contact Info & Form */}
@@ -132,7 +155,7 @@ const ContactUsContent = () => {
                                                                 if (item.label === "Phone") trackPhoneClick("contact_page");
                                                                 if (item.label === "Email") trackEmailClick("contact_page");
                                                             }}
-                                                            className="text-foreground hover:text-primary transition-colors"
+                                                            className="inline-flex min-h-11 items-center text-foreground hover:text-primary transition-colors"
                                                         >
                                                             {item.value}
                                                         </a>
@@ -148,7 +171,22 @@ const ContactUsContent = () => {
 
                             {/* Contact Form */}
                             <FadeInOnScroll direction="right" delay={0.2}>
-                                <form onSubmit={handleSubmit} className="space-y-6">
+                                <form
+                                    onSubmit={handleSubmit}
+                                    className="space-y-6"
+                                    noValidate
+                                    aria-describedby={formAlert ? "contact-form-alert" : undefined}
+                                >
+                                    {formAlert && (
+                                        <div
+                                            id="contact-form-alert"
+                                            role="alert"
+                                            aria-live="assertive"
+                                            className="rounded-md border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
+                                        >
+                                            {formAlert}
+                                        </div>
+                                    )}
                                     <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
                                         <label htmlFor="contact_company_website">Company website</label>
                                         <input
@@ -161,43 +199,54 @@ const ContactUsContent = () => {
                                             onChange={(e) => setFormData({ ...formData, companyWebsite: e.target.value })}
                                         />
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium mb-2">
+                                    <fieldset>
+                                        <legend className="block text-sm font-medium mb-2">
                                             Name <span className="text-primary">*</span>
-                                        </label>
+                                        </legend>
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
+                                                <label htmlFor="contact_first_name" className="sr-only">First name</label>
                                                 <Input
+                                                    id="contact_first_name"
                                                     value={formData.firstName}
                                                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                                                     onBlur={() => handleBlur("firstName")}
                                                     className={fieldClass("firstName", formData.firstName)}
+                                                    aria-invalid={Boolean(firstNameError)}
+                                                    aria-describedby={firstNameError ? "contact_first_name_error" : "contact_first_name_hint"}
+                                                    aria-required="true"
                                                     required
                                                 />
-                                                {getFieldError("firstName", formData.firstName, "First name") && (
-                                                    <span className="text-xs text-red-500">{getFieldError("firstName", formData.firstName, "First name")}</span>
+                                                {firstNameError && (
+                                                    <span id="contact_first_name_error" role="alert" className="text-xs text-red-500">{firstNameError}</span>
                                                 )}
-                                                <span className="text-xs text-muted-foreground mt-1 block">First</span>
+                                                <span id="contact_first_name_hint" className="text-xs text-muted-foreground mt-1 block">First</span>
                                             </div>
                                             <div>
+                                                <label htmlFor="contact_last_name" className="sr-only">Last name</label>
                                                 <Input
+                                                    id="contact_last_name"
                                                     value={formData.lastName}
                                                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                                                     onBlur={() => handleBlur("lastName")}
                                                     className={fieldClass("lastName", formData.lastName)}
+                                                    aria-invalid={Boolean(lastNameError)}
+                                                    aria-describedby={lastNameError ? "contact_last_name_error" : "contact_last_name_hint"}
+                                                    aria-required="true"
                                                     required
                                                 />
-                                                {getFieldError("lastName", formData.lastName, "Last name") && (
-                                                    <span className="text-xs text-red-500">{getFieldError("lastName", formData.lastName, "Last name")}</span>
+                                                {lastNameError && (
+                                                    <span id="contact_last_name_error" role="alert" className="text-xs text-red-500">{lastNameError}</span>
                                                 )}
-                                                <span className="text-xs text-muted-foreground mt-1 block">Last</span>
+                                                <span id="contact_last_name_hint" className="text-xs text-muted-foreground mt-1 block">Last</span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </fieldset>
 
                                     <div>
-                                        <label className="block text-sm font-medium mb-2">Phone</label>
+                                        <label htmlFor="contact_phone" className="block text-sm font-medium mb-2">Phone</label>
                                         <Input
+                                            id="contact_phone"
                                             type="tel"
                                             value={formData.phone}
                                             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
@@ -206,31 +255,43 @@ const ContactUsContent = () => {
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium mb-2">
+                                        <label htmlFor="contact_email" className="block text-sm font-medium mb-2">
                                             Email <span className="text-primary">*</span>
                                         </label>
                                         <Input
+                                            id="contact_email"
                                             type="email"
                                             value={formData.email}
                                             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             onBlur={() => handleBlur("email")}
                                             className={fieldClass("email", formData.email)}
+                                            aria-invalid={Boolean(emailError)}
+                                            aria-describedby={emailError ? "contact_email_error" : undefined}
+                                            aria-required="true"
                                             required
                                         />
-                                        {getFieldError("email", formData.email, "Email") && (
-                                            <span className="text-xs text-red-500 mt-1">{getFieldError("email", formData.email, "Email")}</span>
+                                        {emailError && (
+                                            <span id="contact_email_error" role="alert" className="mt-1 block text-xs text-red-500">{emailError}</span>
                                         )}
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium mb-2">Comment or Message <span className="text-primary">*</span></label>
+                                        <label htmlFor="contact_message" className="block text-sm font-medium mb-2">Comment or Message <span className="text-primary">*</span></label>
                                         <Textarea
+                                            id="contact_message"
                                             value={formData.message}
                                             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                            onBlur={() => handleBlur("message")}
                                             rows={5}
                                             className="transition-all duration-300 focus:shadow-md"
+                                            aria-invalid={Boolean(messageError)}
+                                            aria-describedby={messageError ? "contact_message_error" : undefined}
+                                            aria-required="true"
                                             required
                                         />
+                                        {messageError && (
+                                            <span id="contact_message_error" role="alert" className="mt-1 block text-xs text-red-500">{messageError}</span>
+                                        )}
                                     </div>
 
                                     <motion.div

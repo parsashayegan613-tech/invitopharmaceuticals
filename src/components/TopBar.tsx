@@ -13,13 +13,13 @@ const TopBar = () => {
         </div>
         <div className="flex items-center gap-2">
           <Phone className="w-4 h-4" />
-          <a href="tel:+17807095678" onClick={() => trackPhoneClick("top_bar")} className="hover:text-primary transition-colors">
+          <a href="tel:+17807095678" onClick={() => trackPhoneClick("top_bar")} className="inline-flex min-h-11 items-center hover:text-primary transition-colors">
             +1-780-709-5678
           </a>
         </div>
         <div className="flex items-center gap-2">
           <Mail className="w-4 h-4" />
-          <a href="mailto:info@invitvo.com" onClick={() => trackEmailClick("top_bar")} className="hover:text-primary transition-colors">
+          <a href="mailto:info@invitvo.com" onClick={() => trackEmailClick("top_bar")} className="inline-flex min-h-11 items-center hover:text-primary transition-colors">
             info@invitvo.com
           </a>
         </div>

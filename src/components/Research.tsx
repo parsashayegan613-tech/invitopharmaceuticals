@@ -36,14 +36,14 @@ const Research = () => {
         <div className="max-w-4xl mx-auto">
           <FadeInOnScroll delay={0.2}>
             <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-8 text-center md:text-left">
-              Our current research focuses on synthesis and analytical characterization of Terrein derivatives. Reported biological activities should be interpreted only in the context of cited preclinical and in vitro literature.
+              Our current research focuses on synthesis and analytical characterization of Terrein derivatives. Reported biological activities should be interpreted only in the context of cited laboratory and <em>in vitro</em> literature.
             </p>
           </FadeInOnScroll>
 
           <FadeInOnScroll delay={0.3}>
             <div className="bg-background/10 backdrop-blur-md border border-white/20 rounded-lg p-6 mb-10">
               <p className="text-sm md:text-base text-white/80 italic">
-                <strong className="text-white">Note:</strong> Research compounds are provided for laboratory investigation only. Reported biological activities are based on preclinical studies and peer-reviewed literature. Products are not intended for therapeutic use.
+                <strong className="text-white">Note:</strong> Research compounds are provided for laboratory investigation only. Reported biological activities are based on peer-reviewed laboratory literature. Products are not intended for human, veterinary, diagnostic, clinical, or therapeutic use.
               </p>
             </div>
           </FadeInOnScroll>

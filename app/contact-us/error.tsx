@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function ContactError({ reset }: { error: Error; reset: () => void }) {
     return (
-        <main className="mx-auto max-w-2xl px-4 py-16">
+        <main id="main-content" tabIndex={-1} className="mx-auto max-w-2xl px-4 py-16">
             <h1 className="mb-4 text-3xl font-semibold text-foreground">Contact form is temporarily unavailable</h1>
             <p className="mb-6 text-muted-foreground">
                 Email info@invitvo.com or call +1-780-709-5678, or retry the form.

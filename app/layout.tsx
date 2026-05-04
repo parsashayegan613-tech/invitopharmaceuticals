@@ -118,6 +118,9 @@ export default function RootLayout({
                 />
             </head>
             <body className={`${inter.variable} ${outfit.variable}`}>
+                <a className="skip-link" href="#main-content">
+                    Skip to main content
+                </a>
                 <Providers>
                     <Analytics />
                     <BackToTop />

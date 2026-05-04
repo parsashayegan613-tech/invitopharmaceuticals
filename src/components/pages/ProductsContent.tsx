@@ -24,12 +24,12 @@ const ProductsContent = () => {
         {
             icon: Activity,
             title: "Literature Context",
-            description: "Published in vitro and preclinical research references"
+            description: <>Published <em>in vitro</em> and laboratory research references</>
         },
         {
             icon: Beaker,
             title: "Research Grade",
-            description: "Suitable for in vitro and preclinical research applications"
+            description: "Suitable for qualified laboratory research use"
         },
         {
             icon: Award,
@@ -45,7 +45,7 @@ const ProductsContent = () => {
         { label: "CAS Number", value: terrein.cas },
         { label: "InChIKey", value: terrein.inChIKey },
         { label: "Purity", value: ">95% (UHPLC)" },
-        { label: "Source", value: terrein.source },
+        { label: "Source", value: <em>Aspergillus terreus</em> },
         { label: "Origin", value: "Canadian soil isolates" },
         { label: "Physical Form", value: "Crystalline powder" },
         { label: "Solubility", value: "DMSO, Methanol, Ethanol" },
@@ -61,15 +61,18 @@ const ProductsContent = () => {
     const references = [
         {
             citation: "Zaehle C, et al. (2014) Terrein biosynthesis in Aspergillus terreus and its impact on phytotoxicity. Chemistry & Biology, 21(6), 719-731.",
-            note: "Biosynthesis pathway characterization"
+            note: "Biosynthesis pathway characterization",
+            url: "https://doi.org/10.1016/j.chembiol.2014.03.010",
         },
         {
-            citation: "Lee JC, et al. (2010) Terrein inhibits STAT3 activity and induces apoptosis in human cancer cells. Anticancer Research, 30(10), 3951-3955.",
-            note: "In vitro cancer cell studies"
+            citation: "Goutam J, et al. (2017) Isolation and characterization of terrein from Aspergillus terreus JAS-2. Frontiers in Microbiology, 8, 1334.",
+            note: "Isolation, characterization, and laboratory bioassay context",
+            url: "https://doi.org/10.3389/fmicb.2017.01334",
         },
         {
-            citation: "Arakawa M, et al. (2002) Antibacterial and antifungal activity of terrein. Biological & Pharmaceutical Bulletin, 25(5), 645-649.",
-            note: "Antimicrobial assay characterization"
+            citation: "Ali I, et al. (2019) Large-scale production of terrein by Aspergillus terreus strain S020. Biomolecules, 9(9), 480.",
+            note: "Production and analytical characterization context",
+            url: "https://doi.org/10.3390/biom9090480",
         },
     ];
 
@@ -77,7 +80,7 @@ const ProductsContent = () => {
         <div className="min-h-screen flex flex-col">
             <TopBar />
             <Header />
-            <main className="flex-grow">
+            <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title="Products" />
 
                 {/* RUO Disclaimer */}
@@ -95,15 +98,15 @@ const ProductsContent = () => {
                                 <div>
                                     <h2 className="text-3xl font-light text-foreground mb-6">Terrein</h2>
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-                                        Terrein is a bioactive secondary metabolite isolated from <em>Aspergillus terreus</em> strains obtained from Canadian soil samples. Our high-purity Terrein (&gt;95%) is produced at semi-industrial scale using proprietary fermentation media developed by InVitvo Pharmaceuticals scientists.
+                                        Terrein is a secondary metabolite isolated from <em>Aspergillus terreus</em> strains obtained from Canadian soil samples. Our high-purity Terrein (&gt;95%) is produced at semi-industrial scale using proprietary fermentation media developed by InVitvo Pharmaceuticals scientists.
                                     </p>
                                     <p className="text-lg text-muted-foreground leading-relaxed mb-6">
                                         This compound has been extensively characterized using advanced analytical techniques including UHPLC, tandem mass spectrometry, and NMR spectroscopy. Terrein is available for academic and industrial research applications.
                                     </p>
                                     <div className="flex flex-col sm:flex-row gap-4 mt-6">
                                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
-                                            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto">
-                                                <Link href="/products/terrein" className="flex items-center gap-2">
+                                            <Button asChild className="bg-primary hover:bg-primary/90 text-primary-foreground w-full whitespace-normal text-center sm:w-auto">
+                                                <Link href="/products/terrein" className="flex items-center justify-center gap-2">
                                                     View Terrein CAS {terrein.cas} Specifications
                                                     <ArrowRight className="w-4 h-4" />
                                                 </Link>
@@ -166,12 +169,12 @@ const ProductsContent = () => {
                         <FadeInOnScroll delay={0.2}>
                             <div className="max-w-3xl mx-auto">
                                 <p className="text-lg text-muted-foreground leading-relaxed mb-6 text-center">
-                                    Terrein has been investigated in peer-reviewed literature for various research applications:
+                                    Terrein has been investigated in peer-reviewed literature for laboratory research applications:
                                 </p>
                                 <ul className="space-y-3 mb-6">
                                     <li className="flex items-start gap-3">
                                         <div className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
-                                        <span className="text-muted-foreground">Preclinical cancer research models (in vitro cell line studies)</span>
+                                        <span className="text-muted-foreground">Cited <em>in vitro</em> cancer cell line studies</span>
                                     </li>
                                     <li className="flex items-start gap-3">
                                         <div className="w-2 h-2 bg-primary rounded-full mt-2.5 shrink-0" />
@@ -188,7 +191,7 @@ const ProductsContent = () => {
                                 </ul>
                                 <div className="bg-muted/50 border border-border rounded-lg p-4">
                                     <p className="text-sm text-muted-foreground italic">
-                                        <strong>Disclaimer:</strong> Reported biological activities are based on published preclinical studies. This product is for research use only and is not intended for therapeutic applications.
+                                        <strong>Disclaimer:</strong> Reported biological activities are based on published laboratory studies. This product is for research use only and is not intended for human, veterinary, diagnostic, clinical, or therapeutic use.
                                     </p>
                                 </div>
                             </div>
@@ -203,13 +206,14 @@ const ProductsContent = () => {
                             <h2 className="section-title mb-12">Technical Specifications</h2>
                         </FadeInOnScroll>
                         <FadeInOnScroll delay={0.2}>
-                            <div className="bg-card border border-border rounded-lg overflow-hidden">
-                                <table className="w-full">
+                            <div className="overflow-hidden rounded-lg border border-border bg-card">
+                                <table className="w-full table-fixed">
+                                    <caption className="sr-only">Terrein technical specifications</caption>
                                     <tbody className="divide-y divide-border">
                                         {specifications.map((spec, index) => (
                                             <tr key={index} className="hover:bg-muted/50 transition-colors">
-                                                <td className="px-6 py-4 font-medium text-foreground">{spec.label}</td>
-                                                <td className="px-6 py-4 text-muted-foreground text-right">{spec.value}</td>
+                                                <th scope="row" className="px-3 py-4 text-left text-sm font-medium text-foreground sm:px-6 sm:text-base">{spec.label}</th>
+                                                <td className="break-all px-3 py-4 text-right text-sm text-muted-foreground sm:px-6 sm:text-base">{spec.value}</td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -374,6 +378,14 @@ const ProductsContent = () => {
                                     <div key={index} className="bg-card border border-border rounded-lg p-6">
                                         <p className="text-sm text-muted-foreground mb-2">{ref.citation}</p>
                                         <p className="text-xs text-primary">{ref.note}</p>
+                                        <a
+                                            href={ref.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="mt-2 inline-flex min-h-11 items-center text-sm text-primary hover:underline"
+                                        >
+                                            View DOI
+                                        </a>
                                     </div>
                                 ))}
                             </div>

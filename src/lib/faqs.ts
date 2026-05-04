@@ -25,7 +25,7 @@ export const faqs = [
     },
     {
         question: "What are your compounds typically used for?",
-        answer: "Our compounds are supplied for laboratory research uses such as assay development, analytical chromatography calibration, reference standards, and cited preclinical or in vitro literature context.",
+        answer: "Our compounds are supplied for laboratory research uses such as assay development, analytical chromatography calibration, reference standards, and cited laboratory literature context.",
     },
     {
         question: "Are your products intended for clinical use?",
