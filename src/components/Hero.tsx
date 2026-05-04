@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import heroImage from "@/assets/hero-scientist.jpg";
 import { trackEvent } from "@/lib/analytics";
@@ -11,12 +12,19 @@ const Hero = () => {
     <section id="page-top" className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
       {/* Background Image with subtle zoom animation */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${typeof heroImage === "string" ? heroImage : (heroImage as { src: string }).src})` }}
+        className="absolute inset-0"
         initial={{ scale: 1.1 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
       >
+        <Image
+          src={heroImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
         {/* Enhanced Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/60 to-foreground/20" />
       </motion.div>

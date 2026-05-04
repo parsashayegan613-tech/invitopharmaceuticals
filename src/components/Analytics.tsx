@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Script from "next/script";
 
-const GA_ID = "G-1C75KSQYCL";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const CONSENT_KEY = "invitvo_analytics_consent";
 
 const Analytics = () => {
@@ -29,7 +29,7 @@ const Analytics = () => {
         }
     };
 
-    if (process.env.NODE_ENV !== "production") {
+    if (process.env.NODE_ENV !== "production" || !GA_ID) {
         return null;
     }
 

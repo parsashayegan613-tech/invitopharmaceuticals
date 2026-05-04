@@ -1,73 +1,80 @@
-# Welcome to your Lovable project
+# InVitvo Pharmaceuticals Website
 
-## Project info
+Next.js marketing and RFQ site for InVitvo Pharmaceuticals Ltd.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Local Setup
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
+cp .env.example .env
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Open `http://localhost:3000`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Required Environment Variables
 
-**Use GitHub Codespaces**
+Server-only variables. Set these in Vercel for Production only unless a separate Preview Supabase project is configured.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```env
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=
+RESEND_API_KEY=
+RFQ_NOTIFY_EMAIL=info@invitvo.com
+```
 
-## What technologies are used for this project?
+Public browser variables. These are safe to expose.
 
-This project is built with:
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Database
 
-## How can I deploy this project?
+Apply Supabase migrations before deploying code that depends on new columns.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```sh
+# Supabase CLI, when installed and authenticated
+supabase db push
+```
 
-## Can I connect a custom domain to my Lovable project?
+The RFQ and contact forms submit through Next.js route handlers:
 
-Yes, you can!
+- `POST /api/rfq`
+- `POST /api/contact`
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Do not re-enable browser-side Supabase inserts for public forms.
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Verification
+
+```sh
+npm run lint
+npm run build
+npm audit --audit-level=moderate
+```
+
+After deploying:
+
+1. Submit a test RFQ from `/order?product=terrein&quantity=5mg`.
+2. Confirm the row appears in Supabase `orders`.
+3. Confirm the internal RFQ email arrives at `RFQ_NOTIFY_EMAIL`.
+4. Confirm the customer confirmation email arrives.
+5. Submit a test contact form and confirm the internal notification arrives.
+
+## Deployment
+
+The site is deployed on Vercel. Production should use the canonical host:
+
+```txt
+https://www.invitvo.com
+```
+
+Keep these operational checks outside the repo:
+
+- Microsoft 365 DKIM enabled.
+- SPF and DMARC DNS records current.
+- Resend domain verified.
+- Updated sitemap submitted in Google Search Console.
+- Production secrets restricted from Preview deployments unless Preview uses separate data.

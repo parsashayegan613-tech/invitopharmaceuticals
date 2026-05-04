@@ -15,12 +15,18 @@ const PageHero = ({ title, subtitle = "InVitvo Pharmaceuticals" }: PageHeroProps
     <section className="relative min-h-[300px] md:min-h-[350px] flex items-center justify-center overflow-hidden">
       {/* Background Image with subtle animation */}
       <motion.div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${pageHeroBg.src})` }}
+        className="absolute inset-0"
         initial={{ scale: 1.05 }}
         animate={{ scale: 1 }}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
+        <Image
+          src={pageHeroBg}
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover object-center"
+        />
         {/* Overlay */}
         <div className="absolute inset-0 bg-foreground/50" />
       </motion.div>
@@ -30,6 +36,7 @@ const PageHero = ({ title, subtitle = "InVitvo Pharmaceuticals" }: PageHeroProps
         <Image
           src={logo}
           alt=""
+          sizes="(min-width: 1024px) 24rem, (min-width: 768px) 20rem, 16rem"
           className="w-64 md:w-80 lg:w-96 h-auto opacity-[0.12] object-contain"
         />
       </div>

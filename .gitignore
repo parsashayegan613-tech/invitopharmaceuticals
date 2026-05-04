@@ -34,3 +34,4 @@ supabase/.temp/
 # Next.js
 .next
 out
+tsconfig.tsbuildinfo

@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { z } from "zod";
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database, TablesInsert } from "@/integrations/supabase/types";
+import { getNotifyEmail } from "@/lib/server/env";
+import { sendTransactionalEmail } from "@/lib/server/email";
+import { escapeHtml, sanitizeText } from "@/lib/server/html";
+import { getClientIp, parseJsonBody, rejectInvalidJsonContentType, rejectInvalidOrigin } from "@/lib/server/http";
+import { checkMemoryRateLimit, rateLimitWindowStart } from "@/lib/server/rate-limit";
+import { getSupabaseAdmin } from "@/lib/server/supabase-admin";
 
-const SUPABASE_URL = process.env.SUPABASE_URL || "https://xquntpgxrurxjbpebdhn.supabase.co";
-const SUPABASE_KEY =
-    process.env.SUPABASE_SERVICE_ROLE_KEY ||
-    process.env.SUPABASE_ANON_KEY ||
-    "sb_publishable_vbtS8JJiayCjgQjZsQH32g_9apIxi4s";
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const NOTIFY_EMAIL = process.env.RFQ_NOTIFY_EMAIL || "info@invitvo.com";
+export const runtime = "nodejs";
+export const maxDuration = 10;
 
 const products = {
     "terrein-5mg": { name: "Terrein >95%", amount: "5 mg", price: "C$450", catalog: "INV-TER-005" },
@@ -29,235 +32,118 @@ const freeEmailDomains = new Set([
     "protonmail.com",
 ]);
 
-const rateLimitStore: Map<string, { count: number; resetAt: number }> =
-    ((globalThis as any).__invitvoRfqRateLimit ??= new Map());
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 
-type RfqPayload = {
-    product_id?: keyof typeof products;
-    customer_name?: string;
-    customer_email?: string;
-    customer_phone?: string | null;
-    institution?: string;
-    department?: string | null;
-    pi_name?: string | null;
-    intended_use?: string;
-    custom_quantity?: string | null;
-    how_heard?: string | null;
-    additional_notes?: string | null;
-    ruo_acknowledged?: boolean;
-    qualified_acknowledged?: boolean;
-    terms_accepted?: boolean;
-    company_website?: string;
-    form_started_at?: string;
-};
+const rfqPayloadSchema = z
+    .object({
+        submission_id: z.string().uuid().optional(),
+        product_id: z.enum(["terrein-5mg", "terrein-10mg", "terrein-custom"]),
+        customer_name: z.string().trim().min(1).max(200),
+        customer_email: z.string().trim().email().max(320).transform((value) => value.toLowerCase()),
+        customer_phone: z.string().trim().max(100).nullable().optional(),
+        institution: z.string().trim().min(1).max(250),
+        department: z.string().trim().max(250).nullable().optional(),
+        pi_name: z.string().trim().max(250).nullable().optional(),
+        intended_use: z.string().trim().min(1).max(3000),
+        custom_quantity: z.string().trim().max(100).nullable().optional(),
+        how_heard: z.string().trim().max(150).nullable().optional(),
+        additional_notes: z.string().trim().max(5000).nullable().optional(),
+        ruo_acknowledged: z.literal(true),
+        qualified_acknowledged: z.literal(true),
+        terms_accepted: z.literal(true),
+        company_website: z.string().trim().max(200).optional(),
+        form_started_at: z.string().trim().max(80).nullable().optional(),
+    })
+    .superRefine((payload, context) => {
+        if (payload.product_id === "terrein-custom" && !payload.custom_quantity?.trim()) {
+            context.addIssue({
+                code: z.ZodIssueCode.custom,
+                path: ["custom_quantity"],
+                message: "Custom quantity is required.",
+            });
+        }
+    });
 
-const sanitize = (value: unknown, max = 1000) =>
-    typeof value === "string" ? value.trim().slice(0, max) : "";
-
-const escapeHtml = (value: string) =>
-    value
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-
-const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+type RfqPayload = z.infer<typeof rfqPayloadSchema>;
 
 const getEmailDomain = (email: string) => email.toLowerCase().split("@")[1] || "";
 
-const getClientIp = (request: NextRequest) => {
-    const forwardedFor = request.headers.get("x-forwarded-for");
-    if (forwardedFor) return forwardedFor.split(",")[0].trim();
-    return request.headers.get("x-real-ip") || "unknown";
+const checkDatabaseRateLimit = async (
+    supabase: SupabaseClient<Database>,
+    customerEmail: string,
+    clientIp: string | null
+) => {
+    const since = rateLimitWindowStart(RATE_LIMIT_WINDOW_MS);
+    const emailCheck = await supabase
+        .from("orders")
+        .select("id", { count: "exact", head: true })
+        .eq("customer_email", customerEmail)
+        .gte("created_at", since);
+
+    if (emailCheck.error) return false;
+    if ((emailCheck.count || 0) >= RATE_LIMIT_MAX) return false;
+
+    if (!clientIp) return true;
+
+    const ipCheck = await supabase
+        .from("orders")
+        .select("id", { count: "exact", head: true })
+        .eq("client_ip", clientIp)
+        .gte("created_at", since);
+
+    if (ipCheck.error) return false;
+    return (ipCheck.count || 0) < RATE_LIMIT_MAX;
 };
 
-const checkRateLimit = (key: string) => {
-    const now = Date.now();
-    const current = rateLimitStore.get(key);
-
-    if (!current || current.resetAt <= now) {
-        rateLimitStore.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
-        return true;
-    }
-
-    current.count += 1;
-    return current.count <= RATE_LIMIT_MAX;
+const normalizeOptional = (value: string | null | undefined) => {
+    const sanitized = sanitizeText(value);
+    return sanitized || null;
 };
 
-const sendEmail = async ({
-    from,
-    to,
-    subject,
-    html,
-    text,
-    replyTo,
-}: {
-    from: string;
-    to: string[];
-    subject: string;
-    html: string;
-    text: string;
-    replyTo: string;
-}) => {
-    if (!RESEND_API_KEY) {
-        throw new Error("RESEND_API_KEY is not configured");
-    }
-
-    const response = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${RESEND_API_KEY}`,
-        },
-        body: JSON.stringify({
-            from,
-            to,
-            subject,
-            html,
-            text,
-            reply_to: replyTo,
-        }),
-    });
-
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-        console.error("Resend error:", data);
-        throw new Error("Email delivery failed");
-    }
-};
-
-export async function POST(request: NextRequest) {
-    const clientIp = getClientIp(request);
-    if (!checkRateLimit(clientIp)) {
-        return NextResponse.json({ error: "Too many RFQ submissions. Please try again later." }, { status: 429 });
-    }
-
-    let payload: RfqPayload;
-    try {
-        payload = await request.json();
-    } catch {
-        return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
-    }
-
-    if (sanitize(payload.company_website)) {
-        return NextResponse.json({ success: true });
-    }
-
-    const productId = payload.product_id;
-    const product = productId ? products[productId] : null;
-    const customerName = sanitize(payload.customer_name, 200);
-    const customerEmail = sanitize(payload.customer_email, 320).toLowerCase();
-    const customerPhone = sanitize(payload.customer_phone, 100) || null;
-    const institution = sanitize(payload.institution, 250);
-    const department = sanitize(payload.department, 250) || null;
-    const piName = sanitize(payload.pi_name, 250) || null;
-    const intendedUse = sanitize(payload.intended_use, 3000);
-    const customQuantity = sanitize(payload.custom_quantity, 100) || null;
-    const howHeard = sanitize(payload.how_heard, 150) || null;
-    const additionalNotes = sanitize(payload.additional_notes, 5000) || null;
-    const now = new Date().toISOString();
-    const formStartedAt = sanitize(payload.form_started_at, 80) || null;
-
-    const errors: string[] = [];
-    if (!product) errors.push("Select a valid product.");
-    if (!customerName) errors.push("Name is required.");
-    if (!isValidEmail(customerEmail)) errors.push("A valid email is required.");
-    if (!institution) errors.push("Institution is required.");
-    if (!intendedUse) errors.push("Intended research application is required.");
-    if (productId === "terrein-custom" && !customQuantity) errors.push("Custom quantity is required.");
-    if (!payload.ruo_acknowledged) errors.push("RUO acknowledgement is required.");
-    if (!payload.qualified_acknowledged) errors.push("Qualified researcher acknowledgement is required.");
-    if (!payload.terms_accepted) errors.push("Terms acceptance is required.");
-
-    if (errors.length > 0) {
-        return NextResponse.json({ error: errors.join(" ") }, { status: 400 });
-    }
-
-    const emailDomain = getEmailDomain(customerEmail);
-    const freeEmailWarning = freeEmailDomains.has(emailDomain)
-        ? "Free email domain used. Consider extra supplier qualification before quoting."
-        : "Institutional or organizational email domain supplied.";
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
-        auth: { persistSession: false, autoRefreshToken: false },
-    });
-
-    const insertPayload = {
-        product_name: product!.name,
-        product_catalog: product!.catalog,
-        product_amount: product!.amount,
-        product_price: product!.price,
-        custom_quantity: customQuantity,
-        customer_name: customerName,
-        customer_email: customerEmail,
-        customer_phone: customerPhone,
-        institution,
-        department,
-        pi_name: piName,
-        intended_use: intendedUse,
-        additional_notes: additionalNotes,
-        how_heard: howHeard,
-        ruo_acknowledged_at: now,
-        qualified_acknowledged_at: now,
-        terms_accepted_at: now,
-        form_started_at: formStartedAt,
-        client_ip: clientIp === "unknown" ? null : clientIp,
-        user_agent: sanitize(request.headers.get("user-agent"), 500) || null,
-        street_address: null,
-        city: null,
-        province: null,
-        postal_code: null,
-        country: null,
-        payment_method: null,
-        po_number: null,
-    };
-
-    const { error: dbError } = await supabase.from("orders").insert(insertPayload as any);
-    if (dbError) {
-        console.error("RFQ insert error:", dbError);
-        return NextResponse.json({ error: "Unable to save RFQ. Please email info@invitvo.com." }, { status: 500 });
-    }
-
+const buildInternalEmail = (
+    payload: RfqPayload,
+    product: typeof products[keyof typeof products],
+    now: string,
+    freeEmailWarning: string
+) => {
     const safe = {
-        productName: escapeHtml(product!.name),
-        productCatalog: escapeHtml(product!.catalog),
-        productAmount: escapeHtml(product!.amount),
-        productPrice: escapeHtml(product!.price),
-        customQuantity: escapeHtml(customQuantity || ""),
-        customerName: escapeHtml(customerName),
-        customerEmail: escapeHtml(customerEmail),
-        customerPhone: escapeHtml(customerPhone || "Not provided"),
-        institution: escapeHtml(institution),
-        department: escapeHtml(department || "Not provided"),
-        piName: escapeHtml(piName || "Not provided"),
-        intendedUse: escapeHtml(intendedUse).replace(/\n/g, "<br/>"),
-        howHeard: escapeHtml(howHeard || "Not provided"),
-        additionalNotes: escapeHtml(additionalNotes || "Not provided").replace(/\n/g, "<br/>"),
+        productName: escapeHtml(product.name),
+        productCatalog: escapeHtml(product.catalog),
+        productAmount: escapeHtml(product.amount),
+        productPrice: escapeHtml(product.price),
+        customQuantity: escapeHtml(normalizeOptional(payload.custom_quantity) || ""),
+        customerName: escapeHtml(payload.customer_name),
+        customerEmail: escapeHtml(payload.customer_email),
+        customerPhone: escapeHtml(normalizeOptional(payload.customer_phone) || "Not provided"),
+        institution: escapeHtml(payload.institution),
+        department: escapeHtml(normalizeOptional(payload.department) || "Not provided"),
+        piName: escapeHtml(normalizeOptional(payload.pi_name) || "Not provided"),
+        intendedUse: escapeHtml(payload.intended_use).replace(/\n/g, "<br/>"),
+        howHeard: escapeHtml(normalizeOptional(payload.how_heard) || "Not provided"),
+        additionalNotes: escapeHtml(normalizeOptional(payload.additional_notes) || "Not provided").replace(/\n/g, "<br/>"),
         freeEmailWarning: escapeHtml(freeEmailWarning),
     };
 
-    const internalText = [
+    const text = [
         "New Request for Quotation",
         "",
-        `Product: ${product!.name}`,
-        `Catalog #: ${product!.catalog}`,
-        `Amount: ${product!.amount}`,
-        `Listed price: ${product!.price}`,
-        customQuantity ? `Custom quantity: ${customQuantity}` : "",
+        `Product: ${product.name}`,
+        `Catalog #: ${product.catalog}`,
+        `Amount: ${product.amount}`,
+        `Listed price: ${product.price}`,
+        payload.custom_quantity ? `Custom quantity: ${payload.custom_quantity}` : "",
         "",
-        `Name: ${customerName}`,
-        `Email: ${customerEmail}`,
-        `Phone: ${customerPhone || "Not provided"}`,
-        `Institution: ${institution}`,
-        `Department: ${department || "Not provided"}`,
-        `PI name: ${piName || "Not provided"}`,
+        `Name: ${payload.customer_name}`,
+        `Email: ${payload.customer_email}`,
+        `Phone: ${normalizeOptional(payload.customer_phone) || "Not provided"}`,
+        `Institution: ${payload.institution}`,
+        `Department: ${normalizeOptional(payload.department) || "Not provided"}`,
+        `PI name: ${normalizeOptional(payload.pi_name) || "Not provided"}`,
         "",
-        `Intended research application: ${intendedUse}`,
-        `How heard: ${howHeard || "Not provided"}`,
-        `Additional notes: ${additionalNotes || "Not provided"}`,
+        `Intended research application: ${payload.intended_use}`,
+        `How heard: ${normalizeOptional(payload.how_heard) || "Not provided"}`,
+        `Additional notes: ${normalizeOptional(payload.additional_notes) || "Not provided"}`,
         `Email qualification note: ${freeEmailWarning}`,
         "",
         `RUO acknowledged at: ${now}`,
@@ -267,7 +153,7 @@ export async function POST(request: NextRequest) {
         "All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.",
     ].filter(Boolean).join("\n");
 
-    const internalHtml = `
+    const html = `
       <h2>New Request for Quotation</h2>
       <h3>Product Selection</h3>
       <table style="border-collapse:collapse; width:100%;">
@@ -275,7 +161,7 @@ export async function POST(request: NextRequest) {
         <tr><td style="padding:6px; font-weight:bold;">Catalog #:</td><td style="padding:6px;">${safe.productCatalog}</td></tr>
         <tr><td style="padding:6px; font-weight:bold;">Amount:</td><td style="padding:6px;">${safe.productAmount}</td></tr>
         <tr><td style="padding:6px; font-weight:bold;">Listed Price:</td><td style="padding:6px;">${safe.productPrice}</td></tr>
-        ${customQuantity ? `<tr><td style="padding:6px; font-weight:bold;">Custom Quantity:</td><td style="padding:6px;">${safe.customQuantity}</td></tr>` : ""}
+        ${payload.custom_quantity ? `<tr><td style="padding:6px; font-weight:bold;">Custom Quantity:</td><td style="padding:6px;">${safe.customQuantity}</td></tr>` : ""}
       </table>
 
       <h3>Contact and Institution</h3>
@@ -303,23 +189,27 @@ export async function POST(request: NextRequest) {
       <p style="font-size:12px; color:#64748b;">All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.</p>
     `;
 
-    await sendEmail({
-        from: "InVitvo Orders <orders@invitvo.com>",
-        to: [NOTIFY_EMAIL],
-        subject: `New RFQ: ${product!.name} (${product!.catalog}) - ${customerName}`,
-        html: internalHtml,
-        text: internalText,
-        replyTo: customerEmail,
-    });
+    return { text, html };
+};
 
-    const customerText = [
-        `Dear ${customerName},`,
+const buildCustomerEmail = (
+    payload: RfqPayload,
+    product: typeof products[keyof typeof products]
+) => {
+    const amount = normalizeOptional(payload.custom_quantity) || product.amount;
+    const safeName = escapeHtml(payload.customer_name);
+    const safeProductName = escapeHtml(product.name);
+    const safeCatalog = escapeHtml(product.catalog);
+    const safeAmount = escapeHtml(amount);
+
+    const text = [
+        `Dear ${payload.customer_name},`,
         "",
         "We received your Request for Quotation. Our team will review it within 1-2 business days.",
         "",
-        `Product: ${product!.name}`,
-        `Catalog #: ${product!.catalog}`,
-        `Amount: ${customQuantity || product!.amount}`,
+        `Product: ${product.name}`,
+        `Catalog #: ${product.catalog}`,
+        `Amount: ${amount}`,
         "",
         "Shipping address, payment method, and purchase order details are collected only after quote acceptance.",
         "",
@@ -331,18 +221,18 @@ export async function POST(request: NextRequest) {
         "Edmonton, AB, Canada",
     ].join("\n");
 
-    const customerHtml = `
+    const html = `
       <div style="font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto; color:#1a2332;">
         <div style="text-align:center; padding:20px 0 5px;">
           <img src="https://www.invitvo.com/logo-email.png" alt="InVitvo Pharmaceuticals Ltd." style="max-width:180px; height:auto;" />
         </div>
         <h2>RFQ Received</h2>
-        <p>Dear ${safe.customerName},</p>
+        <p>Dear ${safeName},</p>
         <p>We received your Request for Quotation. Our team will review it within <strong>1-2 business days</strong>.</p>
         <table style="border-collapse:collapse; width:100%; margin:20px 0;">
-          <tr><td style="padding:8px; font-weight:bold;">Product:</td><td style="padding:8px;">${safe.productName}</td></tr>
-          <tr><td style="padding:8px; font-weight:bold;">Catalog #:</td><td style="padding:8px;">${safe.productCatalog}</td></tr>
-          <tr><td style="padding:8px; font-weight:bold;">Amount:</td><td style="padding:8px;">${customQuantity ? safe.customQuantity : safe.productAmount}</td></tr>
+          <tr><td style="padding:8px; font-weight:bold;">Product:</td><td style="padding:8px;">${safeProductName}</td></tr>
+          <tr><td style="padding:8px; font-weight:bold;">Catalog #:</td><td style="padding:8px;">${safeCatalog}</td></tr>
+          <tr><td style="padding:8px; font-weight:bold;">Amount:</td><td style="padding:8px;">${safeAmount}</td></tr>
         </table>
         <p>Shipping address, payment method, and purchase order details are collected only after quote acceptance.</p>
         <p style="font-size:12px; color:#64748b;">All products are Research Use Only (RUO), not for human or veterinary use, and not intended to diagnose, treat, cure, or prevent any disease.</p>
@@ -350,18 +240,116 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    try {
-        await sendEmail({
-            from: "InVitvo Pharmaceuticals <info@invitvo.com>",
-            to: [customerEmail],
-            subject: `RFQ received - ${product!.name} (${product!.catalog})`,
-            html: customerHtml,
-            text: customerText,
-            replyTo: "info@invitvo.com",
-        });
-    } catch (error) {
-        console.error("Customer RFQ confirmation failed:", error);
+    return { text, html };
+};
+
+export async function POST(request: NextRequest) {
+    const originError = rejectInvalidOrigin(request);
+    if (originError) return originError;
+
+    const contentTypeError = rejectInvalidJsonContentType(request);
+    if (contentTypeError) return contentTypeError;
+
+    const clientIp = getClientIp(request);
+    if (clientIp && !checkMemoryRateLimit(`rfq:${clientIp}`, { windowMs: RATE_LIMIT_WINDOW_MS, max: RATE_LIMIT_MAX })) {
+        return NextResponse.json({ error: "Too many RFQ submissions. Please try again later." }, { status: 429 });
     }
 
-    return NextResponse.json({ success: true });
+    const { payload: rawPayload, error: parseError } = await parseJsonBody<unknown>(request);
+    if (parseError) return parseError;
+
+    const validation = rfqPayloadSchema.safeParse(rawPayload);
+    if (!validation.success) {
+        const rawCompanyWebsite =
+            rawPayload && typeof rawPayload === "object" && "company_website" in rawPayload
+                ? sanitizeText((rawPayload as { company_website?: unknown }).company_website)
+                : "";
+        if (rawCompanyWebsite) return NextResponse.json({ success: true });
+        return NextResponse.json({ error: "Check required fields and try again." }, { status: 400 });
+    }
+
+    const payload = validation.data;
+    if (payload.company_website) return NextResponse.json({ success: true });
+
+    const product = products[payload.product_id];
+    const supabase = getSupabaseAdmin();
+
+    const databaseRateLimitOk = await checkDatabaseRateLimit(supabase, payload.customer_email, clientIp);
+    if (!databaseRateLimitOk) {
+        return NextResponse.json({ error: "Too many RFQ submissions. Please try again later." }, { status: 429 });
+    }
+
+    const now = new Date().toISOString();
+    const submissionId = payload.submission_id || crypto.randomUUID();
+    const emailDomain = getEmailDomain(payload.customer_email);
+    const freeEmailWarning = freeEmailDomains.has(emailDomain)
+        ? "Free email domain used. Consider extra supplier qualification before quoting."
+        : "Institutional or organizational email domain supplied.";
+
+    const insertPayload: TablesInsert<"orders"> = {
+        id: submissionId,
+        product_name: product.name,
+        product_catalog: product.catalog,
+        product_amount: product.amount,
+        product_price: product.price,
+        custom_quantity: normalizeOptional(payload.custom_quantity),
+        customer_name: payload.customer_name,
+        customer_email: payload.customer_email,
+        customer_phone: normalizeOptional(payload.customer_phone),
+        institution: payload.institution,
+        department: normalizeOptional(payload.department),
+        pi_name: normalizeOptional(payload.pi_name),
+        intended_use: payload.intended_use,
+        additional_notes: normalizeOptional(payload.additional_notes),
+        how_heard: normalizeOptional(payload.how_heard),
+        ruo_acknowledged_at: now,
+        qualified_acknowledged_at: now,
+        terms_accepted_at: now,
+        form_started_at: normalizeOptional(payload.form_started_at),
+        client_ip: clientIp,
+        user_agent: normalizeOptional(request.headers.get("user-agent")),
+        street_address: null,
+        city: null,
+        province: null,
+        postal_code: null,
+        country: null,
+        payment_method: null,
+        po_number: null,
+    };
+
+    const { error: dbError } = await supabase.from("orders").insert(insertPayload);
+    if (dbError && dbError.code !== "23505") {
+        return NextResponse.json({ error: "Unable to save RFQ. Please email info@invitvo.com." }, { status: 500 });
+    }
+
+    const internalEmail = buildInternalEmail(payload, product, now, freeEmailWarning);
+    const customerEmail = buildCustomerEmail(payload, product);
+
+    const [internalResult] = await Promise.allSettled([
+        sendTransactionalEmail({
+            from: "InVitvo Orders <orders@invitvo.com>",
+            to: [getNotifyEmail()],
+            subject: `New RFQ: ${product.name} (${product.catalog}) - ${payload.customer_name}`,
+            html: internalEmail.html,
+            text: internalEmail.text,
+            replyTo: payload.customer_email,
+        }),
+        sendTransactionalEmail({
+            from: "InVitvo Pharmaceuticals <info@invitvo.com>",
+            to: [payload.customer_email],
+            subject: `RFQ received - ${product.name} (${product.catalog})`,
+            html: customerEmail.html,
+            text: customerEmail.text,
+            replyTo: "info@invitvo.com",
+        }),
+    ]);
+
+    if (internalResult.status === "rejected") {
+        return NextResponse.json(
+            { error: "RFQ was saved, but notification failed. Please email info@invitvo.com." },
+            { status: 502 }
+        );
+    }
+
+    return NextResponse.json({ success: true, rfq_id: submissionId });
 }

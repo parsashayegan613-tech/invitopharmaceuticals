@@ -47,75 +47,96 @@ export type Database = {
       orders: {
         Row: {
           additional_notes: string | null
-          city: string
-          country: string
+          city: string | null
+          client_ip: string | null
+          country: string | null
           created_at: string | null
           custom_quantity: string | null
           customer_email: string
           customer_name: string
           customer_phone: string | null
           department: string | null
+          form_started_at: string | null
+          how_heard: string | null
           id: string
           institution: string
           intended_use: string
           payment_method: string | null
           pi_name: string | null
           po_number: string | null
-          postal_code: string
+          postal_code: string | null
           product_amount: string
           product_catalog: string
           product_name: string
           product_price: string
-          province: string
-          street_address: string
+          province: string | null
+          qualified_acknowledged_at: string | null
+          ruo_acknowledged_at: string | null
+          street_address: string | null
+          terms_accepted_at: string | null
+          user_agent: string | null
         }
         Insert: {
           additional_notes?: string | null
-          city: string
-          country?: string
+          city?: string | null
+          client_ip?: string | null
+          country?: string | null
           created_at?: string | null
           custom_quantity?: string | null
           customer_email: string
           customer_name: string
           customer_phone?: string | null
           department?: string | null
+          form_started_at?: string | null
+          how_heard?: string | null
           id?: string
           institution: string
           intended_use: string
           payment_method?: string | null
           pi_name?: string | null
           po_number?: string | null
-          postal_code: string
+          postal_code?: string | null
           product_amount: string
           product_catalog: string
           product_name: string
           product_price: string
-          province: string
-          street_address: string
+          province?: string | null
+          qualified_acknowledged_at?: string | null
+          ruo_acknowledged_at?: string | null
+          street_address?: string | null
+          terms_accepted_at?: string | null
+          user_agent?: string | null
         }
         Update: {
           additional_notes?: string | null
-          city?: string
-          country?: string
+          city?: string | null
+          client_ip?: string | null
+          country?: string | null
           created_at?: string | null
           custom_quantity?: string | null
           customer_email?: string
           customer_name?: string
           customer_phone?: string | null
           department?: string | null
+          form_started_at?: string | null
+          how_heard?: string | null
           id?: string
           institution?: string
           intended_use?: string
           payment_method?: string | null
           pi_name?: string | null
           po_number?: string | null
-          postal_code?: string
+          postal_code?: string | null
           product_amount?: string
           product_catalog?: string
           product_name?: string
           product_price?: string
-          province?: string
-          street_address?: string
+          province?: string | null
+          qualified_acknowledged_at?: string | null
+          ruo_acknowledged_at?: string | null
+          street_address?: string | null
+          terms_accepted_at?: string | null
+          user_agent?: string | null
         }
         Relationships: []
       }

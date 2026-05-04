@@ -60,6 +60,9 @@ const OrderContent = () => {
     const { toast } = useToast();
     const router = useRouter();
     const [selectedProduct, setSelectedProduct] = useState("terrein-5mg");
+    const [submissionId] = useState(() =>
+        typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : undefined
+    );
     const [formStartedAt] = useState(() => new Date().toISOString());
     const [formData, setFormData] = useState({
         name: "",
@@ -144,6 +147,7 @@ const OrderContent = () => {
         }
 
         const payload = {
+            submission_id: submissionId,
             product_id: product.id,
             customer_name: formData.name,
             customer_email: formData.email,
@@ -187,8 +191,7 @@ const OrderContent = () => {
             });
 
             router.push("/thank-you?type=order");
-        } catch (error) {
-            console.error("RFQ submission error:", error);
+        } catch {
             toast({
                 title: "Submission failed",
                 description: "There was an error sending your RFQ. Please try again or email us directly at info@invitvo.com.",

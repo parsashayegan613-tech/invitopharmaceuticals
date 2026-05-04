@@ -13,19 +13,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import FAQ from "@/components/FAQ";
 import { trackEmailClick, trackEvent, trackPhoneClick } from "@/lib/analytics";
 
 const ContactUsContent = () => {
     const { toast } = useToast();
     const router = useRouter();
+    const [submissionId] = useState(() =>
+        typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : undefined
+    );
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
         phone: "",
         email: "",
         message: "",
+        companyWebsite: "",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -51,26 +54,23 @@ const ContactUsContent = () => {
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase
-                .from('contact_messages')
-                .insert({
-                    first_name: formData.firstName,
-                    last_name: formData.lastName,
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    submission_id: submissionId,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
                     phone: formData.phone || null,
                     email: formData.email,
                     message: formData.message,
-                });
-
-            if (error) throw error;
-
-            // Invoke the edge function to send an email notification
-            const { error: edgeError } = await supabase.functions.invoke('send-contact-email', {
-                body: formData,
+                    company_website: formData.companyWebsite,
+                }),
             });
+            const data = await response.json().catch(() => ({}));
 
-            if (edgeError) {
-                console.error("Error sending email notification:", edgeError);
-                // We still show success since the DB insert succeeded, but we log the email error
+            if (!response.ok) {
+                throw new Error(data.error || "Contact submission failed");
             }
 
             trackEvent("contact_submit", {
@@ -79,8 +79,7 @@ const ContactUsContent = () => {
             });
 
             router.push("/thank-you?type=contact");
-        } catch (error) {
-            console.error("Error submitting contact form:", error);
+        } catch {
             toast({
                 title: "Submission failed",
                 description: "There was an error sending your message. Please try again later.",
@@ -150,6 +149,18 @@ const ContactUsContent = () => {
                             {/* Contact Form */}
                             <FadeInOnScroll direction="right" delay={0.2}>
                                 <form onSubmit={handleSubmit} className="space-y-6">
+                                    <div aria-hidden="true" className="absolute left-[-9999px] h-px w-px overflow-hidden">
+                                        <label htmlFor="contact_company_website">Company website</label>
+                                        <input
+                                            id="contact_company_website"
+                                            name="company_website"
+                                            type="text"
+                                            tabIndex={-1}
+                                            autoComplete="off"
+                                            value={formData.companyWebsite}
+                                            onChange={(e) => setFormData({ ...formData, companyWebsite: e.target.value })}
+                                        />
+                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium mb-2">
                                             Name <span className="text-primary">*</span>
