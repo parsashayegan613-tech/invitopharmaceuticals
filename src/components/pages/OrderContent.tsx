@@ -436,7 +436,7 @@ const OrderContent = () => {
                                                 type="tel"
                                                 value={formData.phone}
                                                 onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                                placeholder="+1 780 709 5678"
+                                                placeholder="e.g., +1 555 010 1234"
                                             />
                                         </div>
                                         <div>
