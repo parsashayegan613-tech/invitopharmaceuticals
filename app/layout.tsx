@@ -18,10 +18,12 @@ export const metadata: Metadata = {
         "Canadian supplier of high-purity microbial research compounds. Terrein with COA/SDS documentation. For research use only.",
     icons: {
         icon: [
-            { url: "/favicon.png", type: "image/png" },
+            { url: "/favicon.svg", type: "image/svg+xml" },
+            { url: "/favicon.png", type: "image/png", sizes: "512x512" },
         ],
+        shortcut: ["/favicon.png"],
         apple: [
-            { url: "/favicon.png" },
+            { url: "/apple-touch-icon.png", type: "image/png", sizes: "512x512" },
         ],
     },
     keywords: [
