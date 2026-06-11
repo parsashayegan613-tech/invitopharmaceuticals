@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Cormorant_Garamond } from "next/font/google";
 import "../src/index.css";
 import Providers from "@/components/Providers";
 import BackToTop from "@/components/BackToTop";
 import Analytics from "@/components/Analytics";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit", display: "swap" });
+const cormorant = Cormorant_Garamond({
+    subsets: ["latin"],
+    variable: "--font-cormorant",
+    weight: ["400", "500", "600", "700"],
+    display: "swap",
+});
 
 export const metadata: Metadata = {
     metadataBase: new URL("https://www.invitvo.com"),
@@ -18,7 +23,6 @@ export const metadata: Metadata = {
         "Canadian supplier of high-purity microbial research compounds. Terrein with COA/SDS documentation. For research use only.",
     icons: {
         icon: [
-            { url: "/favicon.svg", type: "image/svg+xml" },
             { url: "/favicon.png", type: "image/png", sizes: "512x512" },
         ],
         shortcut: ["/favicon.png"],
@@ -119,7 +123,7 @@ export default function RootLayout({
                     }}
                 />
             </head>
-            <body className={`${inter.variable} ${outfit.variable}`}>
+            <body className={`${inter.variable} ${cormorant.variable}`}>
                 <a className="skip-link" href="#main-content">
                     Skip to main content
                 </a>

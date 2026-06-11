@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
@@ -30,13 +31,24 @@ const Header = () => {
   return (
 	    <header className="bg-background py-3 sticky top-0 z-50 shadow-sm">
       <div className="container mx-auto px-4 flex items-center justify-between">
-        {/* Text Logo */}
         <Link
           href="/"
-          className="flex flex-col group"
+          className="flex items-center gap-3 group"
+          aria-label="InVitvo Pharmaceuticals home"
         >
-          <span className="text-2xl md:text-3xl font-bold text-primary tracking-wide">INVITVO</span>
-          <span className="text-xs md:text-sm text-muted-foreground tracking-widest">PHARMACEUTICALS LTD.</span>
+          <Image
+            src={logo}
+            alt=""
+            priority
+            sizes="56px"
+            className="h-14 w-14 shrink-0 rounded-full bg-[#f8f4ee] object-contain ring-1 ring-border/70"
+          />
+          <span className="flex flex-col leading-none">
+            <span className="text-2xl md:text-3xl font-bold text-primary tracking-wide">InVitvo</span>
+            <span className="mt-1 text-[0.65rem] md:text-xs uppercase tracking-[0.24em] text-muted-foreground">
+              Pharmaceuticals
+            </span>
+          </span>
         </Link>
 
         {/* Desktop Navigation */}

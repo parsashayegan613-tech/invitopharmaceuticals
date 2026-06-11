@@ -16,6 +16,30 @@ const getSupabaseConnectSource = () => {
 };
 
 const supabaseConnectSource = getSupabaseConnectSource();
+const isDevelopment = process.env.NODE_ENV === "development";
+
+const scriptSources = [
+    "'self'",
+    "'unsafe-inline'",
+    ...(isDevelopment ? ["'unsafe-eval'"] : []),
+    "https://www.googletagmanager.com",
+];
+
+const connectSources = [
+    "'self'",
+    "https://*.google-analytics.com",
+    "https://*.analytics.google.com",
+    "https://*.googletagmanager.com",
+    supabaseConnectSource,
+    ...(isDevelopment
+        ? [
+              "http://localhost:*",
+              "http://127.0.0.1:*",
+              "ws://localhost:*",
+              "ws://127.0.0.1:*",
+          ]
+        : []),
+];
 
 const securityHeaders = [
     {
@@ -42,8 +66,8 @@ const securityHeaders = [
         key: "Content-Security-Policy",
         value: [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
-            `connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com ${supabaseConnectSource}`,
+            `script-src ${scriptSources.join(" ")}`,
+            `connect-src ${connectSources.join(" ")}`,
             "img-src 'self' data: blob: https:",
             "style-src 'self' 'unsafe-inline'",
             "font-src 'self' data:",

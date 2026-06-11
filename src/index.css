@@ -6,80 +6,88 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 11% 15%;
+    /* Cream/ivory canvas to match the updated InVitvo mark */
+    --background: 37 49% 92%;
+    --foreground: 220 28% 14%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 11% 15%;
+    --card: 36 55% 96%;
+    --card-foreground: 220 28% 14%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
+    --popover: 36 55% 96%;
+    --popover-foreground: 220 28% 14%;
 
-    /* Teal/Cyan brand color */
-    --primary: 187 78% 28%;
-    --primary-foreground: 0 0% 100%;
+    /* Deeper, warmer navy from the updated InVitvo mark */
+    --primary: 220 41% 21%;
+    --primary-foreground: 37 49% 95%;
 
-    --secondary: 210 20% 96%;
-    --secondary-foreground: 210 11% 15%;
+    --secondary: 35 30% 88%;
+    --secondary-foreground: 220 28% 14%;
 
-    --muted: 210 20% 96%;
-    --muted-foreground: 210 11% 35%;
+    --muted: 35 30% 88%;
+    --muted-foreground: 220 18% 30%;
 
-    /* Vibrant Amber/Orange for CTAs and key stats */
-    --accent: 38 92% 50%;
-    --accent-foreground: 210 11% 15%;
+    /* Brushed bronze/champagne gold from the updated InVitvo mark */
+    --accent: 35 50% 48%;
+    --accent-foreground: 37 49% 95%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    /* Sage green tertiary echoing the leaf in the mark */
+    --tertiary: 113 13% 53%;
+    --tertiary-foreground: 37 49% 95%;
 
-    --border: 210 20% 90%;
-    --input: 210 20% 90%;
-    --ring: 187 71% 40%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 37 49% 95%;
+
+    --border: 35 22% 80%;
+    --input: 35 22% 80%;
+    --ring: 220 41% 30%;
 
     --radius: 0.25rem;
 
     /* Custom colors */
-    --topbar-bg: 210 20% 96%;
-    --topbar-text: 210 11% 30%;
-    --nav-text: 210 11% 25%;
-    --hero-overlay: 210 20% 30%;
-    --section-alt: 210 20% 97%;
+    --topbar-bg: 35 30% 88%;
+    --topbar-text: 220 18% 28%;
+    --nav-text: 220 25% 20%;
+    --hero-overlay: 220 35% 18%;
+    --section-alt: 35 35% 90%;
   }
 
   .dark {
-    --background: 210 20% 10%;
-    --foreground: 210 20% 98%;
+    --background: 220 30% 8%;
+    --foreground: 37 30% 92%;
 
-    --card: 210 20% 12%;
-    --card-foreground: 210 20% 98%;
+    --card: 220 30% 12%;
+    --card-foreground: 37 30% 92%;
 
-    --popover: 210 20% 12%;
-    --popover-foreground: 210 20% 98%;
+    --popover: 220 30% 12%;
+    --popover-foreground: 37 30% 92%;
 
-    --primary: 187 71% 45%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 35 55% 60%;
+    --primary-foreground: 220 30% 10%;
 
-    --secondary: 210 20% 18%;
-    --secondary-foreground: 210 20% 98%;
+    --secondary: 220 25% 18%;
+    --secondary-foreground: 37 30% 92%;
 
-    --muted: 210 20% 18%;
-    --muted-foreground: 210 20% 65%;
+    --muted: 220 25% 18%;
+    --muted-foreground: 37 15% 65%;
 
-    --accent: 187 71% 45%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 35 60% 58%;
+    --accent-foreground: 220 30% 10%;
+
+    --tertiary: 113 15% 55%;
+    --tertiary-foreground: 220 30% 10%;
 
     --destructive: 0 62% 30%;
-    --destructive-foreground: 210 20% 98%;
+    --destructive-foreground: 37 30% 92%;
 
-    --border: 210 20% 20%;
-    --input: 210 20% 20%;
-    --ring: 187 71% 45%;
+    --border: 220 25% 20%;
+    --input: 220 25% 20%;
+    --ring: 35 55% 60%;
 
-    --topbar-bg: 210 20% 8%;
-    --topbar-text: 210 20% 65%;
-    --nav-text: 210 20% 90%;
-    --hero-overlay: 210 20% 15%;
-    --section-alt: 210 20% 8%;
+    --topbar-bg: 220 30% 6%;
+    --topbar-text: 37 15% 65%;
+    --nav-text: 37 30% 90%;
+    --hero-overlay: 220 35% 10%;
+    --section-alt: 220 30% 6%;
   }
 }
 
@@ -106,8 +114,9 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-outfit), sans-serif;
-    line-height: 1.3;
+    font-family: var(--font-cormorant), Georgia, serif;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
   }
 
   p {

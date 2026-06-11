@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, AlertTriangle, Linkedin } from "lucide-react";
 import { trackEmailClick, trackPhoneClick } from "@/lib/analytics";
+import logo from "@/assets/logo.png";
 
 const Footer = () => {
   const quickLinks = [
@@ -41,9 +43,17 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Logo & Description */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-block mb-4">
-              <span className="text-2xl font-bold text-background tracking-wide">INVITVO</span>
-	              <span className="block text-xs text-background/85 tracking-widest">PHARMACEUTICALS LTD.</span>
+            <Link href="/" className="mb-4 inline-flex items-center gap-4" aria-label="InVitvo Pharmaceuticals home">
+              <Image
+                src={logo}
+                alt=""
+                sizes="80px"
+                className="h-20 w-20 shrink-0 rounded bg-background object-contain p-1"
+              />
+              <span className="flex flex-col leading-none">
+                <span className="text-2xl font-bold text-background tracking-wide">InVitvo</span>
+                <span className="mt-2 text-xs uppercase tracking-[0.24em] text-background/85">Pharmaceuticals</span>
+              </span>
             </Link>
 	            <p className="text-background/85 text-sm leading-relaxed max-w-md mb-4">
               InVitvo Pharmaceuticals is a research-based scientific company dedicated to isolating, purifying, and characterizing secondary metabolites from natural resources for laboratory research use.
