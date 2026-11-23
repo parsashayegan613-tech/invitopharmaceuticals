@@ -127,7 +127,7 @@ const TerreinProductContent = () => {
                                             {specifications.map((spec, index) => (
                                                 <tr key={index} className="hover:bg-muted/20">
                                                     <th scope="row" className="px-3 py-3 text-left font-medium text-foreground text-sm sm:px-4">{spec.label}</th>
-                                                    <td className="px-3 py-3 text-muted-foreground text-right text-sm break-all sm:px-4">{spec.value}</td>
+                                                    <td className="px-3 py-3 text-muted-foreground text-right text-sm break-words sm:px-4">{spec.value}</td>
                                                 </tr>
                                             ))}
                                         </tbody>

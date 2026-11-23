@@ -32,7 +32,7 @@ const Footer = () => {
       <div className="bg-foreground/95 border-b border-background/10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-start gap-3 max-w-4xl mx-auto">
-            <AlertTriangle className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+            <AlertTriangle className="w-5 h-5 text-accent shrink-0 mt-0.5" />
 	            <p className="text-sm text-background/85 leading-relaxed">
               <strong className="text-background/90">Research Use Only (RUO):</strong> All products sold by InVitvo Pharmaceuticals Ltd. are intended for research use only. Not for human or veterinary use. Not intended to diagnose, treat, cure, or prevent any disease.
             </p>
@@ -76,7 +76,7 @@ const Footer = () => {
                 >
                   <Link
                     href={link.href}
-	                    className="inline-flex min-h-11 items-center text-background/85 hover:text-primary transition-colors duration-300 text-sm"
+	                    className="inline-flex min-h-11 items-center text-background/85 hover:text-accent transition-colors duration-300 text-sm"
                   >
                     {link.name}
                   </Link>
@@ -91,7 +91,7 @@ const Footer = () => {
             <div className="space-y-3">
               {contactInfo.map((item, index) => (
                 <div key={index} className="flex items-start gap-3">
-                  <item.icon className="w-5 h-5 mt-0.5 text-primary" />
+                  <item.icon className="w-5 h-5 mt-0.5 text-accent" />
                   {item.href ? (
                     <a
                       href={item.href}
@@ -99,7 +99,7 @@ const Footer = () => {
                         if (item.href?.startsWith("tel:")) trackPhoneClick("footer");
                         if (item.href?.startsWith("mailto:")) trackEmailClick("footer");
                       }}
-	                      className="inline-flex min-h-11 items-center text-background/85 text-sm hover:text-primary transition-colors"
+	                      className="inline-flex min-h-11 items-center text-background/85 text-sm hover:text-accent transition-colors"
                     >
                       {item.text}
                     </a>
@@ -115,7 +115,7 @@ const Footer = () => {
                 href="https://www.linkedin.com/company/invitvo-pharmaceuticals"
                 target="_blank"
                 rel="noopener noreferrer"
-	                className="inline-flex items-center justify-center w-11 h-11 bg-background/10 rounded-full hover:bg-primary/80 transition-colors duration-200"
+	                className="inline-flex items-center justify-center w-11 h-11 bg-background/10 rounded-full hover:bg-accent/80 transition-colors duration-200"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-4 h-4" />
@@ -123,7 +123,7 @@ const Footer = () => {
               <a
                 href="mailto:info@invitvo.com"
                 onClick={() => trackEmailClick("footer_social")}
-	                className="inline-flex items-center justify-center w-11 h-11 bg-background/10 rounded-full hover:bg-primary/80 transition-colors duration-200"
+	                className="inline-flex items-center justify-center w-11 h-11 bg-background/10 rounded-full hover:bg-accent/80 transition-colors duration-200"
                 aria-label="Email"
               >
                 <Mail className="w-4 h-4" />
@@ -138,8 +138,8 @@ const Footer = () => {
             © {new Date().getFullYear()} InVitvo Pharmaceuticals Ltd. All rights reserved.
           </p>
 	          <div className="flex gap-6 text-sm text-background/80">
-	            <Link href="/privacy-policy" className="inline-flex min-h-11 items-center hover:text-primary transition-colors">Privacy Policy</Link>
-	            <Link href="/terms-of-service" className="inline-flex min-h-11 items-center hover:text-primary transition-colors">Terms of Service</Link>
+	            <Link href="/privacy-policy" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">Privacy Policy</Link>
+	            <Link href="/terms-of-service" className="inline-flex min-h-11 items-center hover:text-accent transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

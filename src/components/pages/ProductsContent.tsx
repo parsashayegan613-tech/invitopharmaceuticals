@@ -226,7 +226,7 @@ const ProductsContent = () => {
                                         {specifications.map((spec, index) => (
                                             <tr key={index} className="hover:bg-muted/50 transition-colors">
                                                 <th scope="row" className="px-3 py-4 text-left text-sm font-medium text-foreground sm:px-6 sm:text-base">{spec.label}</th>
-                                                <td className="break-all px-3 py-4 text-right text-sm text-muted-foreground sm:px-6 sm:text-base">{spec.value}</td>
+                                                <td className="break-words px-3 py-4 text-right text-sm text-muted-foreground sm:px-6 sm:text-base">{spec.value}</td>
                                             </tr>
                                         ))}
                                     </tbody>

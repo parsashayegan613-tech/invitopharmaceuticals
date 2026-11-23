@@ -63,7 +63,7 @@ const Research = () => {
               >
                 <Image
                   src={research2}
-                  alt="UHPLC chromatogram showing >95% Terrein purity"
+                  alt="Transmission electron micrograph of cells, 2 micrometre scale bar"
                   placeholder="blur"
                   className="w-full h-auto rounded object-contain"
                 />
@@ -74,7 +74,7 @@ const Research = () => {
               >
                 <Image
                   src={research3}
-                  alt={`Terrein molecular structure ${terrein.formula} CAS ${terrein.cas} and metabolite analysis`}
+                  alt="Transmission electron micrograph of cell ultrastructure, 500 nanometre scale bar"
                   placeholder="blur"
                   className="w-full h-auto rounded object-contain"
                 />
