@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -13,20 +12,10 @@ import RuoDisclaimer from "@/components/RuoDisclaimer";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Shield, Beaker, Activity, Award, Download, Thermometer, Truck, BookOpen, FlaskConical, CheckCircle2 } from "lucide-react";
 import terreinMolecule from "@/assets/terrein-molecule.png";
-import { trackEvent } from "@/lib/analytics";
 import { terrein } from "@/lib/terrein";
-import { productList } from "@/lib/products";
+import TerreinPurchase from "@/components/TerreinPurchase";
 
 const TerreinProductContent = () => {
-    useEffect(() => {
-        trackEvent("product_page_view", {
-            compound: terrein.name,
-            cas: terrein.cas,
-            product_id: "INV-TER",
-            quantity: productList.map((product) => product.amount).join(", "),
-        });
-    }, []);
-
     const specifications = [
         { label: "Chemical Name", value: terrein.name },
         { label: "Synonyms", value: terrein.synonyms.join(", ") },
@@ -72,6 +61,7 @@ const TerreinProductContent = () => {
             <Header />
             <main id="main-content" tabIndex={-1} className="flex-grow">
                 <PageHero title={`Terrein CAS ${terrein.cas}`} />
+                <TerreinPurchase location="terrein_quantities" />
 
                 {/* RUO Disclaimer */}
                 <section className="py-6 bg-muted/30">
@@ -121,41 +111,6 @@ const TerreinProductContent = () => {
                                 </motion.div>
                             </FadeInOnScroll>
                         </div>
-                    </div>
-                </section>
-
-                {/* Pricing & Availability Table */}
-                <section className="py-16 bg-section-alt">
-                    <div className="container mx-auto px-4 max-w-4xl">
-                        <FadeInOnScroll>
-                            <h2 className="section-title mb-8">Available Quantities & Pricing</h2>
-                            <p className="text-center text-muted-foreground mb-8 text-lg">
-                                We supply standard analytical quantities and quote custom purification amounts for larger laboratory research programs.
-                            </p>
-                        </FadeInOnScroll>
-                        <FadeInOnScroll delay={0.2}>
-                            <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-                                <table className="w-full table-fixed">
-                                    <caption className="sr-only">Terrein pricing by quantity</caption>
-                                    <thead className="bg-muted">
-                                        <tr>
-                                            <th scope="col" className="px-3 py-4 text-left text-sm font-medium text-foreground sm:px-6 sm:text-base">SKU / Catalog</th>
-                                            <th scope="col" className="px-3 py-4 text-left text-sm font-medium text-foreground sm:px-6 sm:text-base">Quantity</th>
-                                            <th scope="col" className="px-3 py-4 text-right text-sm font-medium text-foreground sm:px-6 sm:text-base">Price</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-border">
-                                        {productList.map((item) => (
-                                            <tr key={item.id} className="hover:bg-muted/30 transition-colors">
-                                                <td className="break-words px-3 py-4 text-sm text-muted-foreground font-mono sm:px-6">{item.catalog}</td>
-                                                <td className="px-3 py-4 text-sm font-medium text-foreground sm:px-6">{item.isCustomQuantity ? "Custom / Bulk" : item.amount}</td>
-                                                <td className="px-3 py-4 text-right text-sm font-bold text-foreground sm:px-6">{item.isCustomQuantity ? "Inquire for Quote" : item.price}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </FadeInOnScroll>
                     </div>
                 </section>
 

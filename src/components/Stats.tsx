@@ -32,7 +32,7 @@ const Stats = () => {
 
         <FadeInOnScroll delay={0.5}>
           <div className="text-center">
-            <p className="text-lg md:text-xl font-medium mb-6">Ready to order? Get a quote in under 2 minutes.</p>
+            <p className="text-lg md:text-xl font-medium mb-6">Request a quote. Receive a response within 1-2 business days.</p>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
               <Link
                 href="/order?product=terrein&quantity=5mg"

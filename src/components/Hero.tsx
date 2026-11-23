@@ -9,7 +9,7 @@ import { terrein } from "@/lib/terrein";
 
 const Hero = () => {
   return (
-    <section id="page-top" className="relative min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center overflow-hidden">
+    <section id="page-top" className="relative min-h-[440px] md:min-h-[500px] flex items-center overflow-hidden">
       {/* Background Image with subtle zoom animation */}
       <motion.div
         className="absolute inset-0"
@@ -38,8 +38,8 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            Precision Research<br />
-            Compounds.
+            Terrein for<br />
+            Laboratory Research
           </motion.h1>
           <motion.p
             className="hero-subtitle mb-2"
@@ -47,7 +47,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
-            Microbial Metabolite Discovery & Purification
+            InVitvo Pharmaceuticals · Edmonton, Canada
           </motion.p>
           <motion.p
             className="text-base md:text-lg text-white/70"
@@ -55,7 +55,7 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            High-purity research compounds from Canadian soil microorganisms. Advanced analytical characterization with full documentation.
+            Terrein CAS 582-46-7 at &gt;95% UHPLC purity for academic and industrial laboratories. Available in 5 mg, 10 mg, and custom quantities with batch-specific COA and SDS documentation.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

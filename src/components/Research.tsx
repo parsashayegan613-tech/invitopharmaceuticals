@@ -100,8 +100,8 @@ const Research = () => {
                 whileTap={{ scale: 0.98 }}
               >
                 <Button asChild variant="outline" size="lg" className="bg-transparent text-white border-white/30 hover:bg-white/10 hover:text-white">
-                  <Link href="/contact-us" className="flex items-center gap-2">
-                    Request Your COA Sample Pack
+                  <Link href="/contact-us?inquiry=documentation" className="flex items-center gap-2">
+                    Request a Sample COA & SDS
                   </Link>
                 </Button>
               </motion.div>

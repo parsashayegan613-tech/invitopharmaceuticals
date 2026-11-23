@@ -9,18 +9,17 @@ const WhyInVitvo = () => {
         <section className="py-24 bg-section-alt">
             <div className="container mx-auto px-4">
                 <FadeInOnScroll>
-                    <h2 className="section-title mb-16 text-center">Why Researchers Choose Us</h2>
+                    <h2 className="section-title mb-16 text-center">Research Supply from Canada</h2>
                 </FadeInOnScroll>
 
                 <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto items-center">
                     <FadeInOnScroll delay={0.2}>
                         <div className="space-y-6">
                             <h3 className="text-2xl md:text-3xl font-light text-foreground leading-snug">
-                                Trusted by academic and industrial labs across North America
+                                For academic and industrial laboratories
                             </h3>
                             <p className="text-lg text-muted-foreground leading-relaxed">
-                                Procurement departments and lead researchers rely on InVitvo Pharmaceuticals for our transparent documentation, uncompromised purity, and rapid shipping times.
-                                We bridge the gap between niche natural product discovery and reliable commercial supply.
+                                Evaluate Terrein with product specifications, batch-specific documentation, and a formal quotation. Our team can discuss quantities and shipping requirements for your laboratory.
                             </p>
                             <ul className="space-y-4 pt-4">
                                 {[

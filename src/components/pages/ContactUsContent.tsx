@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
@@ -15,10 +15,17 @@ import { useToast } from "@/hooks/use-toast";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 import FAQ from "@/components/FAQ";
 import { trackEmailClick, trackEvent, trackPhoneClick } from "@/lib/analytics";
+import { inquiryTypes, inquiryLabels, type InquiryType } from "@/lib/inquiries";
 
 const ContactUsContent = () => {
     const { toast } = useToast();
     const router = useRouter();
+    const started = useRef(false);
+    const [inquiryType, setInquiryType] = useState<InquiryType>("general");
+    useEffect(() => {
+        const value = new URLSearchParams(window.location.search).get("inquiry");
+        if (inquiryTypes.includes(value as InquiryType)) setInquiryType(value as InquiryType);
+    }, []);
     const [submissionId] = useState(() =>
         typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : undefined
     );
@@ -52,6 +59,7 @@ const ContactUsContent = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isSubmitting) return;
         setFormAlert("");
 
         const requiredFields = ["firstName", "lastName", "email", "message"];
@@ -82,21 +90,31 @@ const ContactUsContent = () => {
                     email: formData.email,
                     message: formData.message,
                     company_website: formData.companyWebsite,
+                    inquiry_type: inquiryType,
                 }),
             });
             const data = await response.json().catch(() => ({}));
 
-            if (!response.ok) {
+            if (!response.ok || data.success !== true || !data.contact_id) {
+                if (data.saved) {
+                    trackEvent("inquiry_error", { form_type: "contact", inquiry_type: inquiryType, reason: "notification_failed" });
+                    setFormAlert("Your message was saved, but the email notification failed. Please email info@invitvo.com to follow up.");
+                    return;
+                }
                 throw new Error(data.error || "Contact submission failed");
             }
 
             trackEvent("contact_submit", {
                 form_type: "contact",
                 has_phone: Boolean(formData.phone.trim()),
+                inquiry_type: inquiryType,
             });
+            if (inquiryType === "investment") trackEvent("investor_inquiry_submit", { form_type: "contact" });
+            if (inquiryType === "documentation") trackEvent("documentation_inquiry_submit", { compound: "Terrein" });
 
             router.push("/thank-you?type=contact");
         } catch {
+            trackEvent("inquiry_error", { form_type: "contact", inquiry_type: inquiryType, reason: "submission_failed" });
             toast({
                 title: "Submission failed",
                 description: "There was an error sending your message. Please try again later.",
@@ -173,10 +191,19 @@ const ContactUsContent = () => {
                             <FadeInOnScroll direction="right" delay={0.2}>
                                 <form
                                     onSubmit={handleSubmit}
+                                    onChange={() => {
+                                        if (!started.current) started.current = trackEvent("inquiry_start", { form_type: "contact", inquiry_type: inquiryType });
+                                    }}
                                     className="space-y-6"
                                     noValidate
                                     aria-describedby={formAlert ? "contact-form-alert" : undefined}
                                 >
+                                    <div>
+                                        <label htmlFor="inquiry-type" className="mb-2 block text-sm font-medium">Inquiry topic</label>
+                                        <select id="inquiry-type" value={inquiryType} onChange={(event) => setInquiryType(event.target.value as InquiryType)} className="min-h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
+                                            {inquiryTypes.map((type) => <option key={type} value={type}>{inquiryLabels[type]}</option>)}
+                                        </select>
+                                    </div>
                                     {formAlert && (
                                         <div
                                             id="contact-form-alert"

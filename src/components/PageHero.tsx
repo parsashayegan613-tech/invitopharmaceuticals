@@ -42,7 +42,7 @@ const PageHero = ({ title, subtitle = "InVitvo Pharmaceuticals" }: PageHeroProps
       </div>
 
       {/* Content */}
-      <div className="relative text-center z-10">
+      <div className="relative text-center z-10 px-4 w-full break-words">
         <motion.h1
           className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
           initial={{ opacity: 0, y: 20 }}

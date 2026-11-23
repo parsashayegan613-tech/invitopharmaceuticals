@@ -14,10 +14,21 @@ const cleanParams = (params: AnalyticsParams) =>
 
 export const trackEvent = (eventName: string, params: AnalyticsParams = {}) => {
     if (typeof window === "undefined" || typeof window.gtag !== "function") {
-        return;
+        return false;
     }
-
-    window.gtag("event", eventName, cleanParams(params));
+    // Do not queue pre-consent interactions for later transmission.
+    try {
+        if (window.localStorage.getItem("invitvo_analytics_consent") !== "accepted" ||
+            window.localStorage.getItem("invitvo_analytics_exclude") === "true") return false;
+    } catch {
+        return false;
+    }
+    try {
+        window.gtag("event", eventName, cleanParams(params));
+        return true;
+    } catch {
+        return false;
+    }
 };
 
 export const trackPhoneClick = (location: string) => {

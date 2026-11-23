@@ -8,6 +8,7 @@ import { escapeHtml, sanitizeText } from "@/lib/server/html";
 import { getClientIp, parseJsonBody, rejectInvalidJsonContentType, rejectInvalidOrigin } from "@/lib/server/http";
 import { checkMemoryRateLimit, rateLimitWindowStart } from "@/lib/server/rate-limit";
 import { getSupabaseAdmin } from "@/lib/server/supabase-admin";
+import { inquiryTypes, inquiryLabels } from "@/lib/inquiries";
 
 export const runtime = "nodejs";
 export const maxDuration = 10;
@@ -16,6 +17,7 @@ const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 
 const contactPayloadSchema = z.object({
+    inquiry_type: z.enum(inquiryTypes).default("general"),
     submission_id: z.string().uuid().optional(),
     firstName: z.string().trim().min(1).max(100),
     lastName: z.string().trim().min(1).max(100),
@@ -118,7 +120,7 @@ export async function POST(request: NextRequest) {
         last_name: payload.lastName,
         email: payload.email,
         phone: sanitizeText(payload.phone) || null,
-        message: payload.message,
+        message: `[${inquiryLabels[payload.inquiry_type]}]\n${payload.message}`,
     };
 
     const { error: dbError } = await supabase.from("contact_messages").insert(insertPayload);
@@ -131,14 +133,14 @@ export async function POST(request: NextRequest) {
         await sendTransactionalEmail({
             from: "InVitvo Contact <info@invitvo.com>",
             to: [getNotifyEmail()],
-            subject: `New Contact Form Submission from ${email.fullName}`,
+            subject: `${inquiryLabels[payload.inquiry_type]} from ${email.fullName}`,
             html: email.html,
             text: email.text,
             replyTo: payload.email,
         });
     } catch {
         return NextResponse.json(
-            { error: "Message was saved, but notification failed. Please email info@invitvo.com." },
+            { saved: true, error: "Message was saved, but notification failed. Please email info@invitvo.com." },
             { status: 502 }
         );
     }

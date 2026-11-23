@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import TopBar from "@/components/TopBar";
@@ -47,6 +47,7 @@ const getEmailDomain = (email: string) => email.trim().toLowerCase().split("@")[
 const OrderContent = () => {
     const { toast } = useToast();
     const router = useRouter();
+    const started = useRef(false);
     const [selectedProduct, setSelectedProduct] = useState<ProductId>("terrein-5mg");
     const [submissionId] = useState(() =>
         typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : undefined
@@ -106,6 +107,7 @@ const OrderContent = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (isSubmitting) return;
         setFormAlert("");
 
         const product = productCatalog[selectedProduct];
@@ -178,7 +180,12 @@ const OrderContent = () => {
             });
             const data = await response.json().catch(() => ({}));
 
-            if (!response.ok) {
+            if (!response.ok || data.success !== true || !data.rfq_id) {
+                if (data.saved) {
+                    trackEvent("inquiry_error", { form_type: "rfq", reason: "notification_failed" });
+                    setFormAlert("Your RFQ was saved, but email confirmation failed. Please email info@invitvo.com to follow up.");
+                    return;
+                }
                 throw new Error(data.error || "RFQ submission failed");
             }
 
@@ -194,6 +201,7 @@ const OrderContent = () => {
 
             router.push("/thank-you?type=order");
         } catch {
+            trackEvent("inquiry_error", { form_type: "rfq", reason: "submission_failed" });
             toast({
                 title: "Submission failed",
                 description: "There was an error sending your RFQ. Please try again or email us directly at info@invitvo.com.",
@@ -261,6 +269,9 @@ const OrderContent = () => {
 
                         <form
                             onSubmit={handleSubmit}
+                            onChange={() => {
+                                if (!started.current) started.current = trackEvent("inquiry_start", { form_type: "rfq", product_id: selectedProduct });
+                            }}
                             noValidate
                             aria-describedby={formAlert ? "rfq-form-alert" : undefined}
                         >

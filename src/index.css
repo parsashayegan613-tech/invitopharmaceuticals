@@ -116,7 +116,7 @@
   h6 {
     font-family: var(--font-cormorant), Georgia, serif;
     line-height: 1.25;
-    letter-spacing: -0.005em;
+    letter-spacing: 0;
   }
 
   p {

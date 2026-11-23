@@ -16,6 +16,7 @@ const Footer = () => {
     { name: "Terrein Literature Context", href: "/research/terrein-in-vitro-models" },
     { name: "Request Quote", href: "/order?product=terrein&quantity=5mg" },
     { name: "Our Team", href: "/our-team" },
+    { name: "Investors", href: "/investors" },
     { name: "Contact Us", href: "/contact-us" },
   ];
 

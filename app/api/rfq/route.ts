@@ -341,7 +341,7 @@ export async function POST(request: NextRequest) {
 
     if (internalResult.status === "rejected" || customerResult.status === "rejected") {
         return NextResponse.json(
-            { error: "RFQ was saved, but email confirmation failed. Please email info@invitvo.com." },
+            { saved: true, error: "RFQ was saved, but email confirmation failed. Please email info@invitvo.com." },
             { status: 502 }
         );
     }

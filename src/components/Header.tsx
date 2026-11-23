@@ -18,6 +18,7 @@ const Header = () => {
     { name: "Terrein", href: "/products/terrein" },
     { name: "Request Quote", href: "/order?product=terrein&quantity=5mg" },
     { name: "Our Team", href: "/our-team" },
+    { name: "Investors", href: "/investors" },
     { name: "Contact Us", href: "/contact-us" },
   ];
 
@@ -52,7 +53,7 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
+        <nav aria-label="Main navigation" className="hidden xl:flex items-center gap-5">
           {navLinks.map((link) => (
             <Link
               key={link.name}
@@ -69,7 +70,7 @@ const Header = () => {
 
         {/* Mobile Menu Button */}
 	        <motion.button
-	          className="md:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded text-nav"
+	          className="xl:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded text-nav"
 	          onClick={() => setIsMenuOpen(!isMenuOpen)}
 	          aria-label="Toggle menu"
 	          aria-controls="mobile-navigation"
@@ -86,7 +87,7 @@ const Header = () => {
 	          <motion.nav
 	            id="mobile-navigation"
 	            aria-label="Mobile navigation"
-	            className="md:hidden bg-background border-t border-border mt-4 overflow-hidden relative"
+	            className="xl:hidden bg-background border-t border-border mt-4 overflow-hidden relative"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}

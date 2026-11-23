@@ -6,9 +6,9 @@ import { terrein } from "@/lib/terrein";
 import { standardProducts } from "@/lib/products";
 
 export const metadata: Metadata = {
-    title: { absolute: `Terrein CAS ${terrein.cas} >95% | InVitvo` },
+    title: { absolute: `Terrein CAS ${terrein.cas} Supplier | InVitvo Canada` },
     description:
-        `Terrein CAS ${terrein.cas}, >95% UHPLC, from Aspergillus terreus. RUO compound shipped from Canada.`,
+        `Order a research-use quote for Terrein CAS ${terrein.cas}, >95% UHPLC purity. 5 mg C$450, 10 mg C$800. COA and SDS included. Canadian supplier.`,
     alternates: { canonical: "https://www.invitvo.com/products/terrein" },
     openGraph: {
         title: `Terrein CAS ${terrein.cas} >95% | InVitvo`,
